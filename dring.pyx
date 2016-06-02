@@ -35,6 +35,7 @@ cdef class Dring:
         if(not dring.init(bitflags)):
             raise RuntimeError
 
+    def start(self):
         if(not dring.start()):
             raise RuntimeError
 

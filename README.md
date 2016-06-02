@@ -6,6 +6,7 @@
 * ~~Start Ring~~
 * ~~Parse arguments~~
 * Register Callbacks
+* Threading
 
 ## Getting started
 
@@ -24,6 +25,19 @@
 ## Running
 
     ./client.py -h
+
+## Interacting
+
+    from dring import Dring
+
+    dring = Dring()
+    dring.version()
+
+    bitflags = (dring.FLAG_CONSOLE_LOG | dring.FLAG_DEBUG)
+
+    dring.init_library(bitflags)
+
+    dring.start()
 
 ## Contributing
 
