@@ -14,5 +14,8 @@ cdef extern from "dring.h" namespace "DRing":
 
     const char* version();
 
-    #cdef cppclass CallbackWrapperBase:
+    cdef cppclass CallbackWrapperBase: 
+        pass
 
+    cdef cppclass CallbackWrapper(CallbackWrapperBase):
+        pass
