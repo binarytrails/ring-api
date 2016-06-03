@@ -55,5 +55,7 @@ if __name__ == "__main__":
         print(dring.version())
 
     dring.init_library(bitflags)
+    dring.start()
 
     server.startServer()
+
