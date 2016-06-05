@@ -1,7 +1,7 @@
 from libcpp.string cimport string
 from libcpp cimport bool as boolean
 
-from .std cimport *
+from ring_api.utils.std cimport *
 
 cdef extern from "dring.h" namespace "DRing":
     cdef enum InitFlag:

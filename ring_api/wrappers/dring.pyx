@@ -2,9 +2,9 @@
 
 from libcpp.string cimport string
 
-from pxd.std cimport *
-from pxd cimport dring
-from pxd cimport configurationmanager_interface as config_man
+from ring_api.utils.std cimport *
+from ring_api.interfaces cimport dring
+from ring_api.interfaces cimport configuration_manager as config_man
 
 cdef class ConfigurationManager:
     def __cinit__(self):
@@ -58,5 +58,5 @@ cdef class Dring:
             raise RuntimeError
 
     def version(self):
-        return dring.version()
+        return dring.version().decode()
 

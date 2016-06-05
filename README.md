@@ -7,17 +7,18 @@ Traditionally [Ring-daemon](https://gerrit-ring.savoirfairelinux.com/#/admin/pro
 * ~~Initialize Ring~~
 * ~~Start Ring~~
 * ~~Parse arguments~~
-* ~~Get account info~~
+* ~~Get account info for demonstration~~
+* ~~Implement RESTful API skeleton~~
+* ~~Implement encoding / decoding protocols~~
+* ~~Implement the Python package architecture~~
 * Add threading
-* Implement RESTful API skeleton
-* Implement encoding / decoding protocols
 * Register callbacks
 * Rewrite interfaces definitions from */usr/include/dring/*:
     * account_const.h
     * call_const.h
     * callmanager_interface.h
-    * configurationmanager_interface.h
-    * dring.h
+    * configurationmanager_interface.h    ->    configuration_manager.pxd
+    * dring.h                             ->    dring.pxd
     * media_const.h
     * presencemanager_interface.h
     * security_const.h
@@ -30,13 +31,21 @@ Traditionally [Ring-daemon](https://gerrit-ring.savoirfairelinux.com/#/admin/pro
 
 * Encoding / decoding
 
-    * Should the UTF-8 be decoded in wrappers?
+    * Should the Unicode be decoded in the wrappers?
 
-    * Only Json encoding or mixed?
+    Yes, to leverage the encoding / decoding steps in the API.
+
+    * Only JSON encoding or mixed?
+
+    For now, JSON but it can be anything.
 
 * Callback to Javascript from RESTful API
 
+@TODO
+
 * REST vs WebSockets
+
+@TODO related to previous
 
 ## Getting started
 
@@ -63,11 +72,14 @@ Traditionally [Ring-daemon](https://gerrit-ring.savoirfairelinux.com/#/admin/pro
 
 2. Python RESTful server
 
+        pip --user install bottle
+
+        # or use the freezed version
         pip --user install -r requierements.txt
 
 ## Compiling 
 
-    make
+    cd ring_api; make
 
 ## Client
 
@@ -84,12 +96,12 @@ Traditionally [Ring-daemon](https://gerrit-ring.savoirfairelinux.com/#/admin/pro
 
 ## Real-time
 
-    from dring import Dring
+    from ring_api.dring import Dring
 
     dring = Dring()
 
     bitflags = (dring.FLAG_CONSOLE_LOG | dring.FLAG_DEBUG)
-    dring.init_library(bitflags)
+    dring.init_library(bitflags) # default is silent
 
     dring.start()
 

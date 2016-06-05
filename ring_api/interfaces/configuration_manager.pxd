@@ -3,8 +3,8 @@ from libcpp cimport bool as boolean
 from libcpp.map cimport map as map
 from libcpp.vector cimport vector
 
-from .std cimport *
-from .dring cimport *
+from ring_api.utils.std cimport *
+from ring_api.interfaces.dring cimport *
 
 cdef extern from "configurationmanager_interface.h" namespace "DRing":
 

@@ -12,5 +12,5 @@ all:
 	python setup.py build_ext --inplace
 
 clean:
-	rm -rf *$(LIB_EXT) dring.cpp *.out {*,api/*}.pyc {,api/}__pycache__/ build/
+	rm -rf *$(LIB_EXT) *.out build/
 
