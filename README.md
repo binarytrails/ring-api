@@ -2,6 +2,10 @@
 
 Traditionally [Ring-daemon](https://gerrit-ring.savoirfairelinux.com/#/admin/projects/ring-daemon) was implemented using D-Bus client for communication. However, it is not present on any platform other than Gnu / Linux. Thus, the daemon *dring* has to be statistically compiled with the top layers using it. The purpose of Ring-cython is to externalize the Ring-daemon functionality to enable direct communication with its process.
 
+## Why not do a C++ RESTful server?
+
+A research of possible libraries was performed in the [ring-for-the-web](https://github.com/sevaivanov/ring-for-the-web#using-existing-libraries) repository. It turns out that there are not many possibilities. Nevertheless, Restbed seemed the most promising one, but would it be on the long run? The disadvantage of using Cython is that it takes more time to rewrite the interfaces to wrap them with Python but once it is done, the maintenance is minimal and the adjustments are made very quickly. Cython was created 8 years ago (2007) and Python in 1991. They are therefore certainly more mature than our best choices of C++ frameworks. It makes it a lot less probable that everything would go south on the internals. Fast-development opens the door to a lot of possibilities. For instance, unit and intergration tests could be implemented to test the core of the Ring project with complex User Stories in no time. Benchmarks using build-in Python timing libraries are also there. What about the flexibility? Implementing in a High-Level language wouldn't make changing a REST framework a whole new mission. It would be also possible to write custom APIs of all kinds for different requirements. Finally, Cython allows to externalize parts of code directly in C / C++ which provides strictly objectively the best of both worlds.
+
 ## Roadmap
 
 * ~~Initialize Ring~~
@@ -14,30 +18,38 @@ Traditionally [Ring-daemon](https://gerrit-ring.savoirfairelinux.com/#/admin/pro
 * Add threading
 * Register callbacks
 * Rewrite interfaces definitions from */usr/include/dring/*:
-    * account_const.h
-    * call_const.h
-    * callmanager_interface.h
-    * configurationmanager_interface.h    ->    configuration_manager.pxd
-    * dring.h                             ->    dring.pxd
-    * media_const.h
-    * presencemanager_interface.h
-    * security_const.h
-    * videomanager_interface.h
-* Add unitests
+    * In Progress
+
+            configurationmanager_interface.h    ->    configuration_manager.pxd
+            dring.h                             ->    dring.pxd
+
+    * To do
+
+            account_const.h
+            call_const.h
+            callmanager_interface.h
+            media_const.h
+            presencemanager_interface.h
+            security_const.h
+            videomanager_interface.h
+
+* Add unit tests
 * Write how call client from Ring-daemon with -*-without-dbus* option
 * Write "How it works?" with diagrams
 
 ## Design decisions
 
+* Rewriting or Recycling D-Bus
+
 * Encoding / decoding
 
     * Should the Unicode be decoded in the wrappers?
 
-    Yes, to leverage the encoding / decoding steps in the API.
+        Yes, to leverage the encoding / decoding steps in the API.
 
     * Only JSON encoding or mixed?
 
-    For now, JSON but it can be anything.
+        For now, JSON but it can be anything.
 
 * Callback to Javascript from RESTful API
 
@@ -79,7 +91,7 @@ Traditionally [Ring-daemon](https://gerrit-ring.savoirfairelinux.com/#/admin/pro
 
 ## Compiling 
 
-    cd ring_api; make
+    cd ring_api; make; cd ../
 
 ## Client
 
