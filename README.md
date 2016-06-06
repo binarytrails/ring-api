@@ -15,7 +15,7 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 * ~~Implement RESTful API skeleton~~
 * ~~Implement encoding / decoding protocols~~
 * ~~Implement the Python package architecture~~
-* Add threading
+* ~~Add basic threading~~
 * Register callbacks
 * Rewrite interfaces definitions from */usr/include/dring/*:
     * In Progress
@@ -39,6 +39,8 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 
 ## Design decisions
 
+* Threading: who controls who?
+
 * Rewriting or Recycling D-Bus
 
 * Encoding / decoding
@@ -53,11 +55,7 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 
 * Callback to Javascript from RESTful API
 
-@TODO
-
 * REST vs WebSockets
-
-@TODO related to previous
 
 ## Getting started
 
@@ -67,20 +65,20 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 
     1. Download the Ring-daemon
 
-        git clone https://gerrit-ring.savoirfairelinux.com/ring-daemon
+            git clone https://gerrit-ring.savoirfairelinux.com/ring-daemon
 
     2. Apply the patch by going to its url, clicking on *Download* and copy-pasting the *Checkout* line in the *ring-daemon* directory. You can verify it was applied with *git log*.
 
     3. Build the shared library
 
-        cd contrib; mkdir build; cd build
-        ../bootstrap
-        make; make .opendht
-        cd ../../
-        ./autogen.sh
-        ./configure --prefix=/usr
-        make
-        make install
+            cd contrib; mkdir build; cd build
+            ../bootstrap
+            make; make .opendht
+            cd ../../
+            ./autogen.sh
+            ./configure --prefix=/usr
+            make
+            make install
 
 2. Python RESTful server
 
@@ -99,26 +97,30 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
     Usage: client.py [options] arg1 arg2
 
     Options:
-    -h, --help        show this help message and exit
-    -v, --version     show Ring-daemon version
-    -d, --debug       debug mode (more verbose)
-    -c, --console     log in console (instead of syslog)
-    -p, --persistent  stay alive after client quits
-    --auto-answer     force automatic answer to incoming call
+      -h, --help        show this help message and exit
+      -v, --version     show Ring-daemon version
+      -d, --debug       debug mode (more verbose)
+      -c, --console     log in console (instead of syslog)
+      -p, --persistent  stay alive after client quits
+      --auto-answer     force automatic answer to incoming call
+      -r, --rest        start with restful server api
+      --port=PORT       restful server port
+      --host=HOST       restful server host
 
 ## Real-time
 
-    from ring_api.dring import Dring
+    from ring_api import client
 
-    dring = Dring()
+    (options, args) = client.options()
+    options.rest = True
+    options.debug = True
+    options.console = True
 
-    bitflags = (dring.FLAG_CONSOLE_LOG | dring.FLAG_DEBUG)
-    dring.init_library(bitflags) # default is silent
+    ring = client.Client()
+    ring.start()
 
-    dring.start()
-
-    accounts = dring.config.accounts()
-    dring.config.account_details(accounts[0])
+    accounts = ring.dring.config.accounts()
+    ring.dring.config.account_details(accounts[0])
 
 ## Contributing
 

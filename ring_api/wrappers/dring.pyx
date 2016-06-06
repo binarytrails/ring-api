@@ -14,7 +14,7 @@ cdef class ConfigurationManager:
         accounts = list()
         raw_accounts = config_man.getAccountList()
         for i, account in enumerate(raw_accounts):
-            accounts.append(account)
+            accounts.append(account.decode())
         return accounts
 
     def account_details(self, str_id):
