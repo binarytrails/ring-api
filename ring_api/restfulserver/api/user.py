@@ -3,7 +3,9 @@ import cgi, json
 
 api = {
     'routes' : '/user/routes/',
-    'accounts' : '/user/accounts/'
+    'accounts' : '/user/accounts/',
+    'account_details': '/user/details/<account_id>/',
+    'send_text_message': '/user/send/text/<account_id>/<to_ring_id>/<message>/'
 }
 
 class User:
@@ -16,9 +18,20 @@ class User:
 
 @get(api['routes'])
 def routes():
-    return json.dumps(api)
+    html = {**api}
+    return html
 
 @get(api['accounts'])
 def accounts():
     return json.dumps(dring.config.accounts())
+
+@get(api['account_details'])
+def account_details(account_id):
+    details = dring.config.account_details(str(account_id))
+    return json.dumps(details)
+
+@post(api['send_text_message'])
+def send_text_message(account_id, to_ring_id, message):
+    dring.config.send_text_message(
+            account_id, to_ring_id, {'text/plain': message})
 

@@ -5,8 +5,8 @@ from bottle import request, get
 from ring_api.restfulserver.api import ring, user
 
 api = {
-    'root': '/',
     'routes': '/routes/',
+    'all_routes': '/all_routes/',
 }
 
 class Root:
@@ -17,13 +17,15 @@ class Root:
     def api():
         return api
 
-@get(api['root'])
-def root():
-    return json.dumps(api)
-
 @get(api['routes'])
+def root():
+    html = {**api}
+    return html
+
+@get(api['all_routes'])
 def routes():
     ring_api = ring.Ring.api()
     user_api = user.User.api()
-    return json.dumps({**api, **ring_api, **user_api})
+    html = {**api, **ring_api, **user_api}
+    return html
 

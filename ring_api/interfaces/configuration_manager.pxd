@@ -1,3 +1,5 @@
+from libc.stdint cimport *
+
 from libcpp.string cimport string
 from libcpp cimport bool as boolean
 from libcpp.map cimport map as map
@@ -11,6 +13,11 @@ cdef extern from "configurationmanager_interface.h" namespace "DRing":
     void registerConfHandlers(const map[
         string, shared_ptr[CallbackWrapperBase]] &)
 
+    # account id != ring id
     vector[string] getAccountList()
     map[string, string] getAccountDetails(const string& accountID);
+
+    # to: ring_id_dest, payloads: map[<mime-type>, <message>]
+    uint64_t sendAccountTextMessage(const string& accountID, const string& to,
+            const map[string, string]& payloads);
 

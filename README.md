@@ -111,7 +111,19 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
       --auto-answer     force automatic answer to incoming call
       --dring-version   show Ring-daemon version
 
-## Real-time
+### Examples
+
+    ./client.py -rv
+
+Then, you can go to *http://127.0.0.1:8080/all_routes/* to interact with the API.
+
+#### Send a text message
+
+In another terminal you can send a text message:
+
+    curl -X POST http://127.0.0.1:8080/user/send/text/<account_id>/<to_ring_id>/<message>/
+
+## Real-time (experimental)
 
     from ring_api import client
 
@@ -119,7 +131,7 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
     options.rest = True
     options.verbose = True
 
-    ring = client.Client()
+    ring = client.Client(options)
     ring.start()
 
     accounts = ring.dring.config.accounts()
@@ -129,7 +141,9 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 
 ### Style
 
-[PEP 8](https://www.python.org/dev/peps/pep-0008)
+Coding: [PEP 8](https://www.python.org/dev/peps/pep-0008/)
+
+Docstring: [PEP 257](https://www.python.org/dev/peps/pep-0257/)
 
 ## License
 
