@@ -54,18 +54,18 @@ class Client:
     def __init__(self, _options=None):
         self.dring = Dring()
 
-        if not _options:
+        if (not _options):
             (_options, args) = options()
         self.options = _options
 
-        if self.options.verbose:
+        if (self.options.verbose):
             self.options.debug = True
             self.options.console = True
 
         bitflags = self.options_to_bitflags(self.options)
         self.__init_threads__(bitflags)
 
-        if self.options.dring_version:
+        if (self.options.dring_version):
             print(self.dring.version())
 
     def __init_threads__(self, bitflags):
@@ -73,7 +73,7 @@ class Client:
         self.dring_thread = threading.Thread(target=self.dring.start)
         self.dring_thread.setDaemon(not self.options.persistent)
 
-        if self.options.rest:
+        if (self.options.rest):
             self.restapp = BottleServer(
                     self.options.host, self.options.port, self.dring)
             self.restapp_thread = threading.Thread(target=self.restapp.start)
@@ -81,14 +81,14 @@ class Client:
     def options_to_bitflags(self, options):
         flags = 0
 
-        if options.console:
-            flags |= self.dring.FLAG_CONSOLE_LOG
+        if (options.console):
+            flags |= self.dring._FLAG_CONSOLE_LOG
 
-        if options.debug:
-            flags |= self.dring.FLAG_DEBUG
+        if (options.debug):
+            flags |= self.dring._FLAG_DEBUG
 
-        if options.autoanswer:
-            flags |= self.dring.FLAG_AUTOANSWER
+        if (options.autoanswer):
+            flags |= self.dring._FLAG_AUTOANSWER
 
         return flags
 
@@ -96,7 +96,7 @@ class Client:
         try:
             self.dring_thread.start()
 
-            if self.options.rest:
+            if (self.options.rest):
                 time.sleep(3)
                 self.restapp_thread.start()
 
@@ -110,5 +110,6 @@ class Client:
 
     def stop(self):
         self.dring.stop()
-        self.restapp.stop()
+        if hasattr(self, 'restapp'):
+            self.restapp.stop()
 

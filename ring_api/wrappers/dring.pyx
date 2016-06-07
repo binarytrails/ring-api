@@ -28,23 +28,23 @@ cdef class ConfigurationManager:
 
 cdef class Dring:
     cdef:
-        readonly int FLAG_DEBUG
-        readonly int FLAG_CONSOLE_LOG
-        readonly int FLAG_AUTOANSWER
+        readonly int _FLAG_DEBUG
+        readonly int _FLAG_CONSOLE_LOG
+        readonly int _FLAG_AUTOANSWER
 
     cdef public ConfigurationManager config
 
     def __cinit__(self):
-        self.FLAG_DEBUG          = dring.DRING_FLAG_DEBUG
-        self.FLAG_CONSOLE_LOG    = dring.DRING_FLAG_CONSOLE_LOG
-        self.FLAG_AUTOANSWER     = dring.DRING_FLAG_AUTOANSWER
+        self._FLAG_DEBUG          = dring.DRING_FLAG_DEBUG
+        self._FLAG_CONSOLE_LOG    = dring.DRING_FLAG_CONSOLE_LOG
+        self._FLAG_AUTOANSWER     = dring.DRING_FLAG_AUTOANSWER
 
         self.config = ConfigurationManager()
-        if(not self.config):
+        if (not self.config):
             raise RuntimeError
 
     def init_library(self, bitflags=0):
-        if(not dring.init(bitflags)):
+        if (not dring.init(bitflags)):
             raise RuntimeError
 
         # register callbacks
@@ -53,7 +53,7 @@ cdef class Dring:
         #self.configuration_manager.registerConfHandlers(func)
 
     def start(self):
-        if(not dring.start()):
+        if (not dring.start()):
             raise RuntimeError
 
     def stop(self):
