@@ -11,9 +11,9 @@ def options():
     usage = 'usage: %prog [options] arg1 arg2'
     parser = OptionParser(usage=usage)
 
-    parser.add_option('-v', '--version',
-        action='store_true', dest='version', default=False,
-        help='show Ring-daemon version')
+    parser.add_option('-v', '--verbose',
+        action='store_true', dest='verbose', default=False,
+        help='activate all of the verbose options')
 
     parser.add_option('-d', '--debug',
         action='store_true', dest='debug', default=False,
@@ -27,10 +27,6 @@ def options():
         action='store_true', dest='persistent', default=False,
         help='stay alive after client quits')
 
-    parser.add_option('--auto-answer',
-        action='store_true', dest='autoanswer', default=False,
-        help='force automatic answer to incoming call')
-
     parser.add_option('-r', '--rest',
         action='store_true', dest='rest', default=False,
         help='start with restful server api')
@@ -43,6 +39,14 @@ def options():
         type='str', dest='host', default='127.0.0.1',
         help='restful server host')
 
+    parser.add_option('--auto-answer',
+        action='store_true', dest='autoanswer', default=False,
+        help='force automatic answer to incoming call')
+
+    parser.add_option('--dring-version',
+        action='store_true', dest='dring_version', default=False,
+        help='show Ring-daemon version')
+
     return parser.parse_args()
 
 class Client:
@@ -54,12 +58,18 @@ class Client:
             (_options, args) = options()
         self.options = _options
 
-        bitflags = self.options_to_bitflags(self.options)
-        self.dring.init_library(bitflags)
+        if self.options.verbose:
+            self.options.debug = True
+            self.options.console = True
 
-        if self.options.version:
+        bitflags = self.options_to_bitflags(self.options)
+        self.__init_threads__(bitflags)
+
+        if self.options.dring_version:
             print(self.dring.version())
 
+    def __init_threads__(self, bitflags):
+        self.dring.init_library(bitflags)
         self.dring_thread = threading.Thread(target=self.dring.start)
         self.dring_thread.setDaemon(not self.options.persistent)
 
@@ -83,25 +93,22 @@ class Client:
         return flags
 
     def start(self):
-        """
-            TODO:
-                Better main loop control
-                Do pj_thread_register() to exit ring gracefully
-        """
-        self._start_dring()
-        # main loop choice
-        if self.options.rest:
-            time.sleep(3)
-            self._start_restapp()
-        else:
-            q = Queue()
+        try:
+            self.dring_thread.start()
+
+            if self.options.rest:
+                time.sleep(3)
+                self.restapp_thread.start()
+
             while True:
-                q.get()
+                time.sleep(0.1)
+                self.dring.poll_events()
 
-    def _start_dring(self):
-        self.dring_thread.start()
+        except (KeyboardInterrupt, SystemExit):
+            print("Finishing..")
+            self.stop()
 
-    # thread by default
-    def _start_restapp(self):
-        self.restapp_thread.start()
+    def stop(self):
+        self.dring.stop()
+        self.restapp.stop()
 

@@ -15,7 +15,8 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 * ~~Implement RESTful API skeleton~~
 * ~~Implement encoding / decoding protocols~~
 * ~~Implement the Python package architecture~~
-* ~~Add basic threading~~
+* ~~Add threading~~
+* Make bottle WSGIRefServer
 * Register callbacks
 * Rewrite interfaces definitions from */usr/include/dring/*:
     * In Progress
@@ -35,11 +36,13 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 
 * Add unit tests
 * Write how call client from Ring-daemon with -*-without-dbus* option
-* Write "How it works?" with diagrams
+* Write a Wiki
 
 ## Design decisions
 
 * Threading: who controls who?
+
+    Main while loop in Client class start() function using dring.poll_events()
 
 * Rewriting or Recycling D-Bus
 
@@ -98,14 +101,15 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 
     Options:
       -h, --help        show this help message and exit
-      -v, --version     show Ring-daemon version
+      -v, --verbose     activate all of the verbose options
       -d, --debug       debug mode (more verbose)
       -c, --console     log in console (instead of syslog)
       -p, --persistent  stay alive after client quits
-      --auto-answer     force automatic answer to incoming call
       -r, --rest        start with restful server api
       --port=PORT       restful server port
       --host=HOST       restful server host
+      --auto-answer     force automatic answer to incoming call
+      --dring-version   show Ring-daemon version
 
 ## Real-time
 
@@ -113,8 +117,7 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 
     (options, args) = client.options()
     options.rest = True
-    options.debug = True
-    options.console = True
+    options.verbose = True
 
     ring = client.Client()
     ring.start()

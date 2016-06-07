@@ -18,12 +18,12 @@ cdef class ConfigurationManager:
         return accounts
 
     def account_details(self, str_id):
-        cdef string b_id = str_id
+        cdef string b_id = str_id.encode()
         details = dict()
         raw_dict = config_man.getAccountDetails(b_id)
         for key in raw_dict.iterkeys():
             value = raw_dict[key]
-            details[key] = value.decode()
+            details[key.decode()] = value.decode()
         return details
 
 cdef class Dring:
@@ -38,7 +38,6 @@ cdef class Dring:
         self.FLAG_DEBUG          = dring.DRING_FLAG_DEBUG
         self.FLAG_CONSOLE_LOG    = dring.DRING_FLAG_CONSOLE_LOG
         self.FLAG_AUTOANSWER     = dring.DRING_FLAG_AUTOANSWER
-
 
         self.config = ConfigurationManager()
         if(not self.config):
@@ -56,6 +55,12 @@ cdef class Dring:
     def start(self):
         if(not dring.start()):
             raise RuntimeError
+
+    def stop(self):
+        dring.fini()
+
+    def poll_events(self):
+        dring.pollEvents()
 
     def version(self):
         return dring.version().decode()

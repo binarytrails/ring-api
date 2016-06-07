@@ -16,3 +16,6 @@ class BottleServer:
     def start(self):
         run(host=self.host, port=self.port)
 
+    def stop(self):
+        pass
+
