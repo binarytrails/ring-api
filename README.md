@@ -62,7 +62,9 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 
 ## Getting started
 
-### Dependencies
+### Installation
+
+#### Dependencies
 
 1. Ring-daemon with [this patch](https://gerrit-ring.savoirfairelinux.com/#/c/4327/) written due to bug [#699](https://tuleap.ring.cx/plugins/tracker/?aid=699) that was blocking the generation of the shared library. As soon as it is merged, applying it won't be necessary.
 
@@ -90,11 +92,17 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
         # or use the freezed version
         pip --user install -r requierements.txt
 
-## Compiling 
+#### Compiling
 
     cd ring_api; make; cd ../
 
-## Client
+### Running
+
+There are two ways to interact with the Ring-daemon using the API. In both cases, you are using the client. You can either run a **Client script** located at project root called *client.py* that instantiates the Client class located in *ring_api/client.py* or import the *ring_api/client.py* in **Real-time** in a Python interpreter for example into [IPython](http://ipython.org/).
+
+#### Client script
+
+It is recommended that you start it with the *--rest* option to be able to interact with it.
 
     $ ./client.py -h
     Usage: client.py [options] arg1 arg2
@@ -110,32 +118,43 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
       --host=HOST       restful server host
       --auto-answer     force automatic answer to incoming call
       --dring-version   show Ring-daemon version
+      --realtime        adapt threads for real-time interaction
 
-### Examples
+##### Examples
 
     ./client.py -rv
 
-Then, you can go to *http://127.0.0.1:8080/all_routes/* to interact with the API.
+List all of the API routes at http://127.0.0.1:8080/all_routes/.
 
-#### Send a text message
+###### Send a text message
 
 In another terminal you can send a text message:
 
     curl -X POST http://127.0.0.1:8080/user/send/text/<account_id>/<to_ring_id>/<message>/
 
-## Real-time (experimental)
+#### Real-time
+
+It was tested using IPython.
 
     from ring_api import client
 
     (options, args) = client.options()
-    options.rest = True
     options.verbose = True
 
     ring = client.Client(options)
     ring.start()
 
-    accounts = ring.dring.config.accounts()
-    ring.dring.config.account_details(accounts[0])
+    account = ring.dring.config.accounts()[0]
+    details = ring.dring.config.account_details(account)
+
+    ring.dring.config.send_text_message(
+        account, '<to_ring_id>', {'text/plain': 'hello'})
+
+    # show accessible content
+    dir(client)
+
+    # show docstring of the method
+    help(ring.dring.config.account_details)
 
 ## Contributing
 

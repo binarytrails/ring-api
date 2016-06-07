@@ -47,6 +47,10 @@ def options():
         action='store_true', dest='dring_version', default=False,
         help='show Ring-daemon version')
 
+    parser.add_option('--realtime',
+        action='store_true', dest='realtime', default=False,
+        help='adapt threads for real-time interaction')
+
     return parser.parse_args()
 
 class Client:
@@ -78,6 +82,9 @@ class Client:
                     self.options.host, self.options.port, self.dring)
             self.restapp_thread = threading.Thread(target=self.restapp.start)
 
+        if (self.options.realtime):
+            self.mother_thread = threading.Thread(target=self._start_main_loop)
+
     def options_to_bitflags(self, options):
         flags = 0
 
@@ -94,22 +101,31 @@ class Client:
 
     def start(self):
         try:
-            self.dring_thread.start()
-
-            if (self.options.rest):
-                time.sleep(3)
-                self.restapp_thread.start()
-
-            while True:
-                time.sleep(0.1)
-                self.dring.poll_events()
+            if (self.options.realtime):
+                self.mother_thread.start()
+            else:
+                self._start_main_loop()
 
         except (KeyboardInterrupt, SystemExit):
-            print("Finishing..")
             self.stop()
 
+    def _start_main_loop(self):
+        self.dring_thread.start()
+
+        if (self.options.rest):
+            time.sleep(3)
+            self.restapp_thread.start()
+
+        while True:
+            time.sleep(0.1)
+            self.dring.poll_events()
+
     def stop(self):
+        if (self.options.verbose):
+            print("Finishing..")
+
         self.dring.stop()
+
         if hasattr(self, 'restapp'):
             self.restapp.stop()
 
