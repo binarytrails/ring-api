@@ -139,6 +139,7 @@ It was tested using IPython.
     from ring_api import client
 
     (options, args) = client.options()
+    options.realtime = True
     options.verbose = True
 
     ring = client.Client(options)
