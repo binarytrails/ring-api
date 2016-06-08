@@ -12,8 +12,8 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
 * ~~Implement encoding / decoding protocols~~
 * ~~Implement the Python package architecture~~
 * ~~Add threading~~
-* Make bottle WSGIRefServer
 * Register callbacks
+* Define a multi-threaded RESTful server supporting OOP (in class views)
 * Rewrite interfaces definitions from */usr/include/dring/*:
     * In Progress
 
@@ -32,7 +32,7 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
 
 * Add unit tests
 * Write how call client from Ring-daemon with -*-without-dbus* option
-* Write a Wiki
+* ~~Write a Wiki~~
 
 ## Getting started
 
