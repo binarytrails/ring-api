@@ -1,10 +1,6 @@
 # Ring API
 
-Traditionally [Ring-daemon](https://gerrit-ring.savoirfairelinux.com/#/admin/projects/ring-daemon) was implemented using D-Bus client for communication. However, it is not present on any platform other than Gnu / Linux. Thus, the daemon *dring* has to be statistically compiled with the top layers using it. The purpose of Ring-cython is to externalize the Ring-daemon functionality to enable direct communication with its process.
-
-## Why not do a C++ RESTful server?
-
-A research of possible libraries was performed in the [ring-for-the-web](https://github.com/sevaivanov/ring-for-the-web#using-existing-libraries) repository. It turns out that there are not many possibilities. Nevertheless, Restbed seemed the most promising one, but would it be on the long run? The disadvantage of using Cython is that it takes more time to rewrite the interfaces to wrap them with Python but once it is done, the maintenance is minimal and the adjustments are made very quickly. Cython was created 8 years ago (2007) and Python in 1991. They are therefore certainly more mature than our best choices of C++ frameworks. It makes it a lot less probable that everything would go south on the internals. Fast-development opens the door to a lot of possibilities. For instance, unit and intergration tests could be implemented to test the core of the Ring project with complex User Stories in no time. Benchmarks using build-in Python timing libraries are also there. What about the flexibility? Implementing in a High-Level language wouldn't make changing a REST framework a whole new mission. It would be also possible to write custom APIs of all kinds for different requirements. Finally, Cython allows to externalize parts of code directly in C / C++ which provides strictly objectively the best of both worlds.
+The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-api/wiki).
 
 ## Roadmap
 
@@ -38,28 +34,6 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
 * Write how call client from Ring-daemon with -*-without-dbus* option
 * Write a Wiki
 
-## Design decisions
-
-* Threading: who controls who?
-
-    Main while loop in Client class start() function using dring.poll_events()
-
-* Rewriting or Recycling D-Bus
-
-* Encoding / decoding
-
-    * Should the Unicode be decoded in the wrappers?
-
-        Yes, to leverage the encoding / decoding steps in the API.
-
-    * Only JSON encoding or mixed?
-
-        For now, JSON but it can be anything.
-
-* Callback to Javascript from RESTful API
-
-* REST vs WebSockets
-
 ## Getting started
 
 ### Installation
@@ -92,7 +66,9 @@ A research of possible libraries was performed in the [ring-for-the-web](https:/
         # or use the freezed version
         pip --user install -r requierements.txt
 
-#### Compiling
+3. Cython shared library
+
+Install Cython and generate the ring_api library:
 
     cd ring_api; make; cd ../
 
@@ -139,8 +115,8 @@ It was tested using IPython.
     from ring_api import client
 
     (options, args) = client.options()
-    options.realtime = True
     options.verbose = True
+    options.realtime = True
 
     ring = client.Client(options)
     ring.start()
