@@ -14,6 +14,14 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
 * ~~Add threading~~
 * Register callbacks
 * Define a multi-threaded RESTful server supporting OOP (in class views)
+
+    > The easiest way to increase performance is to install a multi-threaded server library like paste or cherrypy and tell Bottle to use that instead of the single-threaded default server -- [bottlepy.org](http://bottlepy.org/docs/dev/deployment.html)
+
+    See restfulserver/cherrypy draft:
+
+        1. You can host a foreign WSGI application with the CherryPy server
+        2. A CherryPy application can be hosted by another WSGI server
+
 * Rewrite interfaces definitions from */usr/include/dring/*:
     * In Progress
 
