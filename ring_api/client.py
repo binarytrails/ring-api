@@ -47,9 +47,9 @@ def options():
         action='store_true', dest='dring_version', default=False,
         help='show Ring-daemon version')
 
-    parser.add_option('--realtime',
-        action='store_true', dest='realtime', default=False,
-        help='adapt threads for real-time interaction')
+    parser.add_option('--interpreter',
+        action='store_true', dest='interpreter', default=False,
+        help='adapt threads for interpreter interaction')
 
     return parser.parse_args()
 
@@ -82,8 +82,9 @@ class Client:
                     self.options.host, self.options.port, self.dring)
             self.restapp_thread = threading.Thread(target=self.restapp.start)
 
-        if (self.options.realtime):
+        if (self.options.interpreter):
             self.mother_thread = threading.Thread(target=self._start_main_loop)
+            self.mother_thread.setDaemon(True)
 
     def options_to_bitflags(self, options):
         flags = 0
@@ -101,7 +102,7 @@ class Client:
 
     def start(self):
         try:
-            if (self.options.realtime):
+            if (self.options.interpreter):
                 self.mother_thread.start()
             else:
                 self._start_main_loop()

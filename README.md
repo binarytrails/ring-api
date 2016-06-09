@@ -74,7 +74,7 @@ Install Cython and generate the ring_api library:
 
 ### Running
 
-There are two ways to interact with the Ring-daemon using the API. In both cases, you are using the client. You can either run a **Client script** located at project root called *client.py* that instantiates the Client class located in *ring_api/client.py* or import the *ring_api/client.py* in **Real-time** in a Python interpreter for example into [IPython](http://ipython.org/).
+There are two ways to interact with the Ring-daemon using the API. In both cases, you are using the client. You can either run a **Client script** located at project root called *client.py* that instantiates the Client class located in *ring_api/client.py* or import the *ring_api/client.py* in **Interpreter** mode to a Python interpreter (for example into [IPython](http://ipython.org/)).
 
 #### Client script
 
@@ -94,7 +94,7 @@ It is recommended that you start it with the *--rest* option to be able to inter
       --host=HOST       restful server host
       --auto-answer     force automatic answer to incoming call
       --dring-version   show Ring-daemon version
-      --realtime        adapt threads for real-time interaction
+      --interpreter     adapt threads for interpreter interaction
 
 ##### Examples
 
@@ -108,7 +108,7 @@ In another terminal you can send a text message:
 
     curl -X POST http://127.0.0.1:8080/user/send/text/<account_id>/<to_ring_id>/<message>/
 
-#### Real-time
+#### Interpreter
 
 It was tested using IPython.
 
@@ -116,7 +116,7 @@ It was tested using IPython.
 
     (options, args) = client.options()
     options.verbose = True
-    options.realtime = True
+    options.interpreter = True
 
     ring = client.Client(options)
     ring.start()
