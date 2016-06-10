@@ -7,17 +7,21 @@ from libcpp.string cimport string
 from libcpp.map cimport map as map
 
 from ring_api.utils.std cimport *
-from ring_api.interfaces cimport dring
-from ring_api.interfaces cimport configuration_manager as config_man
+from ring_api.interfaces cimport dring as dring_cpp
+from ring_api.interfaces cimport configuration_manager as confman_cpp
 
 cdef class ConfigurationManager:
+
     def __cinit__(self):
         pass
 
     def accounts(self):
-        """List user accounts (not ring ids)"""
+        """List user accounts (not ring ids)
+
+        Return: accounts list
+        """
         accounts = list()
-        raw_accounts = config_man.getAccountList()
+        raw_accounts = confman_cpp.getAccountList()
 
         for i, account in enumerate(raw_accounts):
             accounts.append(account.decode())
@@ -29,10 +33,12 @@ cdef class ConfigurationManager:
 
         Keyword arguments:
         account_id -- account id string
+
+        Return: account details dict
         """
         cdef string raw_id = account_id.encode()
         details = dict()
-        raw_dict = config_man.getAccountDetails(raw_id)
+        raw_dict = confman_cpp.getAccountDetails(raw_id)
 
         for key, value in raw_dict.iteritems():
             details[key.decode()] = value.decode()
@@ -46,6 +52,8 @@ cdef class ConfigurationManager:
         account_id  -- account id string
         ring_id     -- ring id destination string
         content_map -- map of content defined as [<mime-type>, <message>]
+
+        No return
         """
         cdef string raw_account_id = account_id.encode()
         cdef string raw_ring_id = ring_id.encode()
@@ -54,7 +62,7 @@ cdef class ConfigurationManager:
         for key, value in content_map.iteritems():
             raw_content_map[key.encode()] = value.encode()
 
-        config_man.sendAccountTextMessage(
+        confman_cpp.sendAccountTextMessage(
                 raw_account_id, raw_ring_id, raw_content_map)
 
 cdef class Dring:
@@ -63,36 +71,56 @@ cdef class Dring:
         readonly int _FLAG_CONSOLE_LOG
         readonly int _FLAG_AUTOANSWER
 
-    cdef public ConfigurationManager config
+    cdef ConfigurationManager config
 
     def __cinit__(self):
-        self._FLAG_DEBUG          = dring.DRING_FLAG_DEBUG
-        self._FLAG_CONSOLE_LOG    = dring.DRING_FLAG_CONSOLE_LOG
-        self._FLAG_AUTOANSWER     = dring.DRING_FLAG_AUTOANSWER
+        self._FLAG_DEBUG          = dring_cpp.DRING_FLAG_DEBUG
+        self._FLAG_CONSOLE_LOG    = dring_cpp.DRING_FLAG_CONSOLE_LOG
+        self._FLAG_AUTOANSWER     = dring_cpp.DRING_FLAG_AUTOANSWER
 
         self.config = ConfigurationManager()
         if (not self.config):
             raise RuntimeError
 
     def init_library(self, bitflags=0):
-        if (not dring.init(bitflags)):
+        # TODO: implement callbacks
+
+        # using namespace std::placeholders;
+
+        # using std::bind;
+        # using DRing::exportable_callback;
+        # using DRing::ConfigurationSignal;
+
+        # using SharedCallback = std::shared_ptr<DRing::CallbackWrapperBase>;
+        #TODO 1.
+        #ctypedef map[string, dring_cpp.SharedCallback] config_event_handlers
+
+        # auto callM = callManager_.get();
+        # auto confM = configurationManager_.get();
+
+        #cdef function[dring_cpp.CallbackWrapperBase] func;
+
+        # Configuration event handlers
+        # const std::map<std::string, SharedCallback> configEvHandlers = {
+
+        # exportable_callback<ConfigurationSignal::IncomingAccountMessage>(bind(&DBusConfigurationManager::incomingAccountMessage, confM, _1, _2, _3 )),
+
+        if (not dring_cpp.init(bitflags)):
             raise RuntimeError
 
-        # register callbacks
-        #cdef function[dring.CallbackWrapperBase] func;
-        #ctypedef const map[string, SharedCallback] config_event_handlers
+        # registerConfHandlers(configEvHandlers);
         #self.configuration_manager.registerConfHandlers(func)
 
     def start(self):
-        if (not dring.start()):
+        if (not dring_cpp.start()):
             raise RuntimeError
 
     def stop(self):
-        dring.fini()
+        dring_cpp.fini()
 
     def poll_events(self):
-        dring.pollEvents()
+        dring_cpp.pollEvents()
 
     def version(self):
-        return dring.version().decode()
+        return dring_cpp.version().decode()
 
