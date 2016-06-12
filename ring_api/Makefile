@@ -12,5 +12,6 @@ all:
 	python setup.py build_ext --inplace
 
 clean:
-	rm -rf *$(LIB_EXT) *.out build/
+	python setup.py clean
+	rm -rf *$(LIB_EXT) *.out
 

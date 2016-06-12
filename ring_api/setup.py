@@ -6,11 +6,14 @@ from Cython.Distutils import build_ext
 setup(name='dring',
       ext_modules = cythonize(Extension(
           'dring',
-          ['wrappers/dring.pyx'],
+          sources=['wrappers/dring.pyx',
+              'cpp/callback_client.cpp',
+              'cpp/callback_configurationmanager.cpp'],
           language='c++',
           extra_compile_args=['-std=c++11'],
           extra_link_args=['-std=c++11'],
-          include_dirs = ['/usr/include/dring'],
+          include_dirs = ['/usr/include/dring',
+              'extra/hpp/', 'cpp/'],
           libraries=['ring'],
       )),
       cmdclass = {'build_ext' : build_ext}

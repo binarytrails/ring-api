@@ -9,11 +9,15 @@ from libcpp.map cimport map as map
 from ring_api.utils.std cimport *
 from ring_api.interfaces cimport dring as dring_cpp
 from ring_api.interfaces cimport configuration_manager as confman_cpp
+from ring_api.interfaces cimport callback_client as cbcli_cpp
+
+cdef class CallbackClient:
+    cdef shared_ptr[cbcli_cpp.CallbackClient] _client
+
+    def register_events(self):
+        self._client.get().registerEvents()
 
 cdef class ConfigurationManager:
-
-    def __cinit__(self):
-        pass
 
     def accounts(self):
         """List user accounts (not ring ids)
@@ -83,33 +87,12 @@ cdef class Dring:
             raise RuntimeError
 
     def init_library(self, bitflags=0):
-        # TODO: implement callbacks
-
-        # using namespace std::placeholders;
-
-        # using std::bind;
-        # using DRing::exportable_callback;
-        # using DRing::ConfigurationSignal;
-
-        # using SharedCallback = std::shared_ptr<DRing::CallbackWrapperBase>;
-        #TODO 1.
-        #ctypedef map[string, dring_cpp.SharedCallback] config_event_handlers
-
-        # auto callM = callManager_.get();
-        # auto confM = configurationManager_.get();
-
-        #cdef function[dring_cpp.CallbackWrapperBase] func;
-
-        # Configuration event handlers
-        # const std::map<std::string, SharedCallback> configEvHandlers = {
-
-        # exportable_callback<ConfigurationSignal::IncomingAccountMessage>(bind(&DBusConfigurationManager::incomingAccountMessage, confM, _1, _2, _3 )),
 
         if (not dring_cpp.init(bitflags)):
             raise RuntimeError
 
-        # registerConfHandlers(configEvHandlers);
-        #self.configuration_manager.registerConfHandlers(func)
+        callback_client = CallbackClient()
+        callback_client.register_events()
 
     def start(self):
         if (not dring_cpp.start()):
