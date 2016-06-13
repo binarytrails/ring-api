@@ -12,10 +12,16 @@ from ring_api.interfaces cimport configuration_manager as confman_cpp
 from ring_api.interfaces cimport callback_client as cbcli_cpp
 
 cdef class CallbackClient:
-    cdef shared_ptr[cbcli_cpp.CallbackClient] _client
+    cdef cbcli_cpp.CallbackClient *_thisptr
+
+    def __cinit__(self):
+        self._thisptr = new cbcli_cpp.CallbackClient()
+
+    def __dealloc__(self):
+        del self._thisptr
 
     def register_events(self):
-        self._client.get().registerEvents()
+        self._thisptr.registerEvents()
 
 cdef class ConfigurationManager:
 
