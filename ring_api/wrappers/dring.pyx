@@ -81,7 +81,7 @@ cdef class Dring:
         readonly int _FLAG_CONSOLE_LOG
         readonly int _FLAG_AUTOANSWER
 
-    cdef ConfigurationManager config
+    cdef public ConfigurationManager config
 
     def __cinit__(self):
         self._FLAG_DEBUG          = dring_cpp.DRING_FLAG_DEBUG
