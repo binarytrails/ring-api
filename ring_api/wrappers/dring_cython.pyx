@@ -15,7 +15,7 @@ global python_callbacks # TODO
 
 cdef public void incoming_account_message(const string& account_id,
         const string& from_ring_id, const map[string, string]& payloads):
-    print('-------------------incoming_account_message in cython------------------------')
+    print('-------incoming_account_message in cython-------------------')
 
 cdef class Callbacks:
     cdef callbacks_cpp.Callbacks *_thisptr
@@ -27,7 +27,7 @@ cdef class Callbacks:
         del self._thisptr
 
     def register_events(self):
-        """@TODO"""
+        """Registers cython callback events"""
 
         self._thisptr.registerEvents()
 
@@ -90,8 +90,7 @@ cdef class Dring:
         readonly int _FLAG_AUTOANSWER
 
     cdef public ConfigurationManager config
-    # TODO keep public?
-    cdef public Callbacks callbacks
+    cdef Callbacks callbacks
 
     def __cinit__(self):
         self._FLAG_DEBUG          = dring_cpp.DRING_FLAG_DEBUG

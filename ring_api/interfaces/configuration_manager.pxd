@@ -10,9 +10,6 @@ from ring_api.interfaces.dring cimport *
 
 cdef extern from "configurationmanager_interface.h" namespace "DRing":
 
-    void registerConfHandlers(const map[
-        string, shared_ptr[CallbackWrapperBase]] &)
-
     # account id != ring id
     vector[string] getAccountList()
     map[string, string] getAccountDetails(const string& accountID);
@@ -21,14 +18,3 @@ cdef extern from "configurationmanager_interface.h" namespace "DRing":
     uint64_t sendAccountTextMessage(const string& accountID, const string& to,
             const map[string, string]& payloads);
 
-    # TODO not sure if needed
-    # function pointers
-    ctypedef void (*IncomingAccountMessage) (const string&, const string&,
-            const map[string, string]&)
-
-    #cdef struct ConfigrationSignal:
-    cdef struct IncomingAccountMessage:
-        const char* name # = "IncomingAccountMessage"
-        # (account_id, from, payloads: map[<mime-type>, <message>]
-        IncomingAccountMessage cb_type
-    # --

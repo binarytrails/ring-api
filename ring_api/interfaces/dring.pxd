@@ -18,14 +18,3 @@ cdef extern from "dring.h" namespace "DRing":
     void fini()
     void pollEvents()
 
-    # TODO not used
-    cdef cppclass CallbackWrapperBase:
-        CallbackWrapperBase() except +
-
-    cdef cppclass CallbackWrapper[T](CallbackWrapperBase):
-        CallbackWrapper() except +
-        CallbackWrapper(function[T]&& func)
-        CallbackWrapper(shared_ptr[T] p)
-
-        const T& operator*()
-    # --
