@@ -21,13 +21,14 @@ cdef extern from "configurationmanager_interface.h" namespace "DRing":
     uint64_t sendAccountTextMessage(const string& accountID, const string& to,
             const map[string, string]& payloads);
 
+    # TODO not sure if needed
+    # function pointers
+    ctypedef void (*IncomingAccountMessage) (const string&, const string&,
+            const map[string, string]&)
 
-    ctypedef (const string&, const string&,
-            const map[string, string]&) CbTypeIncomingAccountMessage
-
-    cdef cppclass ConfigrationSignal:
-        cppclass IncomingAccountMessage:
-            const char* name # = "IncomingAccountMessage"
-            # (account_id, from, payloads: map[<mime-type>, <message>]
-            CbTypeIncomingAccountMessage cb_type
-
+    #cdef struct ConfigrationSignal:
+    cdef struct IncomingAccountMessage:
+        const char* name # = "IncomingAccountMessage"
+        # (account_id, from, payloads: map[<mime-type>, <message>]
+        IncomingAccountMessage cb_type
+    # --

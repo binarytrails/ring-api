@@ -4,7 +4,7 @@ from bottle import Bottle
 import threading, time
 from queue import Queue
 
-from ring_api.dring import Dring
+from ring_api.dring_cython import Dring
 from ring_api.restfulserver.server import BottleServer
 
 def options():

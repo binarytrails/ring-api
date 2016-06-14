@@ -6,9 +6,6 @@ from ring_api.utils.std cimport *
 
 cdef extern from "dring.h" namespace "DRing":
 
-    #ctypedef pair[string, shared_ptr[CallbackWrapperBase]] ExportableCallbackType
-    #ctypedef shared_ptr[CallbackWrapperBase] SharedCallbackType
-
     cdef enum InitFlag:
         DRING_FLAG_DEBUG       = 1<<0
         DRING_FLAG_CONSOLE_LOG = 1<<1
@@ -21,6 +18,7 @@ cdef extern from "dring.h" namespace "DRing":
     void fini()
     void pollEvents()
 
+    # TODO not used
     cdef cppclass CallbackWrapperBase:
         CallbackWrapperBase() except +
 
@@ -30,9 +28,4 @@ cdef extern from "dring.h" namespace "DRing":
         CallbackWrapper(shared_ptr[T] p)
 
         const T& operator*()
-        #const T operator boolean()
-
-    # TODO reference in type type
-    #pair[string, shared_ptr[CallbackWrapperBase]] exportable_callback(
-    #        function[T.cb_type] func)
-
+    # --
