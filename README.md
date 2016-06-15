@@ -69,10 +69,10 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
 
 2. Python RESTful server
 
-        pip --user install bottle
+        pip install --user bottle
 
         # or use the freezed version
-        pip --user install -r requierements.txt
+        pip install --user -r requirements.txt
 
 3. Cython shared library
 
