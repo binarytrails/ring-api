@@ -1,12 +1,12 @@
-#include "callbacks.h"
+#include "cb_client.h"
 
-Callbacks::Callbacks(){}
+CallbacksClient::CallbacksClient(){}
 
-Callbacks::~Callbacks(){}
+CallbacksClient::~CallbacksClient(){}
 
-void Callbacks::registerEvents()
+void CallbacksClient::registerEvents()
 {
-    /* Must be executed after Dring::init() method.
+    /* Must be executed after DRing::init() and before DRing:start() methods.
      * Binding after Cython methods from the generated C header.
      */
     

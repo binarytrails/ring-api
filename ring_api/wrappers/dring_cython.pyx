@@ -9,7 +9,7 @@ from libcpp.map cimport map as map
 from ring_api.utils.std cimport *
 from ring_api.interfaces cimport dring as dring_cpp
 from ring_api.interfaces cimport configuration_manager as confman_cpp
-from ring_api.interfaces cimport callbacks as callbacks_cpp
+from ring_api.interfaces cimport cb_client as cb_client_cpp
 
 global python_callbacks
 python_callbacks = dict.fromkeys(['text_message'])
@@ -30,13 +30,14 @@ cdef public void incoming_account_message(
 
     global python_callbacks
     callback = python_callbacks['text_message']
-    callback(str(account_id), str(from_ring_id), content)
+    if (callback):
+        callback(str(account_id), str(from_ring_id), content)
 
-cdef class Callbacks:
-    cdef callbacks_cpp.Callbacks *_thisptr
+cdef class CallbacksClient:
+    cdef cb_client_cpp.CallbacksClient *_thisptr
 
     def __cinit__(self):
-        self._thisptr = new callbacks_cpp.Callbacks()
+        self._thisptr = new cb_client_cpp.CallbacksClient()
 
     def __dealloc__(self):
         del self._thisptr
@@ -105,7 +106,7 @@ cdef class Dring:
         readonly int _FLAG_AUTOANSWER
 
     cdef public ConfigurationManager config
-    cdef Callbacks callbacks
+    cdef CallbacksClient cb_client
 
     def __cinit__(self):
         self._FLAG_DEBUG          = dring_cpp.DRING_FLAG_DEBUG
@@ -121,8 +122,8 @@ cdef class Dring:
         if (not dring_cpp.init(bitflags)):
             raise RuntimeError
 
-        self.callbacks = Callbacks()
-        self.callbacks.register_events()
+        self.cb_client = CallbacksClient()
+        self.cb_client.register_events()
 
     def start(self):
         if (not dring_cpp.start()):

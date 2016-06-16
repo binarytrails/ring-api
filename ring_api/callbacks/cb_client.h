@@ -1,5 +1,5 @@
-#ifndef CALLBACKS_H
-#define CALLBACKS_H
+#ifndef CB_CLIENT_H
+#define CB_CLIENT_H
 
 #include <functional>
 
@@ -11,10 +11,10 @@
 #include <Python.h>
 #include "dring_cython.h" // has generated C callbacks
 
-class Callbacks {
+class CallbacksClient {
     public:
-        Callbacks();
-        ~Callbacks();
+        CallbacksClient();
+        ~CallbacksClient();
 
         void registerEvents();
 };
