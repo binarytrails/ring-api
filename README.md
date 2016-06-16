@@ -13,7 +13,7 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
 * ~~Implement the Python package architecture~~
 * ~~Add threading~~
 * ~~Register callbacks~~
-* Write python callbacks example functions with docstring
+* ~~Define python callbacks API~~
 * Segment wrappers into multiple files
 * Select a multi-threaded RESTful server [See: Wiki](https://github.com/sevaivanov/ring-api/wiki/Questions#restful-http-server)
 * Define RESTful API standards [See: Wiki](https://github.com/sevaivanov/ring-api/wiki/Architecture#layout)
@@ -121,29 +121,46 @@ It was tested using IPython.
 
     from ring_api import client
 
+    # Options
     (options, args) = client.options()
     options.verbose = True
     options.interpreter = True
 
+    # initialize the client
     ring = client.Client(options)
 
+    # Callbacks
     cbs = ring.dring.callbacks_to_register()
-    def on_text(*args): print(args)
+
+    # i.e. get callback documentation
+    from ring_api.callbacks import cb_api
+    help(cb_api.text_message)
+
+    # i.e. define a simple callback
+    def on_text(account_id, from_ring_id, content):
+        print(account_id, from_ring_id, content)
+
+    # i.e. register this callback
     cbs['text_message'] = on_text
     ring.dring.register_callbacks(cbs)
 
     ring.start()
 
+    # i.e. interogate the daemon
     account = ring.dring.config.accounts()[0]
     details = ring.dring.config.account_details(account)
 
+    # i.e. send a text message
     ring.dring.config.send_text_message(
         account, '<to_ring_id>', {'text/plain': 'hello'})
 
+    # Extra
+
     # show accessible content
     dir(client)
+    dir(cb_api)
 
-    # show docstring of the method
+    # show documentation of some method
     help(ring.dring.config.account_details)
 
 ## Contributing
@@ -161,4 +178,5 @@ The code is licensed under a GNU General Public License [GPLv3](http://www.gnu.o
 ## Authors
 
 Seva Ivanov mail@sevaivanov.com
+Simon Zeni  simon.zeni@savoirfairelinux.com
 
