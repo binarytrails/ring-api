@@ -13,16 +13,15 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
 * ~~Implement the Python package architecture~~
 * ~~Add threading~~
 * ~~Register callbacks~~
-* Define a multi-threaded RESTful server supporting OOP (in class views)
-
-    > The easiest way to increase performance is to install a multi-threaded server library like paste or cherrypy and tell Bottle to use that instead of the single-threaded default server -- [bottlepy.org](http://bottlepy.org/docs/dev/deployment.html)
-
-    See restfulserver/cherrypy draft:
-
-        1. You can host a foreign WSGI application with the CherryPy server
-        2. A CherryPy application can be hosted by another WSGI server
-
+* Write python callbacks example functions with docstring
+* Segment wrappers into multiple files
+* Select a multi-threaded RESTful server [See: Wiki](https://github.com/sevaivanov/ring-api/wiki/Questions#restful-http-server)
+* Define RESTful API standards [See: Wiki](https://github.com/sevaivanov/ring-api/wiki/Architecture#layout)
+* Write how call client from Ring-daemon with *--without-dbus* option
 * Rewrite interfaces definitions from */usr/include/dring/*:
+
+    Keep in mind that not everything needs to be rewritten. It depends on the usage.
+
     * In Progress
 
             configurationmanager_interface.h    ->    configuration_manager.pxd
@@ -38,9 +37,9 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
             security_const.h
             videomanager_interface.h
 
-* Add unit tests
-* Write how call client from Ring-daemon with *--without-dbus* option
 * ~~Write a Wiki~~
+* Add unit tests
+* Add integration tests
 
 ## Getting started
 
