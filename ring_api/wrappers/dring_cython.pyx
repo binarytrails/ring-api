@@ -11,11 +11,26 @@ from ring_api.interfaces cimport dring as dring_cpp
 from ring_api.interfaces cimport configuration_manager as confman_cpp
 from ring_api.interfaces cimport callbacks as callbacks_cpp
 
-global python_callbacks # TODO
+global python_callbacks
+python_callbacks = dict.fromkeys(['text_message'])
 
-cdef public void incoming_account_message(const string& account_id,
-        const string& from_ring_id, const map[string, string]& payloads):
-    print('-------incoming_account_message in cython-------------------')
+cdef public void incoming_account_message(
+        const string& raw_account_id,
+        const string& raw_from_ring_id,
+        const map[string, string]& raw_content):
+
+    account_id = bytes(raw_account_id).decode()
+    from_ring_id = bytes(raw_from_ring_id).decode()
+
+    content = dict()
+    raw_content_dict = dict(raw_content)
+    for raw_key in raw_content_dict:
+        key = raw_key.decode()
+        content[key] = raw_content_dict[raw_key].decode()
+
+    global python_callbacks
+    callback = python_callbacks['text_message']
+    callback(str(account_id), str(from_ring_id), content)
 
 cdef class Callbacks:
     cdef callbacks_cpp.Callbacks *_thisptr
@@ -121,4 +136,25 @@ cdef class Dring:
 
     def version(self):
         return dring_cpp.version().decode()
+
+    def callbacks_to_register(self):
+        """Returns the python callbacks that will be triggered dring signals.
+        The signals are the dict keys.
+        """
+        global python_callbacks
+        return python_callbacks
+
+    def register_callbacks(self, callbacks):
+        """Registers the python callbacks received as dict values.
+        The corresponding signals are defined as keys.
+        Expects the dict with keys defined by the callbacks() method.
+
+        No return
+        """
+        global python_callbacks
+        try:
+            for key, value in python_callbacks.items():
+                python_callbacks[key] = callbacks[key]
+        except KeyError as e:
+            raise KeyError("KeyError: %s. You can't change the keys." % e)
 

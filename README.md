@@ -12,7 +12,7 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
 * ~~Implement encoding / decoding protocols~~
 * ~~Implement the Python package architecture~~
 * ~~Add threading~~
-* Register callbacks
+* ~~Register callbacks~~
 * Define a multi-threaded RESTful server supporting OOP (in class views)
 
     > The easiest way to increase performance is to install a multi-threaded server library like paste or cherrypy and tell Bottle to use that instead of the single-threaded default server -- [bottlepy.org](http://bottlepy.org/docs/dev/deployment.html)
@@ -39,7 +39,7 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
             videomanager_interface.h
 
 * Add unit tests
-* Write how call client from Ring-daemon with -*-without-dbus* option
+* Write how call client from Ring-daemon with *--without-dbus* option
 * ~~Write a Wiki~~
 
 ## Getting started
@@ -127,6 +127,12 @@ It was tested using IPython.
     options.interpreter = True
 
     ring = client.Client(options)
+
+    cbs = ring.dring.callbacks_to_register()
+    def on_text(*args): print(args)
+    cbs['text_message'] = on_text
+    ring.dring.register_callbacks(cbs)
+
     ring.start()
 
     account = ring.dring.config.accounts()[0]
