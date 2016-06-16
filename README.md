@@ -22,10 +22,13 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
 
     Keep in mind that not everything needs to be rewritten. It depends on the usage.
 
+    * Done
+
+            dring.h                             ->    dring.pxd
+
     * In Progress
 
             configurationmanager_interface.h    ->    configuration_manager.pxd
-            dring.h                             ->    dring.pxd
 
     * To do
 

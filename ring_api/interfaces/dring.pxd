@@ -18,3 +18,7 @@ cdef extern from "dring.h" namespace "DRing":
     void fini()
     void pollEvents()
 
+    # CallbackWrapper class and exportable_callback method are not needed.
+    # The register of cython callbacks happens directly in C++ in the
+    # CallbacksClient class of callbacks/cb_client.cpp
+
