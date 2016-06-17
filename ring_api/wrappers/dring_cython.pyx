@@ -79,25 +79,25 @@ cdef class ConfigurationManager:
 
         return details
 
-    def send_text_message(self, account_id, ring_id, content_map):
+    def send_text_message(self, account_id, ring_id, content):
         """Sends a text message
 
         Keyword arguments:
         account_id  -- account id string
         ring_id     -- ring id destination string
-        content_map -- map of content defined as [<mime-type>, <message>]
+        content     -- dict of content defined as {<mime-type>: <message>}
 
         No return
         """
         cdef string raw_account_id = account_id.encode()
         cdef string raw_ring_id = ring_id.encode()
-        cdef map[string, string] raw_content_map
+        cdef map[string, string] raw_content
 
-        for key, value in content_map.iteritems():
-            raw_content_map[key.encode()] = value.encode()
+        for key, value in content.iteritems():
+            raw_content[key.encode()] = value.encode()
 
         confman_cpp.sendAccountTextMessage(
-                raw_account_id, raw_ring_id, raw_content_map)
+                raw_account_id, raw_ring_id, raw_content)
 
 cdef class Dring:
     cdef:
