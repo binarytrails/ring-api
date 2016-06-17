@@ -181,6 +181,7 @@ The code is licensed under a GNU General Public License [GPLv3](http://www.gnu.o
 
 ## Authors
 
-Seva Ivanov mail@sevaivanov.com
+Seva Ivanov seva.ivanov@savoirfairelinux.com
+
 Simon Zeni  simon.zeni@savoirfairelinux.com
 
