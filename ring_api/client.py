@@ -25,7 +25,7 @@ import threading, time
 from queue import Queue
 
 from ring_api.dring_cython import Dring
-from ring_api.restfulserver.server import BottleServer
+from ring_api.restfulserver.bottle.server import BottleServer
 
 def options():
     usage = 'usage: %prog [options] arg1 arg2'
