@@ -3,6 +3,7 @@
 # Copyright (C) 2016 Savoir-faire Linux Inc
 #
 # Author: Seva Ivanov <seva.ivanov@savoirfairelinux.com>
+# Author: Simon Zeni <simon.zeni@savoirfairelinux.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +29,7 @@ from libcpp.map cimport map as map
 from ring_api.utils.std cimport *
 from ring_api.interfaces cimport dring as dring_cpp
 from ring_api.interfaces cimport configuration_manager as confman_cpp
+from ring_api.interfaces cimport video_manager as videoman_cpp
 from ring_api.interfaces cimport cb_client as cb_client_cpp
 
 global python_callbacks
@@ -118,6 +120,20 @@ cdef class ConfigurationManager:
         confman_cpp.sendAccountTextMessage(
                 raw_account_id, raw_ring_id, raw_content)
 
+cdef class VideoManager:
+    def devices(self):
+        """List the available video devices
+
+        Return: devices list
+        """
+        devices = list()
+        raw_devices = videoman_cpp.getDeviceList()
+
+        for device in raw_devices:
+            devices.append(device.decode())
+
+        return devices
+
 cdef class Dring:
     cdef:
         readonly int _FLAG_DEBUG
@@ -125,6 +141,7 @@ cdef class Dring:
         readonly int _FLAG_AUTOANSWER
 
     cdef public ConfigurationManager config
+    cdef public VideoManager video
     cdef CallbacksClient cb_client
 
     def __cinit__(self):
@@ -134,6 +151,10 @@ cdef class Dring:
 
         self.config = ConfigurationManager()
         if (not self.config):
+            raise RuntimeError
+
+        self.video = VideoManager()
+        if (not self.video):
             raise RuntimeError
 
     def init_library(self, bitflags=0):
