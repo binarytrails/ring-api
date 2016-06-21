@@ -17,7 +17,7 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
 * Segment wrappers into multiple files
 * Decide whether to use REST + Sockets or only Sockets (and which ones)
 * Freezed: Select a multi-threaded RESTful server [See: Wiki](https://github.com/sevaivanov/ring-api/wiki/Questions#restful-http-server)
-* Freezed: Define RESTful API standards [See: Wiki](https://github.com/sevaivanov/ring-api/wiki/Architecture#layout)
+* ~~Define RESTful API standards~~
 * Write how call client from Ring-daemon with *--without-dbus* option
 * Rewrite interfaces definitions from */usr/include/dring/*:
 
