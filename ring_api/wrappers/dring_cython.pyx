@@ -30,6 +30,8 @@ from ring_api.utils.std cimport *
 from ring_api.interfaces cimport dring as dring_cpp
 from ring_api.interfaces cimport configuration_manager as confman_cpp
 from ring_api.interfaces cimport video_manager as videoman_cpp
+from ring_api.interfaces cimport call_manager as callman_cpp
+from ring_api.interfaces cimport presence_manager as presman_cpp
 from ring_api.interfaces cimport cb_client as cb_client_cpp
 
 global python_callbacks
@@ -86,10 +88,10 @@ cdef class ConfigurationManager:
     def account_details(self, account_id):
         """Gets account details
 
-        Keyword arguments:
+        Keyword argument:
         account_id -- account id string
 
-        Return: account details dict
+        Return: account_details dict
         """
         cdef string raw_id = account_id.encode()
         details = dict()
@@ -99,6 +101,44 @@ cdef class ConfigurationManager:
             details[key.decode()] = value.decode()
 
         return details
+
+    def add_account(self, details):
+        """Add a new account to the daemon
+
+        Keyword argument:
+        details -- account details map[string, string]
+
+        Return: account_id string
+        """
+        cdef map[string, string] raw_details
+
+        for key in details:
+            raw_details[key.encode()] = details[key].encode()
+
+        cdef string raw_account_id = confman_cpp.addAccount(raw_details)
+
+        return raw_account_id.decode()
+
+    def get_account_template(self, account_type):
+        """Generate a template in function of the type.
+        Type can be : SIP, IAX, IP2IP, RING
+
+        Keyword argument:
+        account_type -- account type string
+
+        Return: template dict
+        """
+
+        cdef string raw_account_type = account_type.encode()
+
+        raw_template = confman_cpp.getAccountTemplate(raw_account_type)
+
+        template = dict()
+
+        for key, value in raw_template.iteritems():
+            template[key.decode()] = value.decode()
+
+        return template
 
     def send_text_message(self, account_id, ring_id, content):
         """Sends a text message
@@ -134,6 +174,12 @@ cdef class VideoManager:
 
         return devices
 
+cdef class CallManager:
+    pass
+
+cdef class PresenceManager:
+    pass
+
 cdef class Dring:
     cdef:
         readonly int _FLAG_DEBUG
@@ -142,6 +188,8 @@ cdef class Dring:
 
     cdef public ConfigurationManager config
     cdef public VideoManager video
+    cdef public CallManager call
+    cdef public PresenceManager pres
     cdef CallbacksClient cb_client
 
     def __cinit__(self):
@@ -154,6 +202,14 @@ cdef class Dring:
             raise RuntimeError
 
         self.video = VideoManager()
+        if (not self.video):
+            raise RuntimeError
+
+        self.call = CallManager()
+        if (not self.video):
+            raise RuntimeError
+
+        self.pres = PresenceManager()
         if (not self.video):
             raise RuntimeError
 
