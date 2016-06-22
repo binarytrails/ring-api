@@ -1,0 +1,86 @@
+{
+    "api": {
+        "version": "0.1",
+        "description": "Ring API - REST documentation",
+        "license": "GPLv3",
+        "url": "https://github.com/sevaivanov/ring-api/",
+        "authors": {
+            "Seva Ivanov": "seva.ivanov@savoirfairelinux.com"
+        },
+        "syntax": {
+            "types" : {
+                "GET": "Get",
+                "POST": "Create",
+                "PUT": "Update",
+                "DELETE": "Delete",
+                "SOCKET": "Makes the user aware of their existence"
+            },
+            "template": {
+                "url" : {
+                    "type": "Name of function from dring <interface.h>'"
+                }
+            },
+            "comments": "Not allowed in JSON, use spaces instead",
+            "empty_lines": {
+                1: "Under same resource but more than 2 of same subresource",
+                2: "Different root resources"
+            },
+            "TODO": "Unfinished tasks"
+        }
+    },
+
+    "/users/": {
+        "GET": "getAccountList",
+        "POST": "addAccount",
+        "DELETE": "removeAccount"
+    },
+    "/users/<id>/TODO/": {
+        "POST": "setAccountEnabled",
+        "PUT": "sendRegister"
+    },
+    "/users/<id>/details/": {
+        "GET": "getAccountDetails", 
+        "PUT": "setAccountDetails"
+    },
+    "/users/<id>/details/volatile/": {
+        "GET": "getVolatileAccountDetails"
+    },
+    "/users/<id>/template/": {
+        "GET": "getAccountTemplate"
+    },
+    "/users/<id>/ciphers/": {
+        "GET": "getSupportedCiphers"
+    },
+
+    "/users/<id>/codecs/": {
+        "GET": "getCodecList"
+    },
+    "/users/<id>/codecs/active/": {
+        "GET": "getActiveCodecList",
+        "PUT": "setActiveCodecList"
+    },
+    "/users/<id>/codecs/<id>/": {
+        "GET": "getCodecDetails",
+        "PUT": "setCodecDetails"
+    },
+
+    "/users/<id>/text/": {
+        "POST": "sendAccountTextMessage",
+        "SOCKET": "IncomingAccountMessage"
+    },
+    "/users/<id>/text/<id>/": {
+        "GET": "getMessageStatus"
+    },
+
+
+    "/settings/tls/": {
+        "GET": "getTlsDefaultSettings"
+    },
+    "/settings/tls/method/": {
+        "GET": "getSupportedTlsMethod"
+    },
+
+    "/settings/audio/plugins/" : {
+        "GET": "getAudioPluginList"
+    }
+}
