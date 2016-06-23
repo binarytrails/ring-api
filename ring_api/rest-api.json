@@ -13,11 +13,11 @@
                 "POST": "Create",
                 "PUT": "Update",
                 "DELETE": "Delete",
-                "SOCKET": "Makes the user aware of their existence"
+                "WEBSOCKET": "Websocket used for daemon callbacks"
             },
             "template": {
                 "url" : {
-                    "type": "Name of function from dring <interface.h>'"
+                    "type": "Name of function from libring <interface.h>'"
                 }
             },
             "comments": "Not allowed in JSON, use spaces instead",
@@ -29,46 +29,48 @@
         }
     },
 
-    "/users/": {
+    "/accounts/": {
         "GET": "getAccountList",
         "POST": "addAccount",
         "DELETE": "removeAccount"
     },
-    "/users/<id>/TODO/": {
-        "POST": "setAccountEnabled",
+    "/accounts/<account_id>/": {
+        "PUT": "setAccountEnabled"
+    },
+    "/accounts/<account_id>/register/": {
         "PUT": "sendRegister"
     },
-    "/users/<id>/details/": {
+    "/accounts/<account_id>/details/": {
         "GET": "getAccountDetails", 
         "PUT": "setAccountDetails"
     },
-    "/users/<id>/details/volatile/": {
+    "/accounts/<account_id>/details/volatile/": {
         "GET": "getVolatileAccountDetails"
     },
-    "/users/<id>/template/": {
+    "/accounts/<account_id>/template/": {
         "GET": "getAccountTemplate"
     },
-    "/users/<id>/ciphers/": {
+    "/accounts/<account_id>/ciphers/": {
         "GET": "getSupportedCiphers"
     },
 
-    "/users/<id>/codecs/": {
+    "/accounts/<account_id>/codecs/": {
         "GET": "getCodecList"
     },
-    "/users/<id>/codecs/active/": {
+    "/accounts/<account_id>/codecs/active/": {
         "GET": "getActiveCodecList",
         "PUT": "setActiveCodecList"
     },
-    "/users/<id>/codecs/<id>/": {
+    "/accounts/<account_id>/codecs/<codec_id>/": {
         "GET": "getCodecDetails",
         "PUT": "setCodecDetails"
     },
 
-    "/users/<id>/text/": {
+    "/accounts/<account_id>/text/": {
         "POST": "sendAccountTextMessage",
-        "SOCKET": "IncomingAccountMessage"
+        "WEBSOCKET": "IncomingAccountMessage"
     },
-    "/users/<id>/text/<id>/": {
+    "/accounts/<account_id>/text/<text_id>/": {
         "GET": "getMessageStatus"
     },
 
