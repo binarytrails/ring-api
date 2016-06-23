@@ -30,8 +30,6 @@ from ring_api.utils.std cimport *
 from ring_api.interfaces cimport dring as dring_cpp
 from ring_api.interfaces cimport configuration_manager as confman_cpp
 from ring_api.interfaces cimport video_manager as videoman_cpp
-from ring_api.interfaces cimport call_manager as callman_cpp
-from ring_api.interfaces cimport presence_manager as presman_cpp
 from ring_api.interfaces cimport cb_client as cb_client_cpp
 
 global python_callbacks
