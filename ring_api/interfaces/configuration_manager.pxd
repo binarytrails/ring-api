@@ -38,3 +38,5 @@ cdef extern from "configurationmanager_interface.h" namespace "DRing":
     uint64_t sendAccountTextMessage(const string& accountID, const string& to,
             const map[string, string]& payloads);
 
+    map[string, string] getAccountTemplate(const string& accountType)
+    string addAccount(const map[string, string]& details)
