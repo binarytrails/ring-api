@@ -17,7 +17,13 @@
             },
             "template": {
                 "url" : {
-                    "type": "Name of function from libring <interface.h>'"
+                    "type1": "Function name of libring <interface.h>",
+                    "type2": {
+                        "argument": {
+                            "value1": "Function name of libring <interface.h>",
+                            "value2": "Function name of libring <interface.h>"
+                        }
+                    }
                 }
             },
             "comments": "Not allowed in JSON, use spaces instead",
@@ -29,26 +35,30 @@
         }
     },
 
-    "/accounts/": {
-        "GET": "getAccountList",
+    "/account/": {
+        "GET": "getAccountTemplate",
         "POST": "addAccount",
         "DELETE": "removeAccount"
     },
-    "/accounts/<account_id>/": {
-        "PUT": "setAccountEnabled"
+    "/accounts/": {
+        "GET": "getAccountList"
     },
-    "/accounts/<account_id>/register/": {
-        "PUT": "sendRegister"
+    "/accounts/<account_id>/": {
+        "PUT": {
+            "action": {
+                "enable": "setAccountEnabled",
+                "register": "sendRegister"
+            }
+        }
     },
     "/accounts/<account_id>/details/": {
-        "GET": "getAccountDetails", 
+        "GET": {
+            "type": {
+                "default": "getAccountDetails",
+                "volatile": "getVolatileAccountDetails"
+            }
+        },
         "PUT": "setAccountDetails"
-    },
-    "/accounts/<account_id>/details/volatile/": {
-        "GET": "getVolatileAccountDetails"
-    },
-    "/accounts/<account_id>/template/": {
-        "GET": "getAccountTemplate"
     },
     "/accounts/<account_id>/ciphers/": {
         "GET": "getSupportedCiphers"
