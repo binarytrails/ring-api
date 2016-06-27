@@ -169,26 +169,77 @@ cdef class ConfigurationManager:
                 raw_account_id, raw_ring_id, raw_content)
 
     def validate_certificate(self, account_id, certificate):
+        """A key-value list of all certificate validation
+
+        Keyword arguments:
+        account_id  -- account id string
+        certificate -- certificate string
+
+        Return: valid certificate list
+        """
         raw_valid_certif = confman_cpp.validateCertificate(account_id.encode(), certificate.encode())
 
         return raw_dict_to_dict(raw_valid_certif)
 
     def get_certificate_details(self, certificate):
+        """A key-value list of all certificate details
+
+        Keyword argument:
+        certificate -- certificate string
+
+        Return: certificate details dict
+        """
         return raw_dict_to_dict(confman_cpp.getCertificateDetails(certificate.encode()))
 
     def get_pinned_certificates(self):
+        """A list of all known certificate IDs
+
+        Return: pinned certificates list
+        """
         return raw_list_to_list(confman_cpp.getPinnedCertificates())
 
     def pin_certificate(self, certificate, local):
+        """True to save the certificate in the daemon local store
+
+        Keyword arguments:
+        certificate -- raw certificate int list
+        local       -- true to save bool
+
+        Return: IDs of the pinned certificate list
+        """
         return raw_list_to_list(confman_cpp.pinCertificate(certificate, local))
 
     def unpin_certificate(self, cert_id):
+        """Unpin a certificate
+
+        Keyword arguments:
+        cert_id     -- certificate id string
+
+        Return: True if unpinned bool
+        """
         return confman_cpp.unpinCertificate(cert_id.encode())
 
     def pin_remote_certificate(account_id, cert_id):
+        """Pin a certificate to an account
+
+        Keyword arguments:
+        account_id  -- account id string
+        cert_id     -- certificate id string
+
+        Return: success bool
+        """
         return confman_cpp.pinRemoteCertificate(account_id.encode(), cert_id.encode())
 
     def set_certificate_status(account_id, cert_id, status):
+        """Set a status if an account certificate
+
+        Keyword arguments:
+        account_id  -- account id string
+        cert_id     -- certificate id string
+        status      -- 'UNDEFINED', 'ALLOWED' or 'BANNED' string
+
+        Return: True if the state is set bool
+        """
         return confman_cpp.setCertificateStatus(account_id.encode(),
             cert_id.encode(),
             status.encode())
@@ -199,13 +250,7 @@ cdef class VideoManager:
 
         Return: devices list
         """
-        devices = list()
-        raw_devices = videoman_cpp.getDeviceList()
-
-        for device in raw_devices:
-            devices.append(device.decode())
-
-        return devices
+        return raw_list_to_list(videoman_cpp.getDeviceList())
 
 cdef class CallManager:
 
