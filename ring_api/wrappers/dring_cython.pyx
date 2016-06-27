@@ -168,6 +168,31 @@ cdef class ConfigurationManager:
         confman_cpp.sendAccountTextMessage(
                 raw_account_id, raw_ring_id, raw_content)
 
+    def validate_certificate(self, account_id, certificate):
+        raw_valid_certif = confman_cpp.validateCertificate(account_id.encode(), certificate.encode())
+
+        return raw_dict_to_dict(raw_valid_certif)
+
+    def get_certificate_details(self, certificate):
+        return raw_dict_to_dict(confman_cpp.getCertificateDetails(certificate.encode()))
+
+    def get_pinned_certificates(self):
+        return raw_list_to_list(confman_cpp.getPinnedCertificates())
+
+    def pin_certificate(self, certificate, local):
+        return raw_list_to_list(confman_cpp.pinCertificate(certificate, local))
+
+    def unpin_certificate(self, cert_id):
+        return confman_cpp.unpinCertificate(cert_id.encode())
+
+    def pin_remote_certificate(account_id, cert_id):
+        return confman_cpp.pinRemoteCertificate(account_id.encode(), cert_id.encode())
+
+    def set_certificate_status(account_id, cert_id, status):
+        return confman_cpp.setCertificateStatus(account_id.encode(),
+            cert_id.encode(),
+            status.encode())
+
 cdef class VideoManager:
     def devices(self):
         """List the available video devices
