@@ -12,11 +12,10 @@
                 "GET": "Get",
                 "POST": "Create",
                 "PUT": "Update",
-                "DELETE": "Delete",
-                "WEBSOCKET": "Websocket used for daemon callbacks"
+                "DELETE": "Delete"
             },
             "template": {
-                "url" : {
+                "/resource/" : {
                     "type1": "Function name of libring <interface.h>",
                     "type2": {
                         "argument": {
@@ -77,13 +76,11 @@
     },
 
     "/accounts/<account_id>/text/": {
-        "POST": "sendAccountTextMessage",
-        "WEBSOCKET": "IncomingAccountMessage"
+        "POST": "sendAccountTextMessage"
     },
     "/accounts/<account_id>/text/<text_id>/": {
         "GET": "getMessageStatus"
     },
-
 
     "/settings/tls/": {
         "GET": "getTlsDefaultSettings"
