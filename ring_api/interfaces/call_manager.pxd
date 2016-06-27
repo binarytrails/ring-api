@@ -1,7 +1,7 @@
 #
 # Copyright (C) 2016 Savoir-faire Linux Inc
 #
-# Author: Seva Ivanov <seva.ivanov@savoirfairelinux.com>
+# Author: Simon Zeni <simon.zeni@savoirfairelinux.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,14 +28,11 @@ from libcpp.vector cimport vector
 from ring_api.utils.std cimport *
 from ring_api.interfaces.dring cimport *
 
-cdef extern from "configurationmanager_interface.h" namespace "DRing":
+cdef extern from "callmanager_interface.h" namespace "DRing":
 
-    map[string, string] getAccountDetails(const string& accountID)
-    void setAccountDetails(const string& accountID, const map[string, string]& details)
-    void setAccountActive(const string& accountID, const boolean& active);
-    map[string, string] getAccountTemplate(const string& accountType)
-    string addAccount(const map[string, string]& details)
-    void removeAccount(const string& accoundID)
-    vector[string] getAccountList()
-    uint64_t sendAccountTextMessage(const string& accountID, const string& to,
-        const map[string, string]& payloads)
+    string placeCall(const string& accountID, const string& to);
+    boolean refuse(const string& callID);
+    boolean accept(const string& callID);
+    boolean hangUp(const string& callID);
+    boolean hold(const string& callID);
+    boolean unhold(const string& callID);

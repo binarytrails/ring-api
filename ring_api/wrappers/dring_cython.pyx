@@ -29,6 +29,7 @@ from libcpp.map cimport map as map
 from ring_api.utils.std cimport *
 from ring_api.interfaces cimport dring as dring_cpp
 from ring_api.interfaces cimport configuration_manager as confman_cpp
+from ring_api.interfaces cimport call_manager as callman_cpp
 from ring_api.interfaces cimport video_manager as videoman_cpp
 from ring_api.interfaces cimport cb_client as cb_client_cpp
 
@@ -70,19 +71,6 @@ cdef class CallbacksClient:
 
 cdef class ConfigurationManager:
 
-    def accounts(self):
-        """List user accounts (not ring ids)
-
-        Return: accounts list
-        """
-        accounts = list()
-        raw_accounts = confman_cpp.getAccountList()
-
-        for i, account in enumerate(raw_accounts):
-            accounts.append(account.decode())
-
-        return accounts
-
     def account_details(self, account_id):
         """Gets account details
 
@@ -100,22 +88,24 @@ cdef class ConfigurationManager:
 
         return details
 
-    def add_account(self, details):
-        """Add a new account to the daemon
-
-        Keyword argument:
-        details -- account details map[string, string]
-
-        Return: account_id string
-        """
+    def set_details(self, account_id, details):
+        cdef string raw_id = account_id.encode()
         cdef map[string, string] raw_details
 
         for key in details:
             raw_details[key.encode()] = details[key].encode()
 
-        cdef string raw_account_id = confman_cpp.addAccount(raw_details)
 
-        return raw_account_id.decode()
+        confman_cpp.setAccountDetails(raw_id, raw_details)
+
+    def set_account_active(self, account_id, active):
+        """Set if this account can be used or not
+
+        Keyword arguments:
+        account_id   -- account id string
+        active       -- status bool
+        """
+        confman_cpp.setAccountActive(account_id.encode(), active);
 
     def get_account_template(self, account_type):
         """Generate a template in function of the type.
@@ -137,6 +127,45 @@ cdef class ConfigurationManager:
             template[key.decode()] = value.decode()
 
         return template
+
+    def add_account(self, details):
+        """Add a new account to the daemon
+
+        Keyword argument:
+        details -- account details map[string, string]
+
+        Return: account_id string
+        """
+        cdef map[string, string] raw_details
+
+        for key in details:
+            raw_details[key.encode()] = details[key].encode()
+
+        cdef string raw_account_id = confman_cpp.addAccount(raw_details)
+
+        return raw_account_id.decode()
+
+    def remove_account(self, account_id):
+        """Remove an account from the daemon
+
+        Keywork argument:
+        account_id -- account id string
+        """
+        cdef string raw_id = account_id.encode()
+        confman_cpp.removeAccount(raw_id)
+
+    def accounts(self):
+        """List user accounts (not ring ids)
+
+        Return: accounts list
+        """
+        accounts = list()
+        raw_accounts = confman_cpp.getAccountList()
+
+        for i, account in enumerate(raw_accounts):
+            accounts.append(account.decode())
+
+        return accounts
 
     def send_text_message(self, account_id, ring_id, content):
         """Sends a text message
@@ -173,7 +202,71 @@ cdef class VideoManager:
         return devices
 
 cdef class CallManager:
-    pass
+
+    def place_call(self, account_id, to):
+        """Place a new call between two users
+
+        Keyword argument:
+        account_id  -- account string
+        to          -- ring_id string
+
+        Return: call_id string
+        """
+
+        raw_call_id = callman_cpp.placeCall(account_id.encode(), to.encode());
+
+        return raw_call_id.decode()
+
+    def refuse(self, call_id):
+        """Refuse an incoming call
+
+        Keyword argument:
+        call_id -- call id string
+
+        Return: status bool
+        """
+        return callman_cpp.refuse(call_id.encode());
+
+    def accept(self, call_id):
+        """Accept an incoming call
+
+        Keyword argument:
+        call_id -- call id string
+
+        Return: status bool
+        """
+        return callman_cpp.accept(call_id.encode());
+
+    def hang_up(self, call_id):
+        """Hang up a call in state 'CURRENT' or 'HOLD'
+
+        Keyword argument:
+        call_id -- call id string
+
+        Return: status bool
+        """
+        return callman_cpp.hangUp(call_id.encode());
+
+    def hold(self, call_id):
+        """Place a call in state 'HOLD'
+
+        Keyword argument:
+        call_id -- call id string
+
+        Return: status bool
+        """
+        return callman_cpp.hold(call_id.encode());
+
+    def unhold(self, call_id):
+        """Take a call off 'HOLD', and place it in state 'CURRENT'
+
+        Keyword argument:
+        call_id -- call id string
+
+        Return: status bool
+        """
+        return callman_cpp.unhold(call_id.encode());
+
 
 cdef class PresenceManager:
     pass
