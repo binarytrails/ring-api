@@ -27,6 +27,8 @@ from libcpp.string cimport string
 from libcpp.map cimport map as map
 
 from ring_api.utils.std cimport *
+from ring_api.utils.cython import *
+
 from ring_api.interfaces cimport dring as dring_cpp
 from ring_api.interfaces cimport configuration_manager as confman_cpp
 from ring_api.interfaces cimport call_manager as callman_cpp
@@ -80,13 +82,8 @@ cdef class ConfigurationManager:
         Return: account_details dict
         """
         cdef string raw_id = account_id.encode()
-        details = dict()
-        raw_dict = confman_cpp.getAccountDetails(raw_id)
 
-        for key, value in raw_dict.iteritems():
-            details[key.decode()] = value.decode()
-
-        return details
+        return raw_dict_to_dict(confman_cpp.getAccountDetails(raw_id))
 
     def set_details(self, account_id, details):
         cdef string raw_id = account_id.encode()
@@ -94,7 +91,6 @@ cdef class ConfigurationManager:
 
         for key in details:
             raw_details[key.encode()] = details[key].encode()
-
 
         confman_cpp.setAccountDetails(raw_id, raw_details)
 
@@ -105,7 +101,7 @@ cdef class ConfigurationManager:
         account_id   -- account id string
         active       -- status bool
         """
-        confman_cpp.setAccountActive(account_id.encode(), active);
+        confman_cpp.setAccountActive(account_id.encode(), active)
 
     def get_account_template(self, account_type):
         """Generate a template in function of the type.
@@ -116,17 +112,9 @@ cdef class ConfigurationManager:
 
         Return: template dict
         """
+        raw_template = confman_cpp.getAccountTemplate(account_type.encode())
 
-        cdef string raw_account_type = account_type.encode()
-
-        raw_template = confman_cpp.getAccountTemplate(raw_account_type)
-
-        template = dict()
-
-        for key, value in raw_template.iteritems():
-            template[key.decode()] = value.decode()
-
-        return template
+        return raw_dict_to_dict(raw_template)
 
     def add_account(self, details):
         """Add a new account to the daemon
@@ -151,21 +139,14 @@ cdef class ConfigurationManager:
         Keywork argument:
         account_id -- account id string
         """
-        cdef string raw_id = account_id.encode()
-        confman_cpp.removeAccount(raw_id)
+        confman_cpp.removeAccount(account_id.encode())
 
     def accounts(self):
         """List user accounts (not ring ids)
 
         Return: accounts list
         """
-        accounts = list()
-        raw_accounts = confman_cpp.getAccountList()
-
-        for i, account in enumerate(raw_accounts):
-            accounts.append(account.decode())
-
-        return accounts
+        return raw_list_to_list(confman_cpp.getAccountList())
 
     def send_text_message(self, account_id, ring_id, content):
         """Sends a text message
