@@ -30,3 +30,11 @@ from ring_api.interfaces.dring cimport *
 cdef extern from "videomanager_interface.h" namespace "DRing":
 
     vector[string] getDeviceList()
+    map[string, string] getSettings(const string& name)
+    void applySettings(const string& name, const map[string, string]& settings)
+    void setDefaultDevice(const string& dev)
+    string getDefaultDevice()
+    void startCamera()
+    void stopCamera()
+    bool switchInput(const string& resource)
+    bool hasCameraStarted()

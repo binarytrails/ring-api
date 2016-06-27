@@ -251,6 +251,48 @@ cdef class VideoManager:
         Return: devices list
         """
         return raw_list_to_list(videoman_cpp.getDeviceList())
+    
+    def get_settings(self, name):
+        """Settings of a given device
+
+        Keyword arguments:
+        name      -- device id string
+
+        Return: settings dict
+        """
+        return raw_dict_to_dict(videoman_cpp.getSettings(name.encode()))
+    
+    def apply_settings(self, name, settings):
+        """Change the settings of a given device
+
+        Keyword arguments:
+        name      -- device id string
+        settings  -- settings dict
+        """
+        cdef map[string, string] raw_settings
+
+        for key, value in settings.iteritems():
+            raw_settings[key.encode()] = value.encode()
+
+        videoman_cpp.applySettings(name.encode(), raw_settings)
+
+    def set_default_device(self, dev)
+        videoman_cpp.setDefaultDevicei(dev.encode())
+    
+    def get_default_device(self):
+        return videoman_cpp.getDefaultDevice().decode()
+
+    def start_camera(self):
+        videoman_cpp.startCamera()
+
+    def stop_camera(self):
+        videoman_cpp.stopCamera()
+    
+    def switch_input(self, resource)
+        return videoman_cpp.switchInput(resource.encode())
+
+    def has_camera_started(self):
+        return videoman_cpp.hasCameraStarted()
 
 cdef class CallManager:
 
