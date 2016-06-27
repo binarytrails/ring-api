@@ -25,7 +25,7 @@ import threading, time
 from queue import Queue
 
 from ring_api.dring_cython import Dring
-from ring_api.server.bottle.server import BottleServer
+from ring_api.server.flask.server import FlaskServer
 
 def options():
     usage = 'usage: %prog [options] arg1 arg2'
@@ -98,7 +98,7 @@ class Client:
         self.dring_thread.setDaemon(not self.options.persistent)
 
         if (self.options.rest):
-            self.restapp = BottleServer(
+            self.restapp = FlaskServer(
                     self.options.host, self.options.port, self.dring)
             self.restapp_thread = threading.Thread(target=self.restapp.start)
 
