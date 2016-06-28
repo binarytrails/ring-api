@@ -36,5 +36,5 @@ cdef extern from "videomanager_interface.h" namespace "DRing":
     string getDefaultDevice()
     void startCamera()
     void stopCamera()
-    bool switchInput(const string& resource)
-    bool hasCameraStarted()
+    boolean switchInput(const string& resource)
+    boolean hasCameraStarted()

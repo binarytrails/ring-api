@@ -281,7 +281,7 @@ cdef class VideoManager:
 
         videoman_cpp.applySettings(name.encode(), raw_settings)
 
-    def set_default_device(self, dev)
+    def set_default_device(self, dev):
         videoman_cpp.setDefaultDevicei(dev.encode())
     
     def get_default_device(self):
@@ -293,7 +293,7 @@ cdef class VideoManager:
     def stop_camera(self):
         videoman_cpp.stopCamera()
     
-    def switch_input(self, resource)
+    def switch_input(self, resource):
         return videoman_cpp.switchInput(resource.encode())
 
     def has_camera_started(self):
