@@ -38,6 +38,8 @@ from ring_api.interfaces cimport cb_client as cb_client_cpp
 global python_callbacks
 python_callbacks = dict.fromkeys(['text_message'])
 
+global python_callbacks_context
+
 cdef public void incoming_account_message(
         const string& raw_account_id,
         const string& raw_from_ring_id,
@@ -54,8 +56,11 @@ cdef public void incoming_account_message(
 
     global python_callbacks
     callback = python_callbacks['text_message']
+    global python_callbacks_context
+    context = python_callbacks_context
+
     if (callback):
-        callback(str(account_id), str(from_ring_id), content)
+        callback(context, str(account_id), str(from_ring_id), content)
 
 cdef class CallbacksClient:
     cdef cb_client_cpp.CallbacksClient *_thisptr
@@ -338,7 +343,7 @@ cdef class Dring:
         global python_callbacks
         return python_callbacks
 
-    def register_callbacks(self, callbacks):
+    def register_callbacks(self, callbacks, context):
         """Registers the python callbacks received as dict values.
         The corresponding signals are defined as keys.
         Expects the dict with keys defined by the callbacks() method.
@@ -352,3 +357,5 @@ cdef class Dring:
         except KeyError as e:
             raise KeyError("KeyError: %s. You can't change the keys." % e)
 
+        global python_callbacks_context
+        python_callbacks_context = context
