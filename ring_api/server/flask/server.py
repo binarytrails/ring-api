@@ -3,6 +3,7 @@ from flask_restful import Api
 
 from flask_socketio import SocketIO
 
+from ring_api.server.flask import socketio_cb_api as cb_api
 from ring_api.server.flask.api import account
 
 class FlaskServer:
@@ -34,7 +35,7 @@ class FlaskServer:
         callbacks = self.dring.callbacks_to_register()
 
         # TODO add dynamically from implemented function names
-        callbacks['text_message'] = account.text_message
+        callbacks['text_message'] = cb_api.text_message
 
         self.dring.register_callbacks(callbacks, context=self.socketio)
 
