@@ -281,8 +281,8 @@ cdef class VideoManager:
 
         videoman_cpp.applySettings(name.encode(), raw_settings)
 
-    def set_default_device(self, dev):
-        videoman_cpp.setDefaultDevicei(dev.encode())
+    def set_default_device(self, dev):  
+        videoman_cpp.setDefaultDevice(dev.encode())
     
     def get_default_device(self):
         return videoman_cpp.getDefaultDevice().decode()

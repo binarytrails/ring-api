@@ -9,7 +9,7 @@ def raw_list_to_list(raw_list):
 def raw_dict_to_dict(raw_dict):
     new_dict = dict()
 
-    for key, value in raw_dict.iteritems():
+    for key, value in raw_dict.items():
         new_dict[key.decode()] = value.decode()
 
     return new_dict
