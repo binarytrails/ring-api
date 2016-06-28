@@ -3,7 +3,6 @@ from flask_restful import Api
 
 from flask_socketio import SocketIO
 
-from ring_api.server.cb_api import *
 from ring_api.server.flask.api import account
 
 class FlaskServer:

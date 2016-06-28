@@ -2,6 +2,8 @@
 
 The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-api/wiki).
 
+**Warning:** there have been major changes in the architecture. After the commit [48f1fae](https://github.com/sevaivanov/ring-api/commit/48f1fae79f8b73513a0cf085abfe699e080b8c03) the project may be broken.
+
 ## Roadmap
 
 * ~~Initialize Ring~~
@@ -15,8 +17,8 @@ The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-ap
 * ~~Register callbacks~~
 * ~~Define python callbacks API~~
 * Segment wrappers into multiple files
-* Decide whether to use REST + Sockets or only Sockets (and which ones)
-* Freezed: Select a multi-threaded RESTful server [See: Wiki](https://github.com/sevaivanov/ring-api/wiki/Questions#restful-http-server)
+* ~~Decide whether to use REST + Sockets or only Sockets (and which ones)~~
+* ~~Select a multi-threaded RESTful server [See: Wiki](https://github.com/sevaivanov/ring-api/wiki/Questions#restful-http-server)~~
 * ~~Define RESTful API standards~~
 * Write how call client from Ring-daemon with *--without-dbus* option
 * Rewrite interfaces definitions from */usr/include/dring/*:
