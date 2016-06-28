@@ -1,7 +1,9 @@
 from flask import Flask
 from flask_restful import Api
+
 from flask_socketio import SocketIO
 
+from ring_api.server.cb_api import *
 from ring_api.server.flask.api import account
 
 class FlaskServer:
@@ -19,18 +21,23 @@ class FlaskServer:
         self.socketio = SocketIO(self.app)
 
         self._add_resources()
+        self._register_callbacks()
 
     def _add_resources(self):
         self.api.add_resource(account.Accounts, '/accounts/',
-            resource_class_kwargs={
-                'dring': self.dring,
-                'socketio': self.socketio})
+            resource_class_kwargs={'dring': self.dring})
         
         self.api.add_resource(account.AccountsDetails,
             '/accounts/<account_id>/details/',
-            resource_class_kwargs={
-                'dring': self.dring,
-                'socketio': self.socketio})
+            resource_class_kwargs={'dring': self.dring})
+
+    def _register_callbacks(self):
+        callbacks = self.dring.callbacks_to_register()
+
+        # TODO add dynamically from implemented function names
+        callbacks['text_message'] = account.text_message
+
+        self.dring.register_callbacks(callbacks, context=self.socketio)
 
     def start(self):
         self.socketio.run(self.app, host=self.host, port=self.port)
