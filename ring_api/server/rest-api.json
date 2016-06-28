@@ -5,7 +5,8 @@
         "license": "GPLv3",
         "url": "https://github.com/sevaivanov/ring-api/",
         "authors": {
-            "Seva Ivanov": "seva.ivanov@savoirfairelinux.com"
+            "Seva Ivanov": "seva.ivanov@savoirfairelinux.com",
+            "Simon Zeni": "simon.zeni@savoirfairelinux.com"
         },
         "syntax": {
             "types" : {
@@ -91,5 +92,35 @@
 
     "/settings/audio/plugins/" : {
         "GET": "getAudioPluginList"
+    },
+
+    "/video/devices/" : {
+        "GET": "getDeviceList"
+    },
+
+    "/video/settings/<device_name>/" : {
+        "GET": "getSettings",
+        "PUT": "applySettings"
+    },
+
+    "/video/devices/default/" : {
+        "GET": "getDefaultDevice",
+        "PUT": "setDefaultDevice"
+    },
+
+    "/video/camera/start/" : {
+        "GET": "startCamera"
+    },
+
+    "/video/camera/stop/" : {
+        "GET": "stopCamera"
+    },
+
+    "/video/camera/switch/" : {
+        "PUT": "switchInput"
+    },
+
+    "/video/camera/status/" : {
+        "GET": "hasCameraStarted"
     }
 }
