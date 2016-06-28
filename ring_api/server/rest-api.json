@@ -94,33 +94,58 @@
         "GET": "getAudioPluginList"
     },
 
-    "/video/devices/" : {
+    "/settings/video/devices/" : {
         "GET": "getDeviceList"
     },
 
-    "/video/settings/<device_name>/" : {
+    "/settings/video/settings/<device_name>/" : {
         "GET": "getSettings",
         "PUT": "applySettings"
     },
 
-    "/video/devices/default/" : {
+    "/settings/video/devices/default/" : {
         "GET": "getDefaultDevice",
         "PUT": "setDefaultDevice"
     },
 
-    "/video/camera/start/" : {
+    "/settings/video/camera/start/" : {
         "GET": "startCamera"
     },
 
-    "/video/camera/stop/" : {
+    "/settings/video/camera/stop/" : {
         "GET": "stopCamera"
     },
 
-    "/video/camera/switch/" : {
+    "/settings/video/camera/switch/" : {
         "PUT": "switchInput"
     },
 
-    "/video/camera/status/" : {
+    "/settings/video/camera/status/" : {
         "GET": "hasCameraStarted"
-    }
+    },
+ 
+    "/call/place/<account_id>/to/" : {
+        "GET": "placeCall"
+	},
+
+    "/call/refuse/<call_id>" : {
+        "GET": "refuse"
+	},
+
+    "/call/accept/<call_id>" : {
+        "GET": "accept"
+	},
+
+    "/call/hang_up/<call_id>" : {
+        "GET": "hangUp"
+	},
+
+    "/call/hold/<call_id>" : {
+        "GET": "hold"
+	},
+
+    "/call/unhold/<call_id>" : {
+        "GET": "unhold"
+	}
+
 }
