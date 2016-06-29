@@ -9,14 +9,14 @@
             "Simon Zeni": "simon.zeni@savoirfairelinux.com"
         },
         "syntax": {
-            "types" : {
+            "types": {
                 "GET": "Get",
                 "POST": "Create",
                 "PUT": "Update",
                 "DELETE": "Delete"
             },
             "template": {
-                "/resource/" : {
+                "/resource/": {
                     "type1": "Function name of libring <interface.h>",
                     "type2": {
                         "argument": {
@@ -78,8 +78,12 @@
             }
         }
     },
-    "/accounts/<account_id>/call/" : {
-        "GET": "placeCall",
+    "/accounts/<account_id>/call/": {
+        "GET": {
+            "ring_id": "placeCall"
+        }
+    },
+    "/accounts/<account_id>/call/<call_id>/": {
         "POST": {
             "action": {
                 "accept": "accept",
@@ -108,11 +112,11 @@
         }
     },
 
-    "/audio/plugins/" : {
+    "/audio/plugins/": {
         "GET": "getAudioPluginList"
     },
 
-    "/video/devices/" : {
+    "/video/devices/": {
         "GET": {
             "type": {
                 "all": "getDeviceList",
@@ -126,12 +130,12 @@
         }
     },
 
-    "/video/<device_id>/settings/" : {
+    "/video/<device_id>/settings/": {
         "GET": "getSettings",
         "PUT": "applySettings"
     },
 
-    "/video/camera/" : {
+    "/video/camera/": {
         "GET": "hasCameraStarted",
         "PUT": {
             "action": {
