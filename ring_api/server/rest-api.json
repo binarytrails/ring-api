@@ -40,6 +40,7 @@
         "POST": "addAccount",
         "DELETE": "removeAccount"
     },
+
     "/accounts/": {
         "GET": "getAccountList"
     },
@@ -63,89 +64,80 @@
     "/accounts/<account_id>/ciphers/": {
         "GET": "getSupportedCiphers"
     },
-
     "/accounts/<account_id>/codecs/": {
-        "GET": "getCodecList"
+        "GET": {
+            "type": {
+                "active": "getActiveCodecList",
+                "details": "getCodecDetails"
+            }
+        },
+        "PUT": {
+            "type": {
+                "active": "setActiveCodecList",
+                "details": "setCodecDetails"
+            }
+        }
     },
-    "/accounts/<account_id>/codecs/active/": {
-        "GET": "getActiveCodecList",
-        "PUT": "setActiveCodecList"
+    "/accounts/<account_id>/call/" : {
+        "GET": "placeCall",
+        "POST": {
+            "action": {
+                "accept": "accept",
+                "refuse": "refuse",
+                "hangup": "hangUp",
+                "hold": "hold",
+                "unhold": "unhold"
+            }
+        }
     },
-    "/accounts/<account_id>/codecs/<codec_id>/": {
-        "GET": "getCodecDetails",
-        "PUT": "setCodecDetails"
-    },
-
-    "/accounts/<account_id>/text/": {
+    "/accounts/<account_id>/message/": {
+        "GET": "getMessageStatus",
         "POST": "sendAccountTextMessage"
     },
-    "/accounts/<account_id>/text/<text_id>/": {
-        "GET": "getMessageStatus"
+
+    "/codecs/": {
+        "GET": "getCodecList"
     },
 
-    "/settings/tls/": {
-        "GET": "getTlsDefaultSettings"
-    },
-    "/settings/tls/method/": {
-        "GET": "getSupportedTlsMethod"
+    "/crypto/tls/": {
+        "GET": {
+            "type": {
+                "settings": "getTlsDefaultSettings",
+                "method": "getSupportedTlsMethod"
+            }
+        }
     },
 
-    "/settings/audio/plugins/" : {
+    "/audio/plugins/" : {
         "GET": "getAudioPluginList"
     },
 
-    "/settings/video/devices/" : {
-        "GET": "getDeviceList"
+    "/video/devices/" : {
+        "GET": {
+            "type": {
+                "all": "getDeviceList",
+                "default": "getDefaultDevice"
+            }
+        },
+        "PUT": {
+            "type": {
+                "default": "setDefaultDevice"
+            }
+        }
     },
 
-    "/settings/video/settings/<device_name>/" : {
+    "/video/<device_id>/settings/" : {
         "GET": "getSettings",
         "PUT": "applySettings"
     },
 
-    "/settings/video/devices/default/" : {
-        "GET": "getDefaultDevice",
-        "PUT": "setDefaultDevice"
-    },
-
-    "/settings/video/camera/start/" : {
-        "GET": "startCamera"
-    },
-
-    "/settings/video/camera/stop/" : {
-        "GET": "stopCamera"
-    },
-
-    "/settings/video/camera/switch/" : {
-        "PUT": "switchInput"
-    },
-
-    "/settings/video/camera/status/" : {
-        "GET": "hasCameraStarted"
-    },
- 
-    "/call/place/<account_id>/to/" : {
-        "GET": "placeCall"
-	},
-
-    "/call/refuse/<call_id>" : {
-        "GET": "refuse"
-	},
-
-    "/call/accept/<call_id>" : {
-        "GET": "accept"
-	},
-
-    "/call/hang_up/<call_id>" : {
-        "GET": "hangUp"
-	},
-
-    "/call/hold/<call_id>" : {
-        "GET": "hold"
-	},
-
-    "/call/unhold/<call_id>" : {
-        "GET": "unhold"
-	}
-
+    "/video/camera/" : {
+        "GET": "hasCameraStarted",
+        "PUT": {
+            "action": {
+                "start": "startCamera",
+                "stop": "stopCamera"
+            }
+        }
+    }
 }
