@@ -35,10 +35,12 @@ from ring_api.interfaces cimport call_manager as callman_cpp
 from ring_api.interfaces cimport video_manager as videoman_cpp
 from ring_api.interfaces cimport cb_client as cb_client_cpp
 
-global python_callbacks
-python_callbacks = dict.fromkeys(['text_message'])
+# python callbacks
+global py_cbs
+py_cbs = dict.fromkeys(['text_message'])
 
-global python_callbacks_context
+# python callbacks context
+global py_cbs_ctx
 
 cdef public void incoming_account_message(
         const string& raw_account_id,
@@ -54,13 +56,14 @@ cdef public void incoming_account_message(
         key = raw_key.decode()
         content[key] = raw_content_dict[raw_key].decode()
 
-    global python_callbacks
-    callback = python_callbacks['text_message']
-    global python_callbacks_context
-    context = python_callbacks_context
+    global py_cbs_ctx
+    global py_cbs
+    callback = py_cbs['text_message']
 
-    if (callback):
-        callback(context, str(account_id), str(from_ring_id), content)
+    if (callback and py_cbs_ctx):
+        callback(py_cbs_ctx, str(account_id), str(from_ring_id), content)
+    elif (callback):
+        callback(str(account_id), str(from_ring_id), content)
 
 cdef class CallbacksClient:
     cdef cb_client_cpp.CallbacksClient *_thisptr
@@ -100,7 +103,7 @@ cdef class ConfigurationManager:
         confman_cpp.setAccountDetails(raw_id, raw_details)
 
     def set_account_active(self, account_id, active):
-        """Set if this account can be used or not
+        """Activates the account
 
         Keyword arguments:
         account_id   -- account id string
@@ -109,11 +112,10 @@ cdef class ConfigurationManager:
         confman_cpp.setAccountActive(account_id.encode(), active)
 
     def get_account_template(self, account_type):
-        """Generate a template in function of the type.
-        Type can be : SIP, IAX, IP2IP, RING
+        """Generates a template for the account
 
         Keyword argument:
-        account_type -- account type string
+        account_type -- account type string (SIP, IAX, IP2IP, RING)
 
         Return: template dict
         """
@@ -122,10 +124,10 @@ cdef class ConfigurationManager:
         return raw_dict_to_dict(raw_template)
 
     def add_account(self, details):
-        """Add a new account to the daemon
+        """Adds a new account
 
         Keyword argument:
-        details -- account details map[string, string]
+        details -- account details template dict
 
         Return: account_id string
         """
@@ -139,7 +141,7 @@ cdef class ConfigurationManager:
         return raw_account_id.decode()
 
     def remove_account(self, account_id):
-        """Remove an account from the daemon
+        """Removes an account from the daemon
 
         Keywork argument:
         account_id -- account id string
@@ -147,7 +149,7 @@ cdef class ConfigurationManager:
         confman_cpp.removeAccount(account_id.encode())
 
     def accounts(self):
-        """List user accounts (not ring ids)
+        """Lists the user accounts (ring_id != account_id)
 
         Return: accounts list
         """
@@ -174,76 +176,76 @@ cdef class ConfigurationManager:
                 raw_account_id, raw_ring_id, raw_content)
 
     def validate_certificate(self, account_id, certificate):
-        """A key-value list of all certificate validation
+        """TODO
 
         Keyword arguments:
         account_id  -- account id string
         certificate -- certificate string
 
-        Return: valid certificate list
+        Return: list of valid certificates ? TODO
         """
         raw_valid_certif = confman_cpp.validateCertificate(account_id.encode(), certificate.encode())
 
         return raw_dict_to_dict(raw_valid_certif)
 
     def get_certificate_details(self, certificate):
-        """A key-value list of all certificate details
+        """Gets the certificate details
 
         Keyword argument:
         certificate -- certificate string
 
-        Return: certificate details dict
+        Return: dict of certificate details
         """
         return raw_dict_to_dict(confman_cpp.getCertificateDetails(certificate.encode()))
 
     def get_pinned_certificates(self):
-        """A list of all known certificate IDs
+        """Gets all known certificate IDs
 
-        Return: pinned certificates list
+        Return: list of pinned certificates
         """
         return raw_list_to_list(confman_cpp.getPinnedCertificates())
 
     def pin_certificate(self, certificate, local):
-        """True to save the certificate in the daemon local store
+        """TODO
 
         Keyword arguments:
         certificate -- raw certificate int list
         local       -- true to save bool
 
-        Return: IDs of the pinned certificate list
+        Return: list of ids of the pinned certificate
         """
         return raw_list_to_list(confman_cpp.pinCertificate(certificate, local))
 
     def unpin_certificate(self, cert_id):
-        """Unpin a certificate
+        """TODO
 
         Keyword arguments:
         cert_id     -- certificate id string
 
-        Return: True if unpinned bool
+        Return: boolean of the operation success
         """
         return confman_cpp.unpinCertificate(cert_id.encode())
 
     def pin_remote_certificate(account_id, cert_id):
-        """Pin a certificate to an account
+        """TODO
 
         Keyword arguments:
         account_id  -- account id string
         cert_id     -- certificate id string
 
-        Return: success bool
+        Return: boolean of the operation success
         """
         return confman_cpp.pinRemoteCertificate(account_id.encode(), cert_id.encode())
 
     def set_certificate_status(account_id, cert_id, status):
-        """Set a status if an account certificate
+        """Sets the status of an account certificate
 
         Keyword arguments:
         account_id  -- account id string
         cert_id     -- certificate id string
-        status      -- 'UNDEFINED', 'ALLOWED' or 'BANNED' string
+        status      -- status stirng (UNDEFINED, ALLOWED, BANNED)
 
-        Return: True if the state is set bool
+        Return: boolean of the operation success
         """
         return confman_cpp.setCertificateStatus(account_id.encode(),
             cert_id.encode(),
@@ -251,24 +253,24 @@ cdef class ConfigurationManager:
 
 cdef class VideoManager:
     def devices(self):
-        """List the available video devices
+        """Lists the available video devices
 
-        Return: devices list
+        Return: list of devices
         """
         return raw_list_to_list(videoman_cpp.getDeviceList())
-    
+
     def get_settings(self, name):
-        """Settings of a given device
+        """Gets the settings of a given device
 
         Keyword arguments:
         name      -- device id string
 
-        Return: settings dict
+        Return: dict of settings
         """
         return raw_dict_to_dict(videoman_cpp.getSettings(name.encode()))
-    
+
     def apply_settings(self, name, settings):
-        """Change the settings of a given device
+        """Changes the settings of a given device
 
         Keyword arguments:
         name      -- device id string
@@ -281,9 +283,9 @@ cdef class VideoManager:
 
         videoman_cpp.applySettings(name.encode(), raw_settings)
 
-    def set_default_device(self, dev):  
+    def set_default_device(self, dev):
         videoman_cpp.setDefaultDevice(dev.encode())
-    
+
     def get_default_device(self):
         return videoman_cpp.getDefaultDevice().decode()
 
@@ -292,8 +294,9 @@ cdef class VideoManager:
 
     def stop_camera(self):
         videoman_cpp.stopCamera()
-    
+
     def switch_input(self, resource):
+        "TODO what is resource?"
         return videoman_cpp.switchInput(resource.encode())
 
     def has_camera_started(self):
@@ -302,13 +305,13 @@ cdef class VideoManager:
 cdef class CallManager:
 
     def place_call(self, account_id, to):
-        """Place a new call between two users
+        """Places a call between two users
 
         Keyword argument:
         account_id  -- account string
         to          -- ring_id string
 
-        Return: call_id string
+        Return: string of the call_id
         """
 
         raw_call_id = callman_cpp.placeCall(account_id.encode(), to.encode());
@@ -316,52 +319,52 @@ cdef class CallManager:
         return raw_call_id.decode()
 
     def refuse(self, call_id):
-        """Refuse an incoming call
+        """Refuses an incoming call
 
         Keyword argument:
         call_id -- call id string
 
-        Return: status bool
+        Return: boolean of operation success
         """
         return callman_cpp.refuse(call_id.encode());
 
     def accept(self, call_id):
-        """Accept an incoming call
+        """Accepts an incoming call
 
         Keyword argument:
         call_id -- call id string
 
-        Return: status bool
+        Return: boolean of operation success
         """
         return callman_cpp.accept(call_id.encode());
 
     def hang_up(self, call_id):
-        """Hang up a call in state 'CURRENT' or 'HOLD'
+        """Hangs up a call which is in state (CURRENT, HOLD)
 
         Keyword argument:
         call_id -- call id string
 
-        Return: status bool
+        Return: boolean of operation success
         """
         return callman_cpp.hangUp(call_id.encode());
 
     def hold(self, call_id):
-        """Place a call in state 'HOLD'
+        """Places a call which is in state (HOLD)
 
         Keyword argument:
         call_id -- call id string
 
-        Return: status bool
+        Return: boolean of operation success
         """
         return callman_cpp.hold(call_id.encode());
 
     def unhold(self, call_id):
-        """Take a call off 'HOLD', and place it in state 'CURRENT'
+        """Takes a call from (HOLD) and place it in (CURRENT) state
 
         Keyword argument:
         call_id -- call id string
 
-        Return: status bool
+        Return: boolean of operation success
         """
         return callman_cpp.unhold(call_id.encode());
 
@@ -424,25 +427,28 @@ cdef class Dring:
         return dring_cpp.version().decode()
 
     def callbacks_to_register(self):
-        """Returns the python callbacks that will be triggered dring signals.
-        The signals are the dict keys.
-        """
-        global python_callbacks
-        return python_callbacks
+        """Returns a dict for callbacks to register as keys values"""
+        global py_cbs
+        return py_cbs
 
-    def register_callbacks(self, callbacks, context):
+    def register_callbacks(self, callbacks, context=None):
         """Registers the python callbacks received as dict values.
-        The corresponding signals are defined as keys.
-        Expects the dict with keys defined by the callbacks() method.
+
+        Keyword argument:
+        callbacks -- dict of functions to callback
+                     the corresponding signals are defined as keys
+                     keys immutable and defined by the callbacks() method
+        context -- context which will be passed as argument to the callbacks
 
         No return
         """
-        global python_callbacks
+        global py_cbs
         try:
-            for key, value in python_callbacks.items():
-                python_callbacks[key] = callbacks[key]
+            for key, value in py_cbs.items():
+                py_cbs[key] = callbacks[key]
         except KeyError as e:
             raise KeyError("KeyError: %s. You can't change the keys." % e)
 
-        global python_callbacks_context
-        python_callbacks_context = context
+        global py_cbs_ctx
+        py_cbs_ctx = context
+
