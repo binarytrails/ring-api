@@ -4,7 +4,7 @@ from flask_restful import Api
 from flask_socketio import SocketIO
 
 from ring_api.server.flask import socketio_cb_api as cb_api
-from ring_api.server.flask.api import account, video, call
+from ring_api.server.flask.api import account
 
 class FlaskServer:
     def __init__(self, host, port, dring):
@@ -24,7 +24,9 @@ class FlaskServer:
         self._register_callbacks()
 
     def _add_resources(self):
-        # Configuration manager related resources
+        """Keep the same order as in the rest-api.json."""
+
+        # Accounts
         self.api.add_resource(account.Accounts, '/accounts/',
             resource_class_kwargs={'dring': self.dring})
         
@@ -32,59 +34,11 @@ class FlaskServer:
             '/accounts/<account_id>/details/',
             resource_class_kwargs={'dring': self.dring})
         
-        # Video manager related resources
-        self.api.add_resource(video.Devices,
-            '/settings/video/devices/',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(video.Settings,
-            '/settings/video/settings/<device_name>/',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(video.Default,
-            '/settings/video/devices/default/',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(video.Start,
-            '/settings/video/camera/start/',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(video.Stop,
-            '/settings/video/camera/stop/',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(video.Switch,
-            '/settings/video/camera/switch/',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(video.Status,
-            '/settings/video/camera/status/',
-            resource_class_kwargs={'dring': self.dring})
-
-        # Call manager related resources
-        self.api.add_resource(call.Call,
-            '/call/place/<account_id>/<to>/',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(call.Refuse,
-            '/call/refuse/<call_id>',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(call.Accept,
-            '/call/accept/<call_id>',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(call.HangUp,
-            '/call/hang_up/<call_id>',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(call.Hold,
-            '/call/hold/<call_id>',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(call.Unhold,
-            '/call/unhold/<call_id>',
-            resource_class_kwargs={'dring': self.dring})
+        # Codecs
+        # Crypto
+        # Video
+        # Audio
+        # Video
 
     def _register_callbacks(self):
         callbacks = self.dring.callbacks_to_register()
