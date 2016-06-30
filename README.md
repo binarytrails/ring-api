@@ -17,15 +17,22 @@ Tested and stable at [fe8f048](https://github.com/sevaivanov/ring-api/commit/fe8
 * ~~Register callbacks~~
 * ~~Define python callbacks API~~
 * Segment wrappers into multiple files
-* ~~Decide whether to use REST + Sockets or only Sockets (and which ones)~~
-* ~~Select a multi-threaded RESTful server [See: Wiki](https://github.com/sevaivanov/ring-api/wiki/Questions#restful-http-server)~~
+* ~~Decide whether to use REST + WebSockets or only WebSockets~~
+* ~~Select multi-threaded RESTful server~~
 * ~~Define RESTful API standards~~
-* Write how call client from Ring-daemon with *--without-dbus* option
-* Rewrite interfaces definitions from */usr/include/dring/*:
-
-    Keep in mind that not everything needs to be rewritten. It depends on the usage.
+* ~~Define RESTful API in json~~
+* ~~Implement RESTful API using Flask-REST~~
+* Implement WebSockets structure for server initiated callbacks
+* ~~Write a wiki base~~
+* Wiki: write how it works with and draw a diagram
+* Wiki: document the server and WebSockets software choices
+* Add unit tests
+* Add integration tests
+* Integrate the project to Ring-daemon Autotools using the *--without-dbus* option
+* Rewrite and implement *dring* interfaces defined in */usr/include/dring/*. They are the Ring-daemon controls. Keep in mind that not everything needs to be rewritten. It depends on the usage.
 
     * Done
+        * dring.h
 
             dring.h                             ->    dring.pxd
             videomanager_interface.h			->	  video_manager.pxd
@@ -42,12 +49,6 @@ Tested and stable at [fe8f048](https://github.com/sevaivanov/ring-api/commit/fe8
             media_const.h
 			presencemanager_interface.h
             security_const.h
-
-* ~~Write a Wiki~~
-* Add unit tests
-* Add integration tests
-
-## Getting started
 
 ### Installation
 
@@ -186,4 +187,3 @@ The code is licensed under a GNU General Public License [GPLv3](http://www.gnu.o
 Seva Ivanov seva.ivanov@savoirfairelinux.com
 
 Simon Zeni  simon.zeni@savoirfairelinux.com
-
