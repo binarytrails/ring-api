@@ -431,14 +431,13 @@ cdef class Dring:
         global py_cbs
         return py_cbs
 
-    def register_callbacks(self, callbacks, context=None):
+    def register_callbacks(self, callbacks):
         """Registers the python callbacks received as dict values.
 
         Keyword argument:
         callbacks -- dict of functions to callback
                      the corresponding signals are defined as keys
                      keys immutable and defined by the callbacks() method
-        context -- context which will be passed as argument to the callbacks
 
         No return
         """
@@ -449,6 +448,18 @@ cdef class Dring:
         except KeyError as e:
             raise KeyError("KeyError: %s. You can't change the keys." % e)
 
+    def update_callbacks_context(self, context):
+        """Updates python callbacks context.
+
+        Keyword argument:
+        context -- context which will be passed as argument to the callbacks
+
+        No return
+        """
         global py_cbs_ctx
         py_cbs_ctx = context
+
+    def get_callbacks_context(self):
+        global py_cbs_ctx
+        return py_cbs_ctx
 

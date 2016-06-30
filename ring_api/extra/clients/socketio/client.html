@@ -7,9 +7,13 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 var ring_api = io.connect('http://127.0.0.1:8080');
-                ring_api.on('text_message', function(data) {
-                    console.log(data);
+                ring_api.on('text_message', function(event) {
+                    console.log(event.data);
                 });
+                ring_api.on('test', function(){
+                    print('tested');
+                });
+                ring_api.emit('emit_test');
             });
         </script>
     </head>
