@@ -29,26 +29,24 @@ Tested and stable at [fe8f048](https://github.com/sevaivanov/ring-api/commit/fe8
 * Add unit tests
 * Add integration tests
 * Integrate the project to Ring-daemon Autotools using the *--without-dbus* option
-* Rewrite and implement *dring* interfaces defined in */usr/include/dring/*. They are the Ring-daemon controls. Keep in mind that not everything needs to be rewritten. It depends on the usage.
+* Implement the functionalities:
 
-    * Done
-        * dring.h
+    **It considered done when it's implement in both Cython and the RESTful server.**
 
-            dring.h                             ->    dring.pxd
-            videomanager_interface.h			->	  video_manager.pxd
+    - ~~possibility to talk to the REST http interface of the daemon (the framework that you've written so far)~~
+    - ~~control the "static" configuration of the daemon: add/remove an account, modify properties, enable/disable them~~
+    - ~~be able to listen to the changes from the daemon (framework for signals)~~
+    - execute dynamic features:
+      - receive a message text (IM) out-of-call
+      - send an IM out-of-call
+      - be able to accept/refuse an incoming call
+      - be able to display the status of a call and stop a call
+      - tx/rx IM in-call
+      - ~~display video, in-call and preview for camera setup (audio is fully controlled by the daemon)~~
+      - add full call controls (media pause, transfer, audio controls, conferences, ...)
+      - add full "smart list" features
+      - ~~certificates controls~~
 
-    * In Progress
-
-            configurationmanager_interface.h    ->    configuration_manager.pxd
-            callmanager_interface.h				->	  call_manager.pxd
-
-    * To do
-
-            account_const.h
-            call_const.h
-            media_const.h
-			presencemanager_interface.h
-            security_const.h
 
 ### Installation
 
