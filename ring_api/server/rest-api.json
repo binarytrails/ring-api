@@ -130,7 +130,7 @@
         }
     },
 
-    "/video/<device_id>/settings/": {
+    "/video/<device_name>/settings/": {
         "GET": "getSettings",
         "PUT": "applySettings"
     },

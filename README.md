@@ -34,19 +34,21 @@ Tested and stable at [fe8f048](https://github.com/sevaivanov/ring-api/commit/fe8
     * Done
         * dring.h
 
-    * In progress
-        * configurationmanager_interface.h
+            dring.h                             ->    dring.pxd
+            videomanager_interface.h			->	  video_manager.pxd
+
+    * In Progress
+
+            configurationmanager_interface.h    ->    configuration_manager.pxd
+            callmanager_interface.h				->	  call_manager.pxd
 
     * To do
-        * account_const.h
-        * call_const.h
-        * callmanager_interface.h
-        * media_const.h
-        * presencemanager_interface.h
-        * security_const.h
-        * videomanager_interface.h
 
-## Getting started
+            account_const.h
+            call_const.h
+            media_const.h
+			presencemanager_interface.h
+            security_const.h
 
 ### Installation
 

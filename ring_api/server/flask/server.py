@@ -4,7 +4,7 @@ from flask_restful import Api
 from flask_socketio import SocketIO
 
 from ring_api.server.flask import socketio_cb_api as cb_api
-from ring_api.server.flask.api import account
+from ring_api.server.flask.api import account, video
 
 class FlaskServer:
     def __init__(self, host, port, dring):
@@ -39,6 +39,17 @@ class FlaskServer:
         # Video
         # Audio
         # Video
+        self.api.add_resource(video.VideoDevices,
+            '/video/devices/',
+            resource_class_kwargs={'dring': self.dring})
+
+        self.api.add_resource(video.VideoSettings,
+            '/video/<device_id>/settings/',
+            resource_class_kwargs={'dring': self.dring})
+        
+        self.api.add_resource(video.VideoCamera,
+            '/video/camera/',
+            resource_class_kwargs={'dring': self.dring})
 
     def _register_callbacks(self):
         callbacks = self.dring.callbacks_to_register()
