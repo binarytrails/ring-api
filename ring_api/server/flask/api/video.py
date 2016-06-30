@@ -1,4 +1,4 @@
-from flask import jsonify, request, abort
+from flask import jsonify, request
 from flask_restful import Resource
 from flask_socketio import SocketIO
 
@@ -9,14 +9,14 @@ class VideoDevices(Resource):
     def get(self):
         data = request.args
         if (not data):
-            return abort(404, {
-                'dev_message': 'data not found'
+            return jsonify({
+                'message': 'data not found'
             })
 
         elif ('type' not in data):
             return jsonify({
                 'status': '404',
-                'dev_message': 'type not found in data'
+                'message': 'type not found in data'
             })
         
         device_type = data.get('type')
@@ -27,20 +27,23 @@ class VideoDevices(Resource):
         elif (device_type == 'default'):
             return jsonify({'default': self.dring.video.get_default_device()})
 
-        return abort(404, {
-            'dev_message': 'wrong device type'
+        return jsonify({
+            'status': '400',
+            'message': 'wrong device type'
         })
 
     def put(self):
         data = request.args
         if (not data):
-            return abort(404, {
-                'dev_message': 'data not found'
+            return jsonify({
+                'status': '404',
+                'message': 'data not found'
             })
 
         elif ('type' not in data):
-            return abort(404, {
-                'dev_message': 'type not found in data'
+            return jsonify({
+                'status': '404',
+                'message': 'type not found in data'
             })
         
         device_type = data.get('type')
@@ -49,16 +52,18 @@ class VideoDevices(Resource):
             data = request.get_json(force=True)
 
             if not "device" in data:
-                return abort(400, {
-                    'dev_message': 'device not found in request data'
+                return jsonify({
+                    'status': '400',
+                    'message': 'device not found in request data'
                 })
            
             self.dring.video.set_default_device(data["device"])
 
             return jsonify({'default': self.dring.video.get_default_device()})
 
-        return abort(400, {
-            'dev_message': 'wrong device type'
+        return jsonify({
+            'status': '400',
+            'message': 'wrong device type'
         })
 
 class VideoSettings(Resource):
@@ -83,13 +88,15 @@ class VideoCamera(Resource):
     def put(self):
         data = request.args
         if (not dat):
-            return abort(404, {
-                'dev_message': 'data not found'
+            return jsonify({
+                'status': '404',
+                'message': 'data not found'
             })
 
         elif ('action' not in data):
-            return abort(404, {
-                'dev_message': 'action not found in data'
+            return jsonify({
+                'status': '404',
+                'message': 'action not found in data'
             })
         
         device_type = data.get('type')
@@ -110,6 +117,7 @@ class VideoCamera(Resource):
                 'cameraStatus': self.dring.video.has_camera_started()
             })
 
-        return abort(404, {
-            'dev_message': 'wrong camera action'
+        return jsonify({
+            'status': '404',
+            'message': 'wrong camera action'
         })
