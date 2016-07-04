@@ -153,7 +153,7 @@ class AccountsCall(Resource):
             'call_id': self.dring.call.place_call(account_id, data['ring_id'])
         })
 
-class AccountsCertif(Resource):
+class AccountsCertificates(Resource):
     def __init__(self, dring):
         self.dring = dring
    

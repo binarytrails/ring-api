@@ -90,7 +90,7 @@
         }
     },
     
-    "/accounts/<account_id>/<cert_id>/": {
+    "/accounts/<account_id>/certificates/<cert_id>/": {
         "GET": {
             "action": {
                 "validate": "validateCertificate"
