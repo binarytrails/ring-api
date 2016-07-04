@@ -4,7 +4,7 @@ from flask_restful import Api
 from flask_socketio import SocketIO
 
 from ring_api.server.flask import socketio_cb_api as cb_api
-from ring_api.server.flask.api import account, video
+from ring_api.server.flask.api import account, video, calls, certificate
 
 class FlaskServer:
     def __init__(self, host, port, dring):
@@ -27,18 +27,49 @@ class FlaskServer:
         """Keep the same order as in the rest-api.json."""
 
         # Accounts
+
+        self.api.add_resource(account.Account, '/account/',
+            resource_class_kwargs={'dring': self.dring})
+        
         self.api.add_resource(account.Accounts, '/accounts/',
+            resource_class_kwargs={'dring': self.dring})
+        
+        self.api.add_resource(account.AccountsID, '/accounts/<account_id>/',
             resource_class_kwargs={'dring': self.dring})
         
         self.api.add_resource(account.AccountsDetails,
             '/accounts/<account_id>/details/',
             resource_class_kwargs={'dring': self.dring})
         
+        self.api.add_resource(account.AccountsCall,
+            '/accounts/<account_id>/call/',
+            resource_class_kwargs={'dring': self.dring})
+        
+        self.api.add_resource(account.AccountsCertifificates,
+            '/accounts/<account_id>/certificates/<cert_id>/',
+            resource_class_kwargs={'dring': self.dring})
+
+        # Calls 
+
+        self.api.add_resource(calls.Calls,
+            '/calls/<call_id>/',
+            resource_class_kwargs={'dring': self.dring})
+
         # Codecs
         # Crypto
-        # Video
+        # Certificate
+
+        self.api.add_resource(certificate.Certificate,
+            '/certificates/',
+            resource_class_kwargs={'dring': self.dring})
+
+        self.api.add_resource(certificate.Certificates,
+            '/certificate/<cert_id>/',
+            resource_class_kwargs={'dring': self.dring})
+
         # Audio
         # Video
+
         self.api.add_resource(video.VideoDevices,
             '/video/devices/',
             resource_class_kwargs={'dring': self.dring})
