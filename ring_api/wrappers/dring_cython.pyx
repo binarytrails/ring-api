@@ -243,7 +243,7 @@ cdef class ConfigurationManager:
         Keyword arguments:
         account_id  -- account id string
         cert_id     -- certificate id string
-        status      -- status stirng (UNDEFINED, ALLOWED, BANNED)
+        status      -- status string (UNDEFINED, ALLOWED, BANNED)
 
         Return: boolean of the operation success
         """
