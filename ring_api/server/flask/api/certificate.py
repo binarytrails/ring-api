@@ -50,7 +50,7 @@ class Certificate(Resource):
                 'message': 'data not found'
             })
 
-        if not "action" in data:
+        if (not "action" in data):
             return jsonify({
                 'status': 400,
                 'message': 'action not found in request data'
@@ -58,7 +58,7 @@ class Certificate(Resource):
         
         action = data.get('type')
 
-        if action == 'pin':
+        if (action == 'pin'):
             return jsonify({
                 'success': 200,
                 'status': self.dring.config.pin_certificate(cert_id)
