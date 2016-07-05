@@ -45,7 +45,7 @@ class FlaskServer:
             '/accounts/<account_id>/call/',
             resource_class_kwargs={'dring': self.dring})
         
-        self.api.add_resource(account.AccountsCertifificates,
+        self.api.add_resource(account.AccountsCertificates,
             '/accounts/<account_id>/certificates/<cert_id>/',
             resource_class_kwargs={'dring': self.dring})
 
