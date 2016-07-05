@@ -29,37 +29,37 @@ class Calls(Resource):
     def put(self, call_id):
         data = request.get_json(force=True)
 
-        if not 'action' in data:
+        if (not 'action' in data):
             return jsonify({
                 'status': 400,
                 'message': 'action not found in request data'
             })
 
-        if data['action'] in 'accept':
+        if (data['action'] in 'accept'):
             return jsonify({
                 'status': 200,
                 'accept': self.dring.call.accept(call_id)
             })
         
-        elif data['action'] in 'refuse':
+        elif (data['action'] in 'refuse'):
             return jsonify({
                 'status': 200,
                 'refuse': self.dring.call.refuse(call_id)
             })
         
-        elif data['action'] in 'hangup':
+        elif (data['action'] in 'hangup'):
             return jsonify({
                 'status': 200,
                 'hang_up': self.dring.call.hang_up(call_id)
             })
         
-        elif data['action'] in 'hold':
+        elif (data['action'] in 'hold'):
             return jsonify({
                 'status': 200,
                 'hold': self.dring.call.hold(call_id)
             })
         
-        elif data['action'] in 'unhold':
+        elif (data['action'] in 'unhold'):
             return jsonify({
                 'status': 200,
                 'unhold': self.dring.call.unhold(call_id)

@@ -28,13 +28,13 @@ class VideoDevices(Resource):
 
     def get(self):
         data = request.args
-        if not data:
+        if (not data):
             return jsonify({
                 'status': 404,
                 'message': 'data not found'
             })
 
-        elif 'type' not in data:
+        elif ('type' not in data):
             return jsonify({
                 'status': 404,
                 'message': 'type not found in data'
@@ -42,13 +42,13 @@ class VideoDevices(Resource):
         
         device_type = data.get('type')
 
-        if device_type == 'all':
+        if (device_type == 'all'):
             return jsonify({
                 'status': 200,
                 'devices': self.dring.video.devices()
             })
 
-        elif device_type == 'default':
+        elif (device_type == 'default'):
             return jsonify({
                 'status': 200,
                 'default': self.dring.video.get_default_device()
@@ -61,13 +61,13 @@ class VideoDevices(Resource):
 
     def put(self):
         data = request.args
-        if not data:
+        if (not data):
             return jsonify({
                 'status': 404,
                 'message': 'data not found'
             })
 
-        elif 'type' not in data:
+        elif ('type' not in data):
             return jsonify({
                 'status': 404,
                 'message': 'type not found in data'
@@ -75,10 +75,10 @@ class VideoDevices(Resource):
         
         device_type = data.get('type')
 
-        if device_type == 'default':
+        if (device_type == 'default'):
             data = request.get_json(force=True)
 
-            if not 'device' in data:
+            if (not 'device' in data):
                 return jsonify({
                     'status': 400,
                     'message': 'device not found in request data'
@@ -126,13 +126,13 @@ class VideoCamera(Resource):
     
     def put(self):
         data = request.args
-        if not data:
+        if (not data):
             return jsonify({
                 'status': 404,
                 'message': 'data not found'
             })
 
-        elif 'action' not in data:
+        elif ('action' not in data):
             return jsonify({
                 'status': 404,
                 'message': 'action not found in data'
@@ -140,7 +140,7 @@ class VideoCamera(Resource):
         
         device_type = data.get('type')
 
-        if device_type == 'start':
+        if (device_type == 'start'):
            
             self.dring.video.start_camera()
 
@@ -149,7 +149,7 @@ class VideoCamera(Resource):
                 'cameraStatus': self.dring.video.has_camera_started()
             })
         
-        elif device_type == 'stop':
+        elif (device_type == 'stop'):
            
             self.dring.video.stop_camera()
 
