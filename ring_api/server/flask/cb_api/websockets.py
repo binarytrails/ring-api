@@ -1,7 +1,8 @@
 #
 # Copyright (C) 2016 Savoir-faire Linux Inc
 #
-# Author: Seva Ivanov <seva.ivanov@savoirfairelinux.com>
+# Authors:  Seva Ivanov <seva.ivanov@savoirfairelinux.com>
+#           Simon Zeni  <simon.zeni@savoirfairelinux.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +19,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
 #
 
-# It's an implementation of Python callbacks API using Socket.IO.
-# Based on ring_api/callbacks/cb_api.py template.
+# This is an implementation of Python callbacks API.
+# It's based on ring_api/callbacks/cb_api.py template.
 
 import json
 

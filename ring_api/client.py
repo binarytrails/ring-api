@@ -1,7 +1,8 @@
 #
 # Copyright (C) 2016 Savoir-faire Linux Inc
 #
-# Author: Seva Ivanov <seva.ivanov@savoirfairelinux.com>
+# Authors:  Seva Ivanov <seva.ivanov@savoirfairelinux.com>
+#           Simon Zeni  <simon.zeni@savoirfairelinux.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
