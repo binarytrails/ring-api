@@ -28,13 +28,13 @@ class Account(Resource):
     
     def get(self):
         data = request.args
-        if not data:
+        if (not data):
             return jsonify({
                 'status': 404,
                 'message': 'data not found'
             })
 
-        elif 'type' not in data:
+        elif ('type' not in data):
             return jsonify({
                 'status': 404,
                 'message': 'type not found in data'
@@ -42,25 +42,25 @@ class Account(Resource):
         
         account_type = data.get('type')
 
-        if account_type == 'SIP':
+        if (account_type == 'SIP'):
             return jsonify({
                 'success': 200,
                 'details': self.dring.config.get_account_template('SIP')
             })
 
-        elif account_type == 'IAX':
+        elif (account_type == 'IAX'):
             return jsonify({
                 'success': 200,
                 'details': self.dring.config.get_account_template('IAX')
             })
 
-        elif account_type == 'IP2IP':
+        elif (account_type == 'IP2IP'):
             return jsonify({
                 'success': 200,
                 'details': self.dring.config.get_account_template('IP2IP')
             })
 
-        elif account_type == 'RING':
+        elif (account_type == 'RING'):
             return jsonify({
                 'success': 200,
                 'details': self.dring.config.get_account_template('RING')
@@ -74,7 +74,7 @@ class Account(Resource):
     def post(self):
         data = request.get_json(force=True)
 
-        if not 'details' in data:
+        if (not 'details' in data):
             return jsonify({
                 'status': 400,
                 'message': 'details not found in request data'
@@ -113,13 +113,13 @@ class AccountsDetails(Resource):
 
     def get(self, account_id):
         data = request.args
-        if not data:
+        if (not data):
             return jsonify({
                 'status': 404,
                 'message': 'data not found'
             })
 
-        elif 'type' not in data:
+        elif ('type' not in data):
             return jsonify({
                 'status': 404,
                 'message': 'type not found in data'
@@ -127,13 +127,13 @@ class AccountsDetails(Resource):
         
         account_type = data.get('type')
 
-        if account_type == 'default':
+        if (account_type == 'default'):
             return jsonify({
                 'status': 200,
                 'details': self.dring.config.account_details(account_id)
             })
 
-        elif account_type == 'volatile':
+        elif (account_type == 'volatile'):
             pass
 
         return jsonify({
@@ -147,14 +147,14 @@ class AccountsCall(Resource):
 
     def post(self, account_id):
         # Check if the account is valid and exists
-        if len(account_id) != 16:
+        if (len(account_id) != 16):
             return jsonify({
                 'status': 400,
                 'message': 'account_id not valid'
             })
 
         accounts = self.dring.config.accounts()
-        if not any(account_id in account for account in accounts):
+        if (not any(account_id in account for account in accounts)):
             return jsonify({
                 'status': 400,
                 'message': 'account not found'
@@ -162,7 +162,7 @@ class AccountsCall(Resource):
         
         data = request.get_json(force=True)
 
-        if not 'ring_id' in data:
+        if (not 'ring_id' in data):
             return jsonify({
                 'status': 400,
                 'message': 'ring_id not found in request data'
@@ -179,13 +179,13 @@ class AccountsCertificates(Resource):
    
     def get(self, account_id):
         data = request.args
-        if not data:
+        if (not data):
             return jsonify({
                 'status': 404,
                 'message': 'data not found'
             })
 
-        elif 'type' not in data:
+        elif ('type' not in data):
             return jsonify({
                 'status': 404,
                 'message': 'type not found in data'
@@ -193,7 +193,7 @@ class AccountsCertificates(Resource):
         
         action = data.get('type')
 
-        if action == 'validate':
+        if (action == 'validate'):
             return jsonify({
                 'status': 200,
                 'certificates': self.dring.config.validate_certificate(
@@ -209,13 +209,13 @@ class AccountsCertificates(Resource):
 
     def put(self, account_id):
         data = request.args
-        if not data:
+        if (not data):
             return jsonify({
                 'status': 404,
                 'message': 'data not found'
             })
 
-        elif 'status' not in data:
+        elif ('status' not in data):
             return jsonify({
                 'status': 404,
                 'message': 'status not found in data'
@@ -223,7 +223,7 @@ class AccountsCertificates(Resource):
         
         status = data.get('type')
 
-        if status == 'UNDEFINED' or status == 'ALLOWED' or status == 'BANNED':
+        if (status == 'UNDEFINED' or status == 'ALLOWED' or status == 'BANNED'):
             return jsonify({
                 'status': 200,
                 'succes': self.dring.configset_certificate_status(
