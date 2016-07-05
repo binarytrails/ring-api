@@ -73,9 +73,6 @@ Tested and stable at [6aae66b](https://github.com/sevaivanov/ring-api/commit/6aa
 
 2. Python RESTful server
 
-        pip install --user bottle
-
-        # or use the freezed version
         pip install --user -r requirements.txt
 
 3. Cython shared library
