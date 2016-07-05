@@ -28,7 +28,7 @@ import websockets
 from websockets import exceptions as ws_ex
 
 from ring_api.server.flask.cb_api import websockets as cb_api
-from ring_api.server.flask.api import account, video, calls, certificate
+from ring_api.server.flask.api import account, video, calls, certificate, audio, crypto, codec
 
 class FlaskServer:
 
@@ -66,10 +66,19 @@ class FlaskServer:
         self.api.add_resource(account.AccountsDetails,
             '/accounts/<account_id>/details/',
             resource_class_kwargs={'dring': self.dring})
+    
+        self.api.add_resource(account.AccountsCodecs,
+            '/accounts/<account_id>/codecs/<codec_id>',
+            resource_class_kwargs={'dring': self.dring})
+
+        self.api.add_resource(account.AccountsCodecsActive,
+            '/accounts/<account_id>/codecs/active/',
+            resource_class_kwargs={'dring': self.dring})
 
         self.api.add_resource(account.AccountsCall,
             '/accounts/<account_id>/call/',
             resource_class_kwargs={'dring': self.dring})
+
         self.api.add_resource(account.AccountsCertificates,
             '/accounts/<account_id>/certificates/<cert_id>/',
             resource_class_kwargs={'dring': self.dring})
@@ -81,7 +90,18 @@ class FlaskServer:
             resource_class_kwargs={'dring': self.dring})
 
         # Codecs
+
+        self.api.add_resource(codec.Codecs,
+            '/codecs/',
+            resource_class_kwargs={'dring': self.dring})
+
         # Crypto
+
+        self.api.add_resource(crypto.Tls,
+            '/crypto/tls/',
+            resource_class_kwargs={'dring': self.dring})
+
+
         # Certificate
 
         self.api.add_resource(certificate.Certificate,
@@ -93,6 +113,11 @@ class FlaskServer:
             resource_class_kwargs={'dring': self.dring})
 
         # Audio
+
+        self.api.add_resource(audio.Plugins,
+            '/audio/plugins/',
+            resource_class_kwargs={'dring': self.dring})
+
         # Video
 
         self.api.add_resource(video.VideoDevices,

@@ -108,7 +108,9 @@ class VideoSettings(Resource):
 
     def put(self, device_name):
         data = request.get_json(force=True)
-
+        
+        self.dring.video.apply_settings(device_name, data['settings'])
+        
         return jsonify({
             'status': 200,
             'settings': self.dring.video.get_settings(device_name)

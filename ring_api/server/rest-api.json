@@ -69,19 +69,14 @@
         "GET": "getSupportedCiphers"
     },
 
-    "/accounts/<account_id>/codecs/": {
-        "GET": {
-            "type": {
-                "active": "getActiveCodecList",
-                "details": "getCodecDetails"
-            }
-        },
-        "PUT": {
-            "type": {
-                "active": "setActiveCodecList",
-                "details": "setCodecDetails"
-            }
-        }
+    "/accounts/<account_id>/codecs/<codec_id>": {
+        "GET": "getCodecDetails",
+        "PUT": "setCodecDetails"
+    },
+
+    "/accounts/<account_id>/codecs/active/": {
+        "GET": "getCodecDetails",
+        "PUT": "setCodecDetails"
     },
 
     "/accounts/<account_id>/call/": {
@@ -134,7 +129,6 @@
             }
         }
     },
-
 
     "/certificates/": {
         "GET": "getPinnedCertificates"
