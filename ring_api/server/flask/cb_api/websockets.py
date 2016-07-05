@@ -21,8 +21,7 @@
 # It's an implementation of Python callbacks API using Socket.IO.
 # Based on ring_api/callbacks/cb_api.py template.
 
-# Function names should be the same as the keys from callbacks_to_register().
-# Each method should contain a docstring that describes it.
+import json
 
 def text_message(server, account_id, from_ring_id, content):
     """Receives a text message
@@ -33,15 +32,12 @@ def text_message(server, account_id, from_ring_id, content):
     from_ring_id    -- ring id string
     content         -- dict of content defined as [<mime-type>, <message>]
     """
-    #message = {'text_message', {
-    #    'account_id': account_id,
-    #    'from_ring_id': from_ring_id,
-    #    'content': content} unhashable content dict
-    #}
-    message = 'hello'
-    print('callback: adding "%s" to queue of size %s' % (
-        message, server.ws_messages.qsize(),
-    ))
-    server.ws_eventloop.call_soon_threadsafe(
-            server.ws_messages.put_nowait, message)
+    message = json.dumps({
+        'text_message': {
+            'account_id': account_id,
+            'from_ring_id': from_ring_id,
+            'content': content
+        }
+    })
+    server.callback_to_ws(message)
 

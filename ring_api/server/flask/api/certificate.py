@@ -1,6 +1,5 @@
 from flask import jsonify, request
 from flask_restful import Resource
-from flask_socketio import SocketIO
 
 class Certificates(Resource):
     def __init__(self, dring):

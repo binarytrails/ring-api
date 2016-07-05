@@ -1,6 +1,26 @@
+#
+# Copyright (C) 2016 Savoir-faire Linux Inc
+#
+# Authors:  Seva Ivanov <seva.ivanov@savoirfairelinux.com>
+#           Simon Zeni  <simon.zeni@savoirfairelinux.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
+#
+
 from flask import Flask
 from flask_restful import Api
-from flask_socketio import SocketIO # TODO remove
 
 import threading
 import asyncio
@@ -26,7 +46,6 @@ class FlaskServer:
             PROPAGATE_EXCEPTIONS = True
         )
         self.api = Api(self.app, catch_all_404s=True)
-        self.socketio = SocketIO(self.app)
 
         self._add_resources()
 
@@ -89,15 +108,45 @@ class FlaskServer:
             '/video/camera/',
             resource_class_kwargs={'dring': self.dring})
 
-    def _register_callbacks(self):
+    def register_callbacks(self, class_instance):
+        """ dring callbacks register using this class instance """
         callbacks = self.dring.callbacks_to_register()
 
         # TODO add dynamically from implemented function names
         callbacks['text_message'] = cb_api.text_message
 
-        self.dring.register_callbacks(callbacks, context=self)
+        self.dring.register_callbacks(callbacks, context=class_instance)
+
+    def start_ws_eventloop(self):
+        """ thread started from client """
+        self.ws_eventloop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.ws_eventloop)
+
+        # TODO register
+        self.ws_server = websockets.serve(
+                self.ws_handle, '127.0.0.1', 5678)
+
+        self.ws_eventloop.create_task(self.ws_server)
+        self.ws_eventloop.create_task(self.ws_notify())
+
+        self.ws_eventloop.run_forever()
+
+    def start_rest(self):
+        """ thread started from client
+
+        use_reloader -- False because expects to run in the main thread
+        """
+        self.app.run(host=self.host, port=self.port,
+                debug=True, use_reloader=False)
+
+    def stop(self):
+        # TODO
+        pass
+
+    # WebSockets using AsyncIO
 
     async def ws_handle(self, websocket, path):
+        """ task handle which is run for every websocket """
         if (websocket not in self.websockets):
             self.websockets.append(websocket)
             print('server: adding new socket: %s' % str(websocket))
@@ -114,7 +163,10 @@ class FlaskServer:
                 break
 
     async def ws_notify(self):
+        """ task notify which listens for new callback messages """
+        print('server: waiting for websockets notifications')
         while True:
+            # FIXME messages are added but not retrieved
             message = await self.ws_messages.get()
             print('server: got "%s"' % message)
 
@@ -126,30 +178,10 @@ class FlaskServer:
                     self.websockets.remove(websocket)
                     print('server: connection closed to %s' % websocket)
 
-    def start_ws_eventloop(self):
-        self.ws_eventloop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.ws_eventloop)
-
-        # TODO register
-        self.ws_server = websockets.serve(
-                self.ws_handle, '127.0.0.1', 5678)
-
-        self.ws_eventloop.create_task(self.ws_server)
-        self.ws_eventloop.create_task(self.ws_notify())
-
-        self.ws_eventloop.run_forever()
-
-    def start(self):
-        self.ws_eventloop_thread = threading.Thread(
-                target=self.start_ws_eventloop)
-        self.ws_eventloop_thread.start()
-
-        self._register_callbacks()
-
-        # blocking call; TODO remove socketio
-        self.socketio.run(self.app, host=self.host, port=self.port)
-
-    def stop(self):
-        # TODO
-        pass
+    def callback_to_ws(self, message):
+        """ used from the python callbacks in the dring """
+        print('server: adding "%s" to ws_messages queue of size %s' % (
+            message, self.ws_messages.qsize(),))
+        self.ws_eventloop.call_soon_threadsafe(
+            self.ws_messages.put_nowait, message)
 
