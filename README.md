@@ -2,7 +2,7 @@
 
 The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-api/wiki).
 
-Tested and stable at [e064788](https://github.com/sevaivanov/ring-api/commit/e064788ca7921e866717a53ee20c329db13508a2).
+Tested and stable at [6aae66b](https://github.com/sevaivanov/ring-api/commit/6aae66bb0d28514c24e87db1cecf004bea4d48f0).
 
 ## Roadmap
 
@@ -137,11 +137,9 @@ It was tested using IPython.
     # Callbacks
     cbs = ring.dring.callbacks_to_register()
 
-    # i.e. get callback documentation
-    from ring_api.callbacks import cb_api
-    help(cb_api.text_message)
-
     # i.e. define a simple callback
+    from ring_api.callbacks import cb_api
+
     def on_text(account_id, from_ring_id, content):
         print(account_id, from_ring_id, content)
 
@@ -167,6 +165,9 @@ It was tested using IPython.
 
     # show documentation of some method
     help(ring.dring.config.account_details)
+
+    # show callbacks documentation
+    help(cb_api.text_message)
 
 ## Contributing
 
