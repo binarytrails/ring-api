@@ -161,10 +161,6 @@ class AccountsCodecs(Resource):
             'details': self.dring.config.get_codec_details(account_id, int(codec_id))
         })
     
-class AccountsCodecsActive(Resource):
-    def __init__(self, dring):
-        self.dring = dring
-
     def get(self, account_id):
         return jsonify({
             'status': 200,

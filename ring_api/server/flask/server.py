@@ -67,7 +67,7 @@ class FlaskServer:
             '/accounts/<account_id>/details/',
             resource_class_kwargs={'dring': self.dring})
 
-        self.api.add_resource(account.AccountsCodecsActive,
+        self.api.add_resource(account.AccountsCodecs,
             '/accounts/<account_id>/codecs/',
             resource_class_kwargs={'dring': self.dring})
     
