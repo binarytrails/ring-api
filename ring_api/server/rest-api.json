@@ -69,12 +69,12 @@
         "GET": "getSupportedCiphers"
     },
 
-    "/accounts/<account_id>/codecs/<codec_id>": {
-        "GET": "getCodecDetails",
-        "PUT": "setCodecDetails"
+    "/accounts/<account_id>/codecs/": {
+        "GET": "getActiveCodecList",
+        "PUT": "setActiveCodecList"
     },
 
-    "/accounts/<account_id>/codecs/active/": {
+    "/accounts/<account_id>/codecs/<codec_id>/": {
         "GET": "getCodecDetails",
         "PUT": "setCodecDetails"
     },

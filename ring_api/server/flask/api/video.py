@@ -127,22 +127,9 @@ class VideoCamera(Resource):
         })
     
     def put(self):
-        data = request.args
-        if (not data):
-            return jsonify({
-                'status': 404,
-                'message': 'data not found'
-            })
+        data = request.get_json(force=True)
 
-        elif ('action' not in data):
-            return jsonify({
-                'status': 404,
-                'message': 'action not found in data'
-            })
-        
-        device_type = data.get('type')
-
-        if (device_type == 'start'):
+        if (data['action'] == 'start'):
            
             self.dring.video.start_camera()
 
@@ -151,7 +138,7 @@ class VideoCamera(Resource):
                 'cameraStatus': self.dring.video.has_camera_started()
             })
         
-        elif (device_type == 'stop'):
+        elif (data['action'] == 'stop'):
            
             self.dring.video.stop_camera()
 

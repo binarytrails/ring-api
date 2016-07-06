@@ -216,7 +216,7 @@ cdef class ConfigurationManager:
         confman_cpp.setActiveCodecList(account_id.encode(), codec_list)
 
     def get_audio_plugin_list(self):
-        """Get the list of audio plugin
+        """Gets the list of audio plugin
 
         Return: plugin list
         """
