@@ -2,6 +2,7 @@
 # Copyright (C) 2016 Savoir-faire Linux Inc
 #
 # Author: Seva Ivanov <seva.ivanov@savoirfairelinux.com>
+#         Simon Zeni <simon.zeni@savoirfairelinux.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,6 +40,15 @@ cdef extern from "configurationmanager_interface.h" namespace "DRing":
     vector[string] getAccountList()
     uint64_t sendAccountTextMessage(const string& accountID, const string& to,
         const map[string, string]& payloads)
+    map[string, string] getTlsDefaultSettings()
+    vector[unsigned] getCodecList()
+    vector[string] getSupportedTlsMethod()
+    map[string, string] getCodecDetails(const string& accountID, const unsigned& codecId)
+    boolean setCodecDetails(const string& accountID, const unsigned& codecId, 
+        const map[string, string]& details)
+    vector[unsigned] getActiveCodecList(const string& accountID)
+    void setActiveCodecList(const string& accountID, const vector[unsigned]& codec_list)
+    vector[string] getAudioPluginList()
     map[string, string] validateCertificate(const string& accountId, const string& certificate)
     map[string, string] getCertificateDetails(const string& certificate)
     vector[string] getPinnedCertificates()

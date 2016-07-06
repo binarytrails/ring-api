@@ -141,6 +141,41 @@ class AccountsDetails(Resource):
             'message': 'wrong account type'
         })
 
+class AccountsCodecs(Resource):
+    def __init__(self, dring):
+        self.dring = dring
+
+    def get(self, account_id, codec_id=None):
+        if (codec_id is not None):
+            return jsonify({
+                'status': 200,
+                'details': self.dring.config.get_codec_details(account_id, int(codec_id))
+            })
+        
+        return jsonify({
+            'status': 200,
+            'details': self.dring.config.get_active_codec_list(account_id)
+        })
+    
+    def put(self, account_id, codec_id=None):
+        data = request.get_json(force=True)
+        
+        if (codec_id is not None):
+            self.dring.config.set_codec_details(account_id, int(codec_id), data['details'])
+
+            return jsonify({
+                'status': 200,
+                'details': self.dring.config.get_codec_details(account_id, int(codec_id))
+            })
+        
+        self.dring.config.set_active_codec_list(account_id, codec_id, data['list'])
+
+        return jsonify({
+            'status': 200,
+            'details': self.dring.config.get_active_codec_list(account_id)
+        })
+        
+
 class AccountsCall(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -226,7 +261,7 @@ class AccountsCertificates(Resource):
         if (status == 'UNDEFINED' or status == 'ALLOWED' or status == 'BANNED'):
             return jsonify({
                 'status': 200,
-                'succes': self.dring.configset_certificate_status(
+                'succes': self.dring.config.set_certificate_status(
                             account_id, 
                             cert_id, 
                             status

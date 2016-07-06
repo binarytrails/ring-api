@@ -145,6 +145,8 @@ cdef class ConfigurationManager:
 
         Keywork argument:
         account_id -- account id string
+
+        No return
         """
         confman_cpp.removeAccount(account_id.encode())
 
@@ -174,6 +176,51 @@ cdef class ConfigurationManager:
 
         confman_cpp.sendAccountTextMessage(
                 raw_account_id, raw_ring_id, raw_content)
+
+    def get_tls_default_settings(self):
+        """Get the TLS default settings
+
+        Return: default settings dict
+        """
+        return raw_dict_to_dict(confman_cpp.getTlsDefaultSettings())
+
+    def get_codec_list(self):
+        """Get the list of codecs
+    
+        Return: codecs list
+        """
+        return confman_cpp.getCodecList()
+
+    def get_supported_tls_method(self):
+        """Get the list of TLS supported methods
+
+        Return: methods list
+        """
+        return raw_list_to_list(confman_cpp.getSupportedTlsMethod())
+   
+    def get_codec_details(self, account_id, codec_id):
+        return raw_dict_to_dict(confman_cpp.getCodecDetails(account_id.encode(), codec_id))
+
+    def set_codec_details(self, account_id, codec_id, details):
+        cdef map[string, string] raw_details
+
+        for key, value in details.iteritems():
+            raw_details[key.encode()] = value.encode()
+
+        return confman_cpp.setCodecDetails(account_id.encode(), codec_id, raw_details)
+    
+    def get_active_codec_list(self, account_id):
+        return confman_cpp.getActiveCodecList(account_id.encode())
+
+    def set_active_codec_list(self, account_id, codec_list):
+        confman_cpp.setActiveCodecList(account_id.encode(), codec_list)
+
+    def get_audio_plugin_list(self):
+        """Gets the list of audio plugin
+
+        Return: plugin list
+        """
+        return raw_list_to_list(confman_cpp.getAudioPluginList())
 
     def validate_certificate(self, account_id, certificate):
         """TODO
