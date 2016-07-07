@@ -28,7 +28,10 @@ Tested and stable at [6aae66b](https://github.com/sevaivanov/ring-api/commit/6aa
 * Wiki: document the server and WebSockets software choices
 * Add unit tests
 * Add integration tests
-* Integrate the project to Ring-daemon Autotools using the *--without-dbus* option
+* Integrate the project to Ring-daemon Autotools (GNU Build System) using the *--without-dbus* option
+
+    See: *Learning Cython Programming* by Philip Herron, page 32.
+
 * Implement the functionalities:
 
     **It considered done when it's implement in both Cython and the RESTful server.**
