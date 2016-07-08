@@ -28,32 +28,40 @@ import websockets
 from websockets import exceptions as ws_ex
 
 from ring_api.server.flask.cb_api import websockets as cb_api
-from ring_api.server.flask.api import account, video, calls, certificate, audio, crypto, codec
+from ring_api.server.flask.api import (
+        account, video, calls, certificate, audio, crypto, codec)
 
 class FlaskServer:
 
     websockets = list()
     ws_messages = asyncio.Queue()
 
-    def __init__(self, host, port, dring):
+    def __init__(self, host, port, dring, dring_pollevents_interval, verbose):
         self.host = host
         self.port = port
         self.dring = dring
+        self.dring_pollevents_interval = dring_pollevents_interval
+        self.verbose = verbose
 
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = 't0p_s3cr3t'
         self.app.config.update(
             PROPAGATE_EXCEPTIONS = True
         )
+
         self.api = Api(self.app, catch_all_404s=True)
+        self._init_api_resources()
 
-        self._add_resources()
+        self._init_websockets()
+        self._register_callbacks()
 
-    def _add_resources(self):
-        """Keep the same order as in the rest-api.json."""
+    def _init_api_resources(self):
+        """Initializes the Flask-REST API resources
+
+        Keep the same order as in the rest-api.json.
+        """
 
         # Accounts
-
         self.api.add_resource(account.Account, '/account/',
             resource_class_kwargs={'dring': self.dring})
 
@@ -81,26 +89,22 @@ class FlaskServer:
             resource_class_kwargs={'dring': self.dring})
 
         # Calls
-
         self.api.add_resource(calls.Calls,
             '/calls/<call_id>/',
             resource_class_kwargs={'dring': self.dring})
 
         # Codecs
-
         self.api.add_resource(codec.Codecs,
             '/codecs/',
             resource_class_kwargs={'dring': self.dring})
 
         # Crypto
-
         self.api.add_resource(crypto.Tls,
             '/crypto/tls/',
             resource_class_kwargs={'dring': self.dring})
 
 
         # Certificate
-
         self.api.add_resource(certificate.Certificate,
             '/certificates/',
             resource_class_kwargs={'dring': self.dring})
@@ -110,13 +114,11 @@ class FlaskServer:
             resource_class_kwargs={'dring': self.dring})
 
         # Audio
-
         self.api.add_resource(audio.Plugins,
             '/audio/plugins/',
             resource_class_kwargs={'dring': self.dring})
 
         # Video
-
         self.api.add_resource(video.VideoDevices,
             '/video/devices/',
             resource_class_kwargs={'dring': self.dring})
@@ -129,80 +131,133 @@ class FlaskServer:
             '/video/camera/',
             resource_class_kwargs={'dring': self.dring})
 
-    def register_callbacks(self, class_instance):
-        """ dring callbacks register using this class instance """
+    def _init_websockets(self):
+        self.ws_eventloop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.ws_eventloop)
+
+        # TODO handle if closed and set as class var for rest api to inform
+        self.ws_server = websockets.serve(self.ws_handle, '127.0.0.1', 5678)
+
+        self.ws_eventloop.create_task(self.ws_server)
+        self.ws_eventloop.create_task(self.ws_notify())
+
+    def _register_callbacks(self):
+        """ Registers Ring-daemon callbacks """
         callbacks = self.dring.callbacks_to_register()
 
         # TODO add dynamically from implemented function names
         callbacks['text_message'] = cb_api.text_message
 
-        self.dring.register_callbacks(callbacks, context=class_instance)
+        ws_context = {
+            'eventloop': self.ws_eventloop,
+            'queue': self.ws_messages}
 
-    def start_ws_eventloop(self):
-        """ thread started from client """
-        self.ws_eventloop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.ws_eventloop)
+        self.dring.register_callbacks(callbacks, context=ws_context)
 
-        # TODO register
-        self.ws_server = websockets.serve(
-                self.ws_handle, '127.0.0.1', 5678)
+    def run_websockets(self):
+        """ Starts the asyncio eventloop for the websockets
 
-        self.ws_eventloop.create_task(self.ws_server)
-        self.ws_eventloop.create_task(self.ws_notify())
-
+        It needs to be run as main process @TODO
+        """
         self.ws_eventloop.run_forever()
 
-    def start_rest(self):
-        """ thread started from client
+    def run_rest(self):
+        """ Starts the RESTful Flask application
 
-        use_reloader -- False because expects to run in the main thread
+        No return
         """
+        # use_reloader is set to False because if it's set to True
+        # it expects to run in the main thread
+
         self.app.run(host=self.host, port=self.port,
                 debug=True, use_reloader=False)
 
     def stop(self):
-        # TODO
+        """ TODO """
         pass
 
     # WebSockets using AsyncIO
 
     async def ws_handle(self, websocket, path):
-        """ task handle which is run for every websocket """
+        """ Task handle which is run for every websocket connection.
+
+        Keyword arguments:
+        websocket   --    websocket instance using asyncio library
+        path        --    websocket namespace
+
+        No return
+        """
         if (websocket not in self.websockets):
             self.websockets.append(websocket)
-            print('server: adding new socket: %s' % str(websocket))
 
-        print('server: sending "welcome" to %s' % str(websocket))
-        await websocket.send('welcome')
+            if (self.verbose):
+                print('server: adding new socket: %s' % str(websocket))
 
         while True:
-            # keeps the websocket alive by the current design
+            # Keeps the websocket alive by the current design
             # see: https://github.com/aaugustin/websockets/issues/122
             await asyncio.sleep(60)
+
             if (websocket not in self.websockets):
-                print('server: closing websocket %s' % websocket)
+                if (self.verbose):
+                    print('server: closing websocket %s' % websocket)
                 break
 
     async def ws_notify(self):
-        """ task notify which listens for new callback messages """
-        print('server: waiting for websockets notifications')
+        """ Task notify which listens for new callback messages and send them
+        to all connected websockets.
+
+        'Dirty hack' issue:
+        Asyncio Queue class is not thread safe.
+
+        It means that in the cb_api/websockets.py, we have to use the call
+        queue.put_nowait() in call_soon_threadsafe() where queue is ws_messages.
+        This means that the await on ws_messages.get() will never happen here.
+
+        In case, we wish to use the asyncio concurrency, we will need to use:
+        'eventloop.create_task(queue.put(message))' in cb_api/websockets.py.
+        However, since the Asyncio Queue is not thread safe, it won't work.
+
+        The latter brings this 'dirty hack' where I use the asyncio websockets
+        implementation but *instead of awaiting messages, we refresh every 'n'
+        seconds* with a combination of queue.get_nowait().
+
+        The refresh is based on the dring poll_events() interval.
+
+        A clean solution would be to find a Queue library supporting both.
+        """
+
+        if (self.verbose):
+            print('server: waiting for websockets notifications')
+
         while True:
-            # FIXME messages are added but not retrieved
-            message = await self.ws_messages.get()
-            print('server: got "%s"' % message)
+            # --------------FIXME dirty hack:------------------
+            await asyncio.sleep(self.dring_pollevents_interval)
 
-            for websocket in self.websockets:
-                print('server: sending "%s" to %s' % (message, websocket))
+            for i in range(0, self.ws_messages.qsize()):
+                # should be in a loop to get them all
                 try:
-                    await websocket.send(message)
-                except ws_ex.ConnectionClosed:
-                    self.websockets.remove(websocket)
-                    print('server: connection closed to %s' % websocket)
+                    message = self.ws_messages.get_nowait()
+                except asyncio.queues.QueueEmpty:
+                    break
 
-    def callback_to_ws(self, message):
-        """ used from the python callbacks in the dring """
-        print('server: adding "%s" to ws_messages queue of size %s' % (
-            message, self.ws_messages.qsize(),))
-        self.ws_eventloop.call_soon_threadsafe(
-            self.ws_messages.put_nowait, message)
+            # Should be only the below line without the previous for loop:
+            #message = await self.ws_messages.get()
+            # -------------------------------------------------
+
+                if (self.verbose):
+                    print('server: got "%s"' % message)
+
+                for websocket in self.websockets:
+
+                    if (self.verbose):
+                        print('server: sending "%s" to %s' % (message, websocket))
+
+                    try:
+                        await websocket.send(message)
+
+                    except ws_ex.ConnectionClosed:
+                        self.websockets.remove(websocket)
+                        if (self.verbose):
+                            print('server: connection closed to %s' % websocket)
 

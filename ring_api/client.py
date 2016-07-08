@@ -20,10 +20,10 @@
 #
 
 from optparse import OptionParser
-from bottle import Bottle
 
-import threading, time
+import time
 from queue import Queue
+from threading import Thread
 
 from ring_api.dring_cython import Dring
 from ring_api.server.flask.server import FlaskServer
@@ -78,6 +78,7 @@ class Client:
 
     def __init__(self, _options=None):
         self.dring = Dring()
+        self.dring_pollevents_interval = 0.1
 
         if (not _options):
             (_options, args) = options()
@@ -94,58 +95,73 @@ class Client:
             print(self.dring.version())
 
     def __init_threads__(self, bitflags):
+        # 1. Ring-daemon (dring) thread
         self.dring.init_library(bitflags)
-        self.dring_thread = threading.Thread(target=self.dring.start)
-        self.dring_thread.setDaemon(not self.options.persistent)
+        self.thread_dring = Thread(target=self.dring.start)
+        self.thread_dring.setDaemon(not self.options.persistent)
 
         if (self.options.rest):
-            # create the rest server
-            self.restapp = FlaskServer(
-                self.options.host, self.options.port, self.dring)
+            # Initialize the server with dring instance
+            self.server = FlaskServer(
+                    self.options.host, self.options.port,
+                    self.dring, self.dring_pollevents_interval,
+                    self.options.verbose)
 
-            # init websockets asyncio eventloop thread
-            self.restapp_ws_eventloop_thread = threading.Thread(
-                target=self.restapp.start_ws_eventloop)
+            # 2. Dring pollevents thread
+            self.thread_dring_pollevents = Thread(
+                target=self._run_dring_pollevents)
 
-            # init restapp thread
-            self.restapp_thread = threading.Thread(
-                target=self.restapp.start_rest)
+            # 3. Server rest app thread
+            self.thread_server_restapp = Thread(target=self.server.run_rest)
 
         if (self.options.interpreter):
-            # main loop as daemon (foreground process)
-            self.mother_thread = threading.Thread(
-                    target=self._start_main_loop)
-            self.mother_thread.setDaemon(True)
+            # Main loop as daemon for non blocking interpreter mode
+            self.thread_mother = Thread(target=self._run_main_loop)
+            self.thread_mother.setDaemon(True)
 
-    def start(self):
-        try:
-            if (self.options.interpreter):
-                self.mother_thread.start()
-            else:
-                self._start_main_loop()
+    def _run_dring_pollevents(self):
+        """ Runs Ring-daemon (dring) poll_events() on an interval """
+        while True:
+            time.sleep(self.dring_pollevents_interval)
+            self.dring.poll_events()
 
-        except (KeyboardInterrupt, SystemExit):
-            self.stop()
-
-    def _start_main_loop(self):
-        self.dring_thread.start()
+    def _run_main_loop(self):
+        # 1. Ring-daemon (dring) thread for everyone
+        self.thread_dring.start()
 
         if (self.options.rest):
             # give dring time to init
             time.sleep(3)
 
-            # start websockets asyncio eventloop in a thread
-            self.restapp_ws_eventloop_thread.start()
+            # 2. dring pollevents thread
+            self.thread_dring_pollevents.start()
 
-            # register callbacks which will use the server instace
-            self.restapp.register_callbacks(self.restapp)
+            # 3. restapp thread
+            self.thread_server_restapp.start()
 
-            # start restapp in a thread
-            self.restapp_thread.start()
+            # main process needs to be websockets asyncio eventloop
+            self.server.run_websockets()
 
-        while True:
-            time.sleep(0.1)
-            self.dring.poll_events()
+        else:
+            self._run_dring_pollevents()
+
+    def start(self):
+        """ Starts the threading according to the users options.
+
+        In interpreter mode, the main_loop is self-contained in a thread to
+        enable a non-blocking runtime.
+        """
+        if (self.options.interpreter and self.options.rest):
+            raise RuntimeError("REST Server wasn't designed to run in interpreter.")
+
+        try:
+            if (self.options.interpreter):
+                self.thread_mother.start()
+            else:
+                self._run_main_loop()
+
+        except (KeyboardInterrupt, SystemExit):
+            self.stop()
 
     def stop(self):
         if (self.options.verbose):

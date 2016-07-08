@@ -22,7 +22,7 @@ Tested and stable at [6aae66b](https://github.com/sevaivanov/ring-api/commit/6aa
 * ~~Define RESTful API standards~~
 * ~~Define RESTful API in json~~
 * ~~Implement RESTful API using Flask-REST~~
-* Implement WebSockets structure for server initiated callbacks
+* ~~Implement WebSockets structure for server initiated callbacks~~
 * ~~Write a wiki base~~
 * Wiki: write how it works with and draw a diagram
 * Wiki: document the server and WebSockets software choices
@@ -122,7 +122,7 @@ In another terminal you can send a text message:
 
 #### Interpreter
 
-It was tested using IPython.
+It was tested using IPython. **It wasn't designed to be run with the REST Server.**
 
     from ring_api import client
 

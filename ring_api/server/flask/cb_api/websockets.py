@@ -24,7 +24,7 @@
 
 import json
 
-def text_message(server, account_id, from_ring_id, content):
+def text_message(context, account_id, from_ring_id, content):
     """Receives a text message
 
     Keyword arguments:
@@ -40,5 +40,6 @@ def text_message(server, account_id, from_ring_id, content):
             'content': content
         }
     })
-    server.callback_to_ws(message)
+    context['eventloop'].call_soon_threadsafe(
+        context['queue'].put_nowait, message)
 
