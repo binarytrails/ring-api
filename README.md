@@ -2,7 +2,7 @@
 
 The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-api/wiki).
 
-Tested and stable at [6aae66b](https://github.com/sevaivanov/ring-api/commit/6aae66bb0d28514c24e87db1cecf004bea4d48f0).
+Tested and stable at [f8cd8fa](https://github.com/sevaivanov/ring-api/commit/f8cd8fabc9ed2973fe4ca9935b423012e56c70bf).
 
 ## Roadmap
 
@@ -49,7 +49,6 @@ Tested and stable at [6aae66b](https://github.com/sevaivanov/ring-api/commit/6aa
       - add full call controls (media pause, transfer, audio controls, conferences, ...)
       - add full "smartInfo" features
       - ~~certificates controls~~
-
 
 ### Installation
 
