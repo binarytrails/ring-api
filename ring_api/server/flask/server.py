@@ -29,7 +29,7 @@ from websockets import exceptions as ws_ex
 
 from ring_api.server.flask.cb_api import websockets as cb_api
 from ring_api.server.flask.api import (
-        account, video, calls, certificate, audio, crypto, codec)
+    account, video, messages, calls, certificate, audio, crypto, codec)
 
 class FlaskServer:
 
@@ -86,6 +86,15 @@ class FlaskServer:
 
         self.api.add_resource(account.AccountsCertificates,
             '/accounts/<account_id>/certificates/<cert_id>/',
+            resource_class_kwargs={'dring': self.dring})
+
+        self.api.add_resource(account.AccountsMessage,
+            '/accounts/<account_id>/message/',
+            resource_class_kwargs={'dring': self.dring})
+
+        # Messages
+        self.api.add_resource(messages.Messages,
+            '/messages/<message_id>/',
             resource_class_kwargs={'dring': self.dring})
 
         # Calls
@@ -146,7 +155,7 @@ class FlaskServer:
         callbacks = self.dring.callbacks_to_register()
 
         # TODO add dynamically from implemented function names
-        callbacks['text_message'] = cb_api.text_message
+        callbacks['account_message'] = cb_api.account_message
 
         ws_context = {
             'eventloop': self.ws_eventloop,

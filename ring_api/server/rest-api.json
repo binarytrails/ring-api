@@ -40,7 +40,7 @@
             "type": {
                 "SIP": "getAccountTemplate",
                 "IAX": "getAccountTemplate",
-                "IP2IP": "getAccountTemplate", 
+                "IP2IP": "getAccountTemplate",
                 "RING": "getAccountTemplate"
             }
         },
@@ -84,7 +84,7 @@
             "ring_id": "placeCall"
         }
     },
-    
+
     "/accounts/<account_id>/certificates/<cert_id>/": {
         "GET": {
             "action": {
@@ -100,6 +100,20 @@
         }
     },
 
+    "/accounts/<account_id>/message/": {
+        "POST": {
+            ["ring_id", "mime_type", "message"]: "sendAccountTextMessage"
+        }
+    },
+
+    "/message/mime_types/": {
+        "GET": "TODO"
+    },
+
+    "/messages/<message_id>/": {
+        "GET": "getMessageStatus"
+    },
+
     "/calls/<call_id>/": {
         "PUT": {
             "action": [
@@ -110,11 +124,6 @@
                 "unhold"
             ]
         }
-    },
-
-    "/accounts/<account_id>/message/": {
-        "GET": "getMessageStatus",
-        "POST": "sendAccountTextMessage"
     },
 
     "/codecs/": {
@@ -139,7 +148,7 @@
         "POST": {
             "action": {
                 "pin": "pinCertificate",
-                "pin_remote": "pinRemoteCertificate", 
+                "pin_remote": "pinRemoteCertificate",
                 "unpin": "unpinCertificate"
             }
         }

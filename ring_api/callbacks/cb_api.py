@@ -24,8 +24,8 @@
 # Function names should be the same as the keys from callbacks_to_register().
 # Each method should contain a docstring that describes it.
 
-def text_message(account_id, from_ring_id, content):
-    """Receives a text message
+def account_message(account_id, from_ring_id, content):
+    """Receive account message
 
     Keyword arguments:
     account_id      -- account id string

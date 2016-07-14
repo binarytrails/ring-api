@@ -19,6 +19,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
 #
 
+# TODO need to validate the account existence? if yes, move to utils.
+
 from flask import jsonify, request
 from flask_restful import Resource
 
@@ -95,7 +97,7 @@ class Accounts(Resource):
             'accounts': self.dring.config.accounts()
         })
 
-class AccountsID(Resource):
+class AccountsID(Resource):         # FIXME merge with Accounts
     def __init__(self, dring):
         self.dring = dring
 
@@ -232,9 +234,9 @@ class AccountsCertificates(Resource):
             return jsonify({
                 'status': 200,
                 'certificates': self.dring.config.validate_certificate(
-                                    account_id, 
-                                    cert_id
-                                )
+                    account_id,
+                    cert_id
+                )
             })
 
         return jsonify({
@@ -262,13 +264,39 @@ class AccountsCertificates(Resource):
             return jsonify({
                 'status': 200,
                 'succes': self.dring.config.set_certificate_status(
-                            account_id, 
-                            cert_id, 
-                            status
-                          )
+                    account_id,
+                    cert_id,
+                    status
+                )
             })
 
         return jsonify({
             'status': 400,
             'message': 'wrong status type'
         })
+
+class AccountsMessage(Resource):
+    def __init__(self, dring):
+        self.dring = dring
+
+    def post(self, account_id):
+
+        data = request.args
+        ring_id = data.get('ring_id')
+        mime_type = data.get('mime_type')
+        message = data.get('message')
+
+        if (not (ring_id and mime_type and message)):
+            return jsonify({
+                'status': 400,
+                'message': 'required post data not found'
+            })
+
+        message_id = self.dring.config.send_account_message(
+            account_id, ring_id, {mime_type: message})
+
+        return jsonify({
+            'status': 200,
+            'message_id': message_id
+        })
+

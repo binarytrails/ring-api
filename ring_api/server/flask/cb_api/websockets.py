@@ -24,8 +24,8 @@
 
 import json
 
-def text_message(context, account_id, from_ring_id, content):
-    """Receives a text message
+def account_message(context, account_id, from_ring_id, content):
+    """Receive account message
 
     Keyword arguments:
     socketio        -- context as instance to emit to websockets
@@ -34,7 +34,7 @@ def text_message(context, account_id, from_ring_id, content):
     content         -- dict of content defined as [<mime-type>, <message>]
     """
     message = json.dumps({
-        'text_message': {
+        'account_message': {
             'account_id': account_id,
             'from_ring_id': from_ring_id,
             'content': content

@@ -2,8 +2,8 @@
 #
 # Copyright (C) 2016 Savoir-faire Linux Inc
 #
-# Author: Seva Ivanov <seva.ivanov@savoirfairelinux.com>
-# Author: Simon Zeni <simon.zeni@savoirfairelinux.com>
+# Authors: Seva Ivanov <seva.ivanov@savoirfairelinux.com>
+#          Simon Zeni <simon.zeni@savoirfairelinux.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 # Keep the logic of the interfaces
 # Apply the logical partitioning in the API layer
 
+from libc.stdint cimport *
 from libcpp.string cimport string
 from libcpp.map cimport map as map
 
@@ -37,7 +38,7 @@ from ring_api.interfaces cimport cb_client as cb_client_cpp
 
 # python callbacks
 global py_cbs
-py_cbs = dict.fromkeys(['text_message'])
+py_cbs = dict.fromkeys(['account_message'])
 
 # python callbacks context
 global py_cbs_ctx
@@ -58,7 +59,7 @@ cdef public void incoming_account_message(
 
     global py_cbs_ctx
     global py_cbs
-    callback = py_cbs['text_message']
+    callback = py_cbs['account_message']
 
     if (callback and py_cbs_ctx):
         callback(py_cbs_ctx, str(account_id), str(from_ring_id), content)
@@ -157,15 +158,15 @@ cdef class ConfigurationManager:
         """
         return raw_list_to_list(confman_cpp.getAccountList())
 
-    def send_text_message(self, account_id, ring_id, content):
-        """Sends a text message
+    def send_account_message(self, account_id, ring_id, content):
+        """Sends account message
 
         Keyword arguments:
         account_id  -- account id string
         ring_id     -- ring id destination string
         content     -- dict of content defined as {<mime-type>: <message>}
 
-        No return
+        Return: success int (0 = Failure, int = message_id)
         """
         cdef string raw_account_id = account_id.encode()
         cdef string raw_ring_id = ring_id.encode()
@@ -174,8 +175,20 @@ cdef class ConfigurationManager:
         for key, value in content.iteritems():
             raw_content[key.encode()] = value.encode()
 
-        confman_cpp.sendAccountTextMessage(
-                raw_account_id, raw_ring_id, raw_content)
+        return confman_cpp.sendAccountTextMessage(
+            raw_account_id, raw_ring_id, raw_content)
+
+    def get_message_status(self, message_id):
+        """Gets account message
+
+        Keyword arguments:
+        message_id  -- message id int
+
+        Return: message status int
+        (0 = UNKNOWN, 1 = SENDING, 2 = SENT, 3 = READ, 4 = FAILURE)
+        """
+        cdef uint64_t raw_message_id = message_id
+        return confman_cpp.getMessageStatus(raw_message_id)
 
     def get_tls_default_settings(self):
         """Get the TLS default settings
@@ -186,7 +199,7 @@ cdef class ConfigurationManager:
 
     def get_codec_list(self):
         """Get the list of codecs
-    
+
         Return: codecs list
         """
         return confman_cpp.getCodecList()

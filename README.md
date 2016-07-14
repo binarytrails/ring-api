@@ -40,14 +40,14 @@ Tested and stable at [6aae66b](https://github.com/sevaivanov/ring-api/commit/6aa
     - ~~control the "static" configuration of the daemon: add/remove an account, modify properties, enable/disable them~~
     - ~~be able to listen to the changes from the daemon (framework for signals)~~
     - execute dynamic features:
-      - receive a message text (IM) out-of-call
-      - send an IM out-of-call
+      - ~~receive a message text (IM) out-of-call~~
+      - ~~send an IM out-of-call~~
       - be able to accept/refuse an incoming call
       - be able to display the status of a call and stop a call
       - tx/rx IM in-call
       - ~~display video, in-call and preview for camera setup (audio is fully controlled by the daemon)~~
       - add full call controls (media pause, transfer, audio controls, conferences, ...)
-      - add full "smart list" features
+      - add full "smartInfo" features
       - ~~certificates controls~~
 
 
@@ -110,15 +110,19 @@ It is recommended that you start it with the *--rest* option to be able to inter
 
 ##### Examples
 
-    ./client.py -rv
+Start the backend using client in verbose and with REST server:
 
-List all of the API routes at http://127.0.0.1:8080/all_routes/.
+    ./client.py -rv
 
 ###### Send a text message
 
-In another terminal you can send a text message:
+In another terminal, you can send a account message using curl:
 
-    curl -X POST http://127.0.0.1:8080/user/send/text/<account_id>/<to_ring_id>/<message>/
+    curl -X POST -G -v http://127.0.0.1:8080/accounts/<account_id>/message/ -d "ring_id=<ring_id> -d "message=curling" --data-urlencode "mime_type=text/plain"
+
+Get the message status:
+
+    curl http://127.0.0.1:8080/message/<message_id>/
 
 #### Interpreter
 
@@ -144,7 +148,7 @@ It was tested using IPython. **It wasn't designed to be run with the REST Server
         print(account_id, from_ring_id, content)
 
     # i.e. register this callback
-    cbs['text_message'] = on_text
+    cbs['account_message'] = on_text
     ring.dring.register_callbacks(cbs)
 
     ring.start()
@@ -154,7 +158,7 @@ It was tested using IPython. **It wasn't designed to be run with the REST Server
     details = ring.dring.config.account_details(account)
 
     # i.e. send a text message
-    ring.dring.config.send_text_message(
+    ring.dring.config.send_account_message(
         account, '<to_ring_id>', {'text/plain': 'hello'})
 
     # Extra
@@ -167,7 +171,7 @@ It was tested using IPython. **It wasn't designed to be run with the REST Server
     help(ring.dring.config.account_details)
 
     # show callbacks documentation
-    help(cb_api.text_message)
+    help(cb_api.account_message)
 
 ## Contributing
 

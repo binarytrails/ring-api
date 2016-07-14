@@ -40,6 +40,7 @@ cdef extern from "configurationmanager_interface.h" namespace "DRing":
     vector[string] getAccountList()
     uint64_t sendAccountTextMessage(const string& accountID, const string& to,
         const map[string, string]& payloads)
+    int getMessageStatus(uint64_t id)
     map[string, string] getTlsDefaultSettings()
     vector[unsigned] getCodecList()
     vector[string] getSupportedTlsMethod()
