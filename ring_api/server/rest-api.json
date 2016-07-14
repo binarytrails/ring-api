@@ -8,30 +8,53 @@
             "Seva Ivanov": "seva.ivanov@savoirfairelinux.com",
             "Simon Zeni": "simon.zeni@savoirfairelinux.com"
         },
+
         "syntax": {
+            "todo": "Unfinished tasks",
+            ["comment", "comments"]: "Important comment",
+
             "types": {
-                "GET": "Get",
-                "POST": "Create",
-                "PUT": "Update",
-                "DELETE": "Delete"
+                "comments": {
+                    "Types are requests supported types",
+                    "Responses includes a 'success' and a html 'status' variables"
+                },
+                "GET": "Get using raw arguments",
+                "POST": "Create action using json",
+                "PUT": "Update action using json",
+                "DELETE": "Delete action"
             },
-            "template": {
-                "/resource/": {
-                    "type1": "Function name of libring <interface.h>",
-                    "type2": {
-                        "argument": {
-                            "value1": "Function name of libring <interface.h>",
-                            "value2": "Function name of libring <interface.h>"
+
+            "structure": {
+                "comments": {
+                    "Template explaining the structure of resources with types, values and arguments",
+                    "values": {
+                        "Not specified implies that you get them from a GET request, see <type2>, i.e. /account/"
+                    },
+                    "arguments": {
+                        "Required that can't be obtained from a GET are listed, see <type4>, i.e. /accounts/<account_id>/message/"
+                    }
+                },
+                "/<resource>/": {
+                    "<type1>": "Function name of libring <interface.h>",
+                    "<type2>": {
+                        "<argument>": "Function name of libring <interface.h>"
+                    },
+                    "<type3>": {
+                        "<argument>": {
+                            "<value2>": "Function name of libring <interface.h>",
+                            "<value2>": "Function name of libring <interface.h>"
                         }
+                    },
+                    "<type4>": {
+                        ["<argument1>", "<argument2>"]: "Function name of libring <interface.h>"
                     }
                 }
             },
-            "comments": "Not allowed in JSON, use spaces instead",
+
             "empty_lines": {
-                1: "Under same resource but more than 2 of same subresource",
-                2: "Different root resources"
-            },
-            "TODO": "Unfinished tasks"
+                1: "Resources are under the same root resource",
+                2: "Resources are different root resources"
+            }
         }
     },
 
@@ -44,7 +67,9 @@
                 "RING": "getAccountTemplate"
             }
         },
-        "POST": "addAccount"
+        "POST": {
+            "details": "addAccount"
+        }
     },
 
     "/accounts/": {
@@ -62,7 +87,9 @@
                 "volatile": "getVolatileAccountDetails"
             }
         },
-        "PUT": "setAccountDetails"
+        "PUT": {
+            "todo": "setAccountDetails"
+        }
     },
 
     "/accounts/<account_id>/ciphers/": {
@@ -71,12 +98,16 @@
 
     "/accounts/<account_id>/codecs/": {
         "GET": "getActiveCodecList",
-        "PUT": "setActiveCodecList"
+        "PUT": {
+            "todo": "setActiveCodecList"
+        }
     },
 
     "/accounts/<account_id>/codecs/<codec_id>/": {
         "GET": "getCodecDetails",
-        "PUT": "setCodecDetails"
+        "PUT": {
+            "todo" : "setCodecDetails"
+        }
     },
 
     "/accounts/<account_id>/call/": {
@@ -106,13 +137,15 @@
         }
     },
 
+
     "/message/mime_types/": {
-        "GET": "TODO"
+        "GET": "todo"
     },
 
     "/messages/<message_id>/": {
         "GET": "getMessageStatus"
     },
+
 
     "/calls/<call_id>/": {
         "PUT": {
@@ -126,9 +159,11 @@
         }
     },
 
+
     "/codecs/": {
         "GET": "getCodecList"
     },
+
 
     "/crypto/tls/": {
         "GET": {
@@ -139,6 +174,7 @@
         }
     },
 
+
     "/certificates/": {
         "GET": "getPinnedCertificates"
     },
@@ -146,6 +182,7 @@
     "/certificate/<cert_id>/": {
         "GET": "getCertificateDetails",
         "POST": {
+            "comment": "todo: what pin means?",
             "action": {
                 "pin": "pinCertificate",
                 "pin_remote": "pinRemoteCertificate",
@@ -154,9 +191,11 @@
         }
     },
 
+
     "/audio/plugins/": {
         "GET": "getAudioPluginList"
     },
+
 
     "/video/devices/": {
         "GET": {
@@ -174,7 +213,9 @@
 
     "/video/<device_name>/settings/": {
         "GET": "getSettings",
-        "PUT": "applySettings"
+        "PUT": {
+            "todo": "applySettings"
+        }
     },
 
     "/video/camera/": {
