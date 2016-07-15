@@ -65,6 +65,10 @@
         }
     },
 
+    "/websocket/port/": {
+        "GET": "Returns the connection port"
+    },
+
     "/account/": {
        "GET": {
             "type": {

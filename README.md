@@ -95,17 +95,18 @@ It is recommended that you start it with the *--rest* option to be able to inter
     Usage: client.py [options] arg1 arg2
 
     Options:
-      -h, --help        show this help message and exit
-      -v, --verbose     activate all of the verbose options
-      -d, --debug       debug mode (more verbose)
-      -c, --console     log in console (instead of syslog)
-      -p, --persistent  stay alive after client quits
-      -r, --rest        start with restful server api
-      --port=PORT       restful server port
-      --host=HOST       restful server host
-      --auto-answer     force automatic answer to incoming call
-      --dring-version   show Ring-daemon version
-      --interpreter     adapt threads for interpreter interaction
+      -h, --help         show this help message and exit
+      -v, --verbose      activate all of the verbose options
+      -d, --debug        debug mode (more verbose)
+      -c, --console      log in console (instead of syslog)
+      -p, --persistent   stay alive after client quits
+      -r, --rest         start with restful server api
+      --port=HTTP_PORT   server http port for rest
+      --ws-port=WS_PORT  server websocket port for callbacks
+      --host=HOST        restful server host
+      --auto-answer      force automatic answer to incoming call
+      --dring-version    show Ring-daemon version
+      --interpreter      adapt threads for interpreter interaction
 
 ##### Examples
 

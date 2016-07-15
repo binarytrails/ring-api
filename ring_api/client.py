@@ -53,8 +53,12 @@ def options():
         help='start with restful server api')
 
     parser.add_option('--port',
-        type='int', dest='port', default=8080,
-        help='restful server port')
+        type='int', dest='http_port', default=8080,
+        help='server http port for rest')
+
+    parser.add_option('--ws-port',
+        type='int', dest='ws_port', default=5678,
+        help='server websocket port for callbacks')
 
     parser.add_option('--host',
         type='str', dest='host', default='127.0.0.1',
@@ -103,9 +107,9 @@ class Client:
         if (self.options.rest):
             # Initialize the server with dring instance
             self.server = FlaskServer(
-                    self.options.host, self.options.port,
-                    self.dring, self.dring_pollevents_interval,
-                    self.options.verbose)
+                    self.options.host, self.options.http_port,
+                    self.options.ws_port, self.dring_pollevents_interval,
+                    self.dring, self.options.verbose)
 
             # 2. Dring pollevents thread
             self.thread_dring_pollevents = Thread(

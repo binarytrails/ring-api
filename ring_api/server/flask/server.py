@@ -28,6 +28,7 @@ import websockets
 from websockets import exceptions as ws_ex
 
 from ring_api.server.flask.cb_api import websockets as cb_api
+from ring_api.server.flask.api import websockets as rest_ws
 from ring_api.server.flask.api import (
     account, video, messages, calls, certificate, audio, crypto, codec)
 
@@ -36,11 +37,14 @@ class FlaskServer:
     websockets = list()
     ws_messages = asyncio.Queue()
 
-    def __init__(self, host, port, dring, dring_pollevents_interval, verbose):
+    def __init__(self, host, http_port, ws_port, ws_poll_interval,
+        dring, verbose):
+
         self.host = host
-        self.port = port
+        self.http_port = http_port
+        self.ws_port = ws_port
+        self.ws_poll_interval = ws_poll_interval
         self.dring = dring
-        self.dring_pollevents_interval = dring_pollevents_interval
         self.verbose = verbose
 
         self.app = Flask(__name__)
@@ -60,6 +64,11 @@ class FlaskServer:
 
         Keep the same order as in the rest-api.json.
         """
+
+        # Websockets
+        self.api.add_resource(rest_ws.Websocket,
+            '/websocket/<port>/',
+            resource_class_kwargs={'port': self.ws_port})
 
         # Accounts
         self.api.add_resource(account.Account,
@@ -140,8 +149,8 @@ class FlaskServer:
         self.ws_eventloop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.ws_eventloop)
 
-        # TODO handle if closed and set as class var for rest api to inform
-        self.ws_server = websockets.serve(self.ws_handle, '127.0.0.1', 5678)
+        self.ws_server = websockets.serve(
+            self.ws_handle, self.host, self.ws_port)
 
         self.ws_eventloop.create_task(self.ws_server)
         self.ws_eventloop.create_task(self.ws_notify())
@@ -174,7 +183,7 @@ class FlaskServer:
         # use_reloader is set to False because if it's set to True
         # it expects to run in the main thread
 
-        self.app.run(host=self.host, port=self.port,
+        self.app.run(host=self.host, port=self.http_port,
                 debug=True, use_reloader=False)
 
     def stop(self):
@@ -237,7 +246,7 @@ class FlaskServer:
 
         while True:
             # --------------FIXME dirty hack:------------------
-            await asyncio.sleep(self.dring_pollevents_interval)
+            await asyncio.sleep(self.ws_poll_interval)
 
             for i in range(0, self.ws_messages.qsize()):
                 # should be in a loop to get them all
