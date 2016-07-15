@@ -24,7 +24,7 @@ from flask_restful import Resource
 class Messages(Resource):
     def __init__(self, dring):
         self.dring = dring
-    
+
     def get(self, message_id):
 
         status = None
@@ -32,12 +32,16 @@ class Messages(Resource):
 
         if (raw_status == 0):
             status = "UNKNOWN"
+
         elif (raw_status == 1):
             status = "SENDING"
+
         elif (raw_status == 2):
             status = "SENT"
+
         elif (raw_status == 3):
             status = "READ"
+
         elif (raw_status == 4):
             status = "FAILURE"
 
@@ -46,7 +50,7 @@ class Messages(Resource):
                 'status': 404,
                 'message': 'unidentified message status'
             })
-            
+
         return jsonify({
             'status': 200,
             'message_status': status

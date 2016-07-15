@@ -10,7 +10,13 @@
         },
 
         "syntax": {
-            "todo": "Unfinished tasks",
+            "todo": {
+                "comment": "Unfinished tasks",
+                "things": [
+                    "specify data_type for json after refactor to stable of server",
+                    "write human text explaining this API"
+                ]
+            },
             ["comment", "comments"]: "Important comment",
 
             "types": {
@@ -18,9 +24,9 @@
                     "Types are requests supported types",
                     "Responses includes a 'success' and a html 'status' variables"
                 },
-                "GET": "Get using raw arguments",
-                "POST": "Create action using json",
-                "PUT": "Update action using json",
+                "GET": "Get",
+                "POST": "Create",
+                "PUT": "Update",
                 "DELETE": "Delete action"
             },
 
@@ -37,6 +43,7 @@
                 "/<resource>/": {
                     "<type1>": "Function name of libring <interface.h>",
                     "<type2>": {
+                        "data_type" : "json",
                         "<argument>": "Function name of libring <interface.h>"
                     },
                     "<type3>": {

@@ -38,7 +38,7 @@ class Tls(Resource):
                 'status': 404,
                 'message': 'type not found in data'
             })
-        
+
         tls_type = data.get('type')
 
         if (tls_type == 'settings'):
@@ -46,7 +46,7 @@ class Tls(Resource):
                 'status': 200,
                 'settings': self.dring.config.get_tls_default_settings()
             })
-        
+
         elif (tls_type == 'method'):
             return jsonify({
                 'status': 200,
@@ -57,3 +57,4 @@ class Tls(Resource):
             'status': 400,
             'message': 'wrong tls type'
         })
+

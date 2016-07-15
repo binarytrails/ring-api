@@ -39,7 +39,7 @@ class VideoDevices(Resource):
                 'status': 404,
                 'message': 'type not found in data'
             })
-        
+
         device_type = data.get('type')
 
         if (device_type == 'all'):
@@ -72,18 +72,18 @@ class VideoDevices(Resource):
                 'status': 404,
                 'message': 'type not found in data'
             })
-        
+
         device_type = data.get('type')
 
         if (device_type == 'default'):
-            data = request.get_json(force=True)
+            data = request.get_json(force=True)     # FIXME json needed?
 
             if (not 'device' in data):
                 return jsonify({
                     'status': 400,
                     'message': 'device not found in request data'
                 })
-           
+
             self.dring.video.set_default_device(data['device'])
 
             return jsonify({
@@ -107,10 +107,10 @@ class VideoSettings(Resource):
         })
 
     def put(self, device_name):
-        data = request.get_json(force=True)
-        
+        data = request.get_json(force=True)     # FIXME remove json
+
         self.dring.video.apply_settings(device_name, data['settings'])
-        
+
         return jsonify({
             'status': 200,
             'settings': self.dring.video.get_settings(device_name)
@@ -125,21 +125,19 @@ class VideoCamera(Resource):
             'status': 200,
             'camera': self.dring.video.has_camera_started()
         })
-    
+
     def put(self):
-        data = request.get_json(force=True)
+        data = request.get_json(force=True)     # FIXME remove json
 
         if (data['action'] == 'start'):
-           
             self.dring.video.start_camera()
 
             return jsonify({
                 'status': 200,
                 'cameraStatus': self.dring.video.has_camera_started()
             })
-        
+
         elif (data['action'] == 'stop'):
-           
             self.dring.video.stop_camera()
 
             return jsonify({

@@ -19,15 +19,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
 #
 
-# TODO need to validate the account existence? if yes, move to utils.
-
 from flask import jsonify, request
 from flask_restful import Resource
+
+import utils
 
 class Account(Resource):
     def __init__(self, dring):
         self.dring = dring
-    
+
     def get(self):
         data = request.args
         if (not data):
@@ -41,31 +41,15 @@ class Account(Resource):
                 'status': 404,
                 'message': 'type not found in data'
             })
-        
+
+        account_template = None
+        account_types = ['SIP', 'IAX', 'IP2P', 'RING']
         account_type = data.get('type')
 
-        if (account_type == 'SIP'):
+        if (account_type in account_types):
             return jsonify({
-                'success': 200,
-                'details': self.dring.config.get_account_template('SIP')
-            })
-
-        elif (account_type == 'IAX'):
-            return jsonify({
-                'success': 200,
-                'details': self.dring.config.get_account_template('IAX')
-            })
-
-        elif (account_type == 'IP2IP'):
-            return jsonify({
-                'success': 200,
-                'details': self.dring.config.get_account_template('IP2IP')
-            })
-
-        elif (account_type == 'RING'):
-            return jsonify({
-                'success': 200,
-                'details': self.dring.config.get_account_template('RING')
+                'status': 200,
+                'details': self.dring.config.get_account_template(account_type)
             })
 
         return jsonify({
@@ -83,23 +67,19 @@ class Account(Resource):
             })
 
         return jsonify({
-            'success': 200,
+            'status': 200,
             'account_id': self.dring.config.add_account(data['details'])
         })
-        
+
 class Accounts(Resource):
     def __init__(self, dring):
         self.dring = dring
 
     def get(self):
         return jsonify({
-            'success': 200,
+            'status': 200,
             'accounts': self.dring.config.accounts()
         })
-
-class AccountsID(Resource):         # FIXME merge with Accounts
-    def __init__(self, dring):
-        self.dring = dring
 
     def delete(self, account_id):
         self.dring.config.remove_account(account_id)
@@ -115,6 +95,7 @@ class AccountsDetails(Resource):
 
     def get(self, account_id):
         data = request.args
+
         if (not data):
             return jsonify({
                 'status': 404,
@@ -126,7 +107,7 @@ class AccountsDetails(Resource):
                 'status': 404,
                 'message': 'type not found in data'
             })
-        
+
         account_type = data.get('type')
 
         if (account_type == 'default'):
@@ -148,63 +129,67 @@ class AccountsCodecs(Resource):
         self.dring = dring
 
     def get(self, account_id, codec_id=None):
-        if (codec_id is not None):
+        if (codec_id):
             return jsonify({
                 'status': 200,
-                'details': self.dring.config.get_codec_details(account_id, int(codec_id))
+                'details': self.dring.config.get_codec_details(
+                    account_id, int(codec_id))
             })
-        
+
         return jsonify({
             'status': 200,
             'details': self.dring.config.get_active_codec_list(account_id)
         })
-    
+
     def put(self, account_id, codec_id=None):
         data = request.get_json(force=True)
-        
-        if (codec_id is not None):
-            self.dring.config.set_codec_details(account_id, int(codec_id), data['details'])
+
+        if (codec_id):
+            self.dring.config.set_codec_details(
+                account_id, int(codec_id), data['details'])
 
             return jsonify({
                 'status': 200,
-                'details': self.dring.config.get_codec_details(account_id, int(codec_id))
+                'details': self.dring.config.get_codec_details(
+                    account_id, int(codec_id))
             })
-        
-        self.dring.config.set_active_codec_list(account_id, codec_id, data['list'])
+
+        self.dring.config.set_active_codec_list(
+                account_id, codec_id, data['list'])
 
         return jsonify({
             'status': 200,
             'details': self.dring.config.get_active_codec_list(account_id)
         })
-        
+
 
 class AccountsCall(Resource):
     def __init__(self, dring):
         self.dring = dring
 
     def post(self, account_id):
-        # Check if the account is valid and exists
-        if (len(account_id) != 16):
+        if (not utils.valid_account_format(account_id)):
             return jsonify({
                 'status': 400,
                 'message': 'account_id not valid'
             })
 
         accounts = self.dring.config.accounts()
-        if (not any(account_id in account for account in accounts)):
+
+        if (not utils.contained_in(account_id, accounts)):
             return jsonify({
                 'status': 400,
                 'message': 'account not found'
             })
-        
-        data = request.get_json(force=True)
+
+        data = request.get_json(force=True) # FIXME remove json
 
         if (not 'ring_id' in data):
             return jsonify({
                 'status': 400,
                 'message': 'ring_id not found in request data'
             })
-        
+
         return jsonify({
             'status': 200,
             'call_id': self.dring.call.place_call(account_id, data['ring_id'])
@@ -213,9 +198,11 @@ class AccountsCall(Resource):
 class AccountsCertificates(Resource):
     def __init__(self, dring):
         self.dring = dring
-   
-    def get(self, account_id):
+
+    def get(self, account_id, cert_id):
+        # FIXME not tested
         data = request.args
+
         if (not data):
             return jsonify({
                 'status': 404,
@@ -227,16 +214,16 @@ class AccountsCertificates(Resource):
                 'status': 404,
                 'message': 'type not found in data'
             })
-        
+
         action = data.get('type')
 
         if (action == 'validate'):
+            certificates = self.dring.config.validate_certificate(
+                account_id, cert_id
+            )
             return jsonify({
                 'status': 200,
-                'certificates': self.dring.config.validate_certificate(
-                    account_id,
-                    cert_id
-                )
+                'certificates' certificates
             })
 
         return jsonify({
@@ -244,8 +231,10 @@ class AccountsCertificates(Resource):
             'message': 'wrong account type'
         })
 
-    def put(self, account_id):
+    def put(self, account_id, cert_id):
+        # FIXME not tested
         data = request.args
+
         if (not data):
             return jsonify({
                 'status': 404,
@@ -257,17 +246,17 @@ class AccountsCertificates(Resource):
                 'status': 404,
                 'message': 'status not found in data'
             })
-        
-        status = data.get('type')
 
-        if (status == 'UNDEFINED' or status == 'ALLOWED' or status == 'BANNED'):
+        cert_states = ["UNDEFINED", "ALLOWED", "BANNED"]
+        cert_state = data.get('type')
+
+        if (not cert_state in cert_states):
+            success = self.dring.config.set_certificate_status(
+                    account_id, cert_id, status
+            )
             return jsonify({
                 'status': 200,
-                'succes': self.dring.config.set_certificate_status(
-                    account_id,
-                    cert_id,
-                    status
-                )
+                'success': success
             })
 
         return jsonify({
