@@ -223,7 +223,7 @@ class AccountsCertificates(Resource):
             )
             return jsonify({
                 'status': 200,
-                'certificates' certificates
+                'certificates': certificates
             })
 
         return jsonify({
