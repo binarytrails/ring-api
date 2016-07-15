@@ -2,7 +2,7 @@
 
 The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-api/wiki).
 
-Tested and stable at [f8cd8fa](https://github.com/sevaivanov/ring-api/commit/f8cd8fabc9ed2973fe4ca9935b423012e56c70bf).
+Status: Ongoing Refactoring ~~Tested and stable at [f8cd8fa](https://github.com/sevaivanov/ring-api/commit/f8cd8fabc9ed2973fe4ca9935b423012e56c70bf).~~
 
 ## Roadmap
 

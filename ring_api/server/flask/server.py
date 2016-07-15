@@ -62,13 +62,13 @@ class FlaskServer:
         """
 
         # Accounts
-        self.api.add_resource(account.Account, '/account/',
+        self.api.add_resource(account.Account,
+            '/account/',
             resource_class_kwargs={'dring': self.dring})
 
-        self.api.add_resource(account.Accounts, '/accounts/',
-            resource_class_kwargs={'dring': self.dring})
-
-        self.api.add_resource(account.AccountsID, '/accounts/<account_id>/',
+        self.api.add_resource(account.Accounts,
+            '/accounts/',
+            '/accounts/<account_id>/',
             resource_class_kwargs={'dring': self.dring})
 
         self.api.add_resource(account.AccountsDetails,
@@ -112,14 +112,10 @@ class FlaskServer:
             '/crypto/tls/',
             resource_class_kwargs={'dring': self.dring})
 
-
-        # Certificate
-        self.api.add_resource(certificate.Certificate,
-            '/certificates/',
-            resource_class_kwargs={'dring': self.dring})
-
+        # Certificates
         self.api.add_resource(certificate.Certificates,
-            '/certificate/<cert_id>/',
+            '/certificates/',
+            '/certificates/<cert_id>/',
             resource_class_kwargs={'dring': self.dring})
 
         # Audio
