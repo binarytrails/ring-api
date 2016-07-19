@@ -138,7 +138,7 @@ class FlaskServer:
             resource_class_kwargs={'dring': self.dring})
 
         self.api.add_resource(video.VideoSettings,
-            '/video/<device_id>/settings/',
+            '/video/<device_name>/settings/',
             resource_class_kwargs={'dring': self.dring})
 
         self.api.add_resource(video.VideoCamera,

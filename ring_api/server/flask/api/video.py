@@ -109,6 +109,8 @@ class VideoSettings(Resource):
     def put(self, device_name):
         data = request.get_json(force=True)     # FIXME remove json
 
+        # TODO add more validation
+
         self.dring.video.apply_settings(device_name, data['settings'])
 
         return jsonify({
@@ -123,7 +125,7 @@ class VideoCamera(Resource):
     def get(self):
         return jsonify({
             'status': 200,
-            'camera': self.dring.video.has_camera_started()
+            'cameraStatus': self.dring.video.has_camera_started()
         })
 
     def put(self):

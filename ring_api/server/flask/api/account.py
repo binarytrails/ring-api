@@ -43,7 +43,7 @@ class Account(Resource):
             })
 
         account_template = None
-        account_types = ['SIP', 'IAX', 'IP2P', 'RING']
+        account_types = ['SIP', 'IAX', 'RING']
         account_type = data.get('type')
 
         if (account_type in account_types):

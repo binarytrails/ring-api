@@ -27,6 +27,6 @@ class Codecs(Resource):
 
     def get(self):
         return jsonify({
-            'status': 400,
+            'status': 200,
             'codecs': self.dring.config.get_codec_list()
         })

@@ -26,16 +26,16 @@ class Certificates(Resource):
     def __init__(self, dring):
         self.dring = dring
 
-    def get(self):
+    def get(self, cert_id=None):
+        if (cert_id):
+            return jsonify({
+                'status': 200,
+                'details': self.dring.config.get_certificate_details(cert_id)
+            })
+        
         return jsonify({
-            'status': 404,
+            'status': 200,
             'pinned': self.dring.config.get_pinned_certificates()
-        })
-
-    def get(self, cert_id):
-        return jsonify({
-            'status': 404,
-            'details': self.dring.config.get_certificate_details(cert_id)
         })
 
     def post(self, cert_id):
