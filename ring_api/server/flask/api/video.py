@@ -22,6 +22,7 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
+
 class VideoDevices(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -78,7 +79,7 @@ class VideoDevices(Resource):
         if (device_type == 'default'):
             data = request.get_json(force=True)     # FIXME json needed?
 
-            if (not 'device' in data):
+            if ('device' not in data):
                 return jsonify({
                     'status': 400,
                     'message': 'device not found in request data'
@@ -95,6 +96,7 @@ class VideoDevices(Resource):
             'status': 400,
             'message': 'wrong device type'
         })
+
 
 class VideoSettings(Resource):
     def __init__(self, dring):
@@ -117,6 +119,7 @@ class VideoSettings(Resource):
             'status': 200,
             'settings': self.dring.video.get_settings(device_name)
         })
+
 
 class VideoCamera(Resource):
     def __init__(self, dring):

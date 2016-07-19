@@ -21,6 +21,7 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
+
 class Codecs(Resource):
     def __init__(self, dring):
         self.dring = dring

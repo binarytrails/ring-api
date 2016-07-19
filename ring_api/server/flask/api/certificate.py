@@ -22,6 +22,7 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
+
 class Certificates(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -32,7 +33,7 @@ class Certificates(Resource):
                 'status': 200,
                 'details': self.dring.config.get_certificate_details(cert_id)
             })
-        
+
         return jsonify({
             'status': 200,
             'pinned': self.dring.config.get_pinned_certificates()
@@ -47,7 +48,7 @@ class Certificates(Resource):
                 'message': 'data not found'
             })
 
-        if (not 'action' in data):
+        if ('action' not in data):
             return jsonify({
                 'status': 400,
                 'message': 'action not found in request data'

@@ -24,6 +24,7 @@
 # Function names should be the same as the keys from callbacks_to_register().
 # Each method should contain a docstring that describes it.
 
+
 def text_message(socketio, account_id, from_ring_id, content):
     """Receives a text message
 
@@ -33,10 +34,9 @@ def text_message(socketio, account_id, from_ring_id, content):
     from_ring_id    -- ring id string
     content         -- dict of content defined as [<mime-type>, <message>]
     """
-    print(id(socketio)) # TODO remove
+    print(id(socketio))  # TODO remove
     socketio.emit('text_message', {
         'account_id': account_id,
         'from_ring_id': from_ring_id,
         'content': content
     })
-

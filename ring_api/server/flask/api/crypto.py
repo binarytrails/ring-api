@@ -21,6 +21,7 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
+
 class Tls(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -57,4 +58,3 @@ class Tls(Resource):
             'status': 400,
             'message': 'wrong tls type'
         })
-

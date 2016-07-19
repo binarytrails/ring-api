@@ -28,55 +28,79 @@ from threading import Thread
 from ring_api.dring_cython import Dring
 from ring_api.server.flask.server import FlaskServer
 
+
 def options():
     usage = 'usage: %prog [options] arg1 arg2'
     parser = OptionParser(usage=usage)
 
-    parser.add_option('-v', '--verbose',
+    parser.add_option(
+        '-v', '--verbose',
         action='store_true', dest='verbose', default=False,
-        help='activate all of the verbose options')
+        help='activate all of the verbose options'
+    )
 
-    parser.add_option('-d', '--debug',
+    parser.add_option(
+        '-d', '--debug',
         action='store_true', dest='debug', default=False,
-        help='debug mode (more verbose)')
+        help='debug mode (more verbose)'
+    )
 
-    parser.add_option('-c', '--console',
+    parser.add_option(
+        '-c', '--console',
         action='store_true', dest='console', default=False,
-        help='log in console (instead of syslog)')
+        help='log in console (instead of syslog)'
+    )
 
-    parser.add_option('-p', '--persistent',
+    parser.add_option(
+        '-p', '--persistent',
         action='store_true', dest='persistent', default=False,
-        help='stay alive after client quits')
+        help='stay alive after client quits'
+    )
 
-    parser.add_option('-r', '--rest',
+    parser.add_option(
+        '-r', '--rest',
         action='store_true', dest='rest', default=False,
-        help='start with restful server api')
+        help='start with restful server api'
+    )
 
-    parser.add_option('--port',
+    parser.add_option(
+        '--port',
         type='int', dest='http_port', default=8080,
-        help='server http port for rest')
+        help='server http port for rest'
+    )
 
-    parser.add_option('--ws-port',
+    parser.add_option(
+        '--ws-port',
         type='int', dest='ws_port', default=5678,
-        help='server websocket port for callbacks')
+        help='server websocket port for callbacks'
+    )
 
-    parser.add_option('--host',
+    parser.add_option(
+        '--host',
         type='str', dest='host', default='127.0.0.1',
-        help='restful server host')
+        help='restful server host'
+    )
 
-    parser.add_option('--auto-answer',
+    parser.add_option(
+        '--auto-answer',
         action='store_true', dest='autoanswer', default=False,
-        help='force automatic answer to incoming call')
+        help='force automatic answer to incoming call'
+    )
 
-    parser.add_option('--dring-version',
+    parser.add_option(
+        '--dring-version',
         action='store_true', dest='dring_version', default=False,
-        help='show Ring-daemon version')
+        help='show Ring-daemon version'
+    )
 
-    parser.add_option('--interpreter',
+    parser.add_option(
+        '--interpreter',
         action='store_true', dest='interpreter', default=False,
-        help='adapt threads for interpreter interaction')
+        help='adapt threads for interpreter interaction'
+    )
 
     return parser.parse_args()
+
 
 class Client:
 
@@ -156,7 +180,9 @@ class Client:
         enable a non-blocking runtime.
         """
         if (self.options.interpreter and self.options.rest):
-            raise RuntimeError("REST Server wasn't designed to run in interpreter.")
+            raise RuntimeError(
+                "REST Server wasn't designed to run in interpreter."
+            )
 
         try:
             if (self.options.interpreter):
@@ -189,4 +215,3 @@ class Client:
             flags |= self.dring._FLAG_AUTOANSWER
 
         return flags
-

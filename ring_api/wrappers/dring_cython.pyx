@@ -95,6 +95,14 @@ cdef class ConfigurationManager:
         return raw_dict_to_dict(confman_cpp.getAccountDetails(raw_id))
 
     def set_details(self, account_id, details):
+        """Set account details
+
+        Keyword argument:
+        account_id -- account id string
+        details -- account details dict
+
+        Return: account_details dict
+        """
         cdef string raw_id = account_id.encode()
         cdef map[string, string] raw_details
 
@@ -152,7 +160,7 @@ cdef class ConfigurationManager:
         confman_cpp.removeAccount(account_id.encode())
 
     def accounts(self):
-        """Lists the user accounts (ring_id != account_id)
+        """Lists the user accounts by account id (ring_id != account_id)
 
         Return: accounts list
         """
@@ -210,22 +218,56 @@ cdef class ConfigurationManager:
         Return: methods list
         """
         return raw_list_to_list(confman_cpp.getSupportedTlsMethod())
-   
+
     def get_codec_details(self, account_id, codec_id):
-        return raw_dict_to_dict(confman_cpp.getCodecDetails(account_id.encode(), codec_id))
+        """Get the details of a codec for an accounts
+
+        account_id -- account id string
+        codec_id -- codec id string
+
+        Return: codec details list
+        """
+        return raw_dict_to_dict(
+            confman_cpp.getCodecDetails(account_id.encode(), codec_id)
+        )
 
     def set_codec_details(self, account_id, codec_id, details):
+        """Set the details of a codec for an accounts
+
+        account_id -- account id string
+        codec_id -- codec id string
+        details -- codec details list
+
+        Return: codec details list
+        """
         cdef map[string, string] raw_details
 
         for key, value in details.iteritems():
             raw_details[key.encode()] = value.encode()
 
-        return confman_cpp.setCodecDetails(account_id.encode(), codec_id, raw_details)
-    
+        return confman_cpp.setCodecDetails(
+            account_id.encode(),
+            codec_id,
+            raw_details
+        )
+
     def get_active_codec_list(self, account_id):
+        """Get the active codec list for an accounts
+
+        account_id -- account id string
+
+        Return: active codec list
+        """
         return confman_cpp.getActiveCodecList(account_id.encode())
 
     def set_active_codec_list(self, account_id, codec_list):
+        """Set the active codec list for an accounts
+
+        account_id -- account id string
+        codec_list -- codec list string
+
+        Return: codec details list
+        """
         confman_cpp.setActiveCodecList(account_id.encode(), codec_list)
 
     def get_audio_plugin_list(self):
@@ -236,15 +278,18 @@ cdef class ConfigurationManager:
         return raw_list_to_list(confman_cpp.getAudioPluginList())
 
     def validate_certificate(self, account_id, certificate):
-        """TODO
+        """Validate a certificaty by it's id
 
         Keyword arguments:
         account_id  -- account id string
         certificate -- certificate string
 
-        Return: list of valid certificates ? TODO
+        Return: list of all certificate validation
         """
-        raw_valid_certif = confman_cpp.validateCertificate(account_id.encode(), certificate.encode())
+        raw_valid_certif = confman_cpp.validateCertificate(
+            account_id.encode(),
+            certificate.encode()
+        )
 
         return raw_dict_to_dict(raw_valid_certif)
 
@@ -256,7 +301,9 @@ cdef class ConfigurationManager:
 
         Return: dict of certificate details
         """
-        return raw_dict_to_dict(confman_cpp.getCertificateDetails(certificate.encode()))
+        return raw_dict_to_dict(
+            confman_cpp.getCertificateDetails(certificate.encode())
+        )
 
     def get_pinned_certificates(self):
         """Gets all known certificate IDs
@@ -266,36 +313,39 @@ cdef class ConfigurationManager:
         return raw_list_to_list(confman_cpp.getPinnedCertificates())
 
     def pin_certificate(self, certificate, local):
-        """TODO
+        """Pin a certificate to the daemon
 
         Keyword arguments:
         certificate -- raw certificate int list
-        local       -- true to save bool
+        local       -- save the certificate in the local storage bool
 
         Return: list of ids of the pinned certificate
         """
         return raw_list_to_list(confman_cpp.pinCertificate(certificate, local))
 
     def unpin_certificate(self, cert_id):
-        """TODO
+        """Unpin a certificate from the daemon
 
         Keyword arguments:
         cert_id     -- certificate id string
 
-        Return: boolean of the operation success
+        Return: true if the certificate was unpinned
         """
         return confman_cpp.unpinCertificate(cert_id.encode())
 
-    def pin_remote_certificate(account_id, cert_id):
-        """TODO
+    def pin_remote_certificate(account_id, ring_id):
+        """Pin a certificate for a user from a ring ID
 
         Keyword arguments:
         account_id  -- account id string
-        cert_id     -- certificate id string
+        ring_id     -- ring id string
 
         Return: boolean of the operation success
         """
-        return confman_cpp.pinRemoteCertificate(account_id.encode(), cert_id.encode())
+        return confman_cpp.pinRemoteCertificate(
+            account_id.encode(),
+            ring_id.encode()
+        )
 
     def set_certificate_status(account_id, cert_id, status):
         """Sets the status of an account certificate
@@ -307,9 +357,11 @@ cdef class ConfigurationManager:
 
         Return: boolean of the operation success
         """
-        return confman_cpp.setCertificateStatus(account_id.encode(),
+        return confman_cpp.setCertificateStatus(
+            account_id.encode(),
             cert_id.encode(),
-            status.encode())
+            status.encode()
+        )
 
 cdef class VideoManager:
     def devices(self):
@@ -356,7 +408,18 @@ cdef class VideoManager:
         videoman_cpp.stopCamera()
 
     def switch_input(self, resource):
-        "TODO what is resource?"
+        """Changes the input of the video stream
+
+        Currently, the following are supported:
+            - camera://DEVICE
+            - display://DISPLAY_NAME[ WIDTHxHEIGHT]
+            - file://IMAGE_PATH
+
+        Keyword arguments:
+        resource  -- string
+
+        Return: True if the input stream was successfully changed
+        """
         return videoman_cpp.switchInput(resource.encode())
 
     def has_camera_started(self):
@@ -374,7 +437,7 @@ cdef class CallManager:
         Return: string of the call_id
         """
 
-        raw_call_id = callman_cpp.placeCall(account_id.encode(), to.encode());
+        raw_call_id = callman_cpp.placeCall(account_id.encode(), to.encode())
 
         return raw_call_id.decode()
 
@@ -386,7 +449,7 @@ cdef class CallManager:
 
         Return: boolean of operation success
         """
-        return callman_cpp.refuse(call_id.encode());
+        return callman_cpp.refuse(call_id.encode())
 
     def accept(self, call_id):
         """Accepts an incoming call
@@ -396,7 +459,7 @@ cdef class CallManager:
 
         Return: boolean of operation success
         """
-        return callman_cpp.accept(call_id.encode());
+        return callman_cpp.accept(call_id.encode())
 
     def hang_up(self, call_id):
         """Hangs up a call which is in state (CURRENT, HOLD)
@@ -406,7 +469,7 @@ cdef class CallManager:
 
         Return: boolean of operation success
         """
-        return callman_cpp.hangUp(call_id.encode());
+        return callman_cpp.hangUp(call_id.encode())
 
     def hold(self, call_id):
         """Places a call which is in state (HOLD)
@@ -415,8 +478,8 @@ cdef class CallManager:
         call_id -- call id string
 
         Return: boolean of operation success
-        """
-        return callman_cpp.hold(call_id.encode());
+        """i
+        return callman_cpp.hold(call_id.encode())
 
     def unhold(self, call_id):
         """Takes a call from (HOLD) and place it in (CURRENT) state
@@ -426,7 +489,7 @@ cdef class CallManager:
 
         Return: boolean of operation success
         """
-        return callman_cpp.unhold(call_id.encode());
+        return callman_cpp.unhold(call_id.encode())
 
 
 cdef class PresenceManager:
@@ -445,9 +508,9 @@ cdef class Dring:
     cdef CallbacksClient cb_client
 
     def __cinit__(self):
-        self._FLAG_DEBUG          = dring_cpp.DRING_FLAG_DEBUG
-        self._FLAG_CONSOLE_LOG    = dring_cpp.DRING_FLAG_CONSOLE_LOG
-        self._FLAG_AUTOANSWER     = dring_cpp.DRING_FLAG_AUTOANSWER
+        self._FLAG_DEBUG = dring_cpp.DRING_FLAG_DEBUG
+        self._FLAG_CONSOLE_LOG = dring_cpp.DRING_FLAG_CONSOLE_LOG
+        self._FLAG_AUTOANSWER = dring_cpp.DRING_FLAG_AUTOANSWER
 
         self.config = ConfigurationManager()
         if (not self.config):
@@ -511,4 +574,3 @@ cdef class Dring:
 
         global py_cbs_ctx
         py_cbs_ctx = context
-

@@ -24,6 +24,7 @@
 
 import json
 
+
 def account_message(context, account_id, from_ring_id, content):
     """Receive account message
 
@@ -42,4 +43,3 @@ def account_message(context, account_id, from_ring_id, content):
     })
     context['eventloop'].call_soon_threadsafe(
         context['queue'].put_nowait, message)
-

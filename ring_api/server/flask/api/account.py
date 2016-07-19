@@ -24,6 +24,7 @@ from flask_restful import Resource
 
 from ring_api.server.flask import utils
 
+
 class Account(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -60,7 +61,7 @@ class Account(Resource):
     def post(self):
         data = request.get_json(force=True)
 
-        if (not 'details' in data):
+        if ('details' not in data):
             return jsonify({
                 'status': 400,
                 'message': 'details not found in request data'
@@ -70,6 +71,7 @@ class Account(Resource):
             'status': 200,
             'account_id': self.dring.config.add_account(data['details'])
         })
+
 
 class Accounts(Resource):
     def __init__(self, dring):
@@ -88,6 +90,7 @@ class Accounts(Resource):
             'status': 200,
             'accounts': self.dring.config.accounts()
         })
+
 
 class AccountsDetails(Resource):
     def __init__(self, dring):
@@ -123,6 +126,7 @@ class AccountsDetails(Resource):
             'status': 400,
             'message': 'wrong account type'
         })
+
 
 class AccountsCodecs(Resource):
     def __init__(self, dring):
@@ -182,9 +186,9 @@ class AccountsCall(Resource):
                 'message': 'account not found'
             })
 
-        data = request.get_json(force=True) # FIXME remove json
+        data = request.get_json(force=True)  # FIXME remove json
 
-        if (not 'ring_id' in data):
+        if ('ring_id' not in data):
             return jsonify({
                 'status': 400,
                 'message': 'ring_id not found in request data'
@@ -194,6 +198,7 @@ class AccountsCall(Resource):
             'status': 200,
             'call_id': self.dring.call.place_call(account_id, data['ring_id'])
         })
+
 
 class AccountsCertificates(Resource):
     def __init__(self, dring):
@@ -250,7 +255,7 @@ class AccountsCertificates(Resource):
         cert_states = ["UNDEFINED", "ALLOWED", "BANNED"]
         cert_state = data.get('type')
 
-        if (not cert_state in cert_states):
+        if (cert_state not in cert_states):
             success = self.dring.config.set_certificate_status(
                     account_id, cert_id, status
             )
@@ -263,6 +268,7 @@ class AccountsCertificates(Resource):
             'status': 400,
             'message': 'wrong status type'
         })
+
 
 class AccountsMessage(Resource):
     def __init__(self, dring):
@@ -288,4 +294,3 @@ class AccountsMessage(Resource):
             'status': 200,
             'message_id': message_id
         })
-

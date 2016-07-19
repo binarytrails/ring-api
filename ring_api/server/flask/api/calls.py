@@ -22,6 +22,7 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
+
 class Calls(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -29,7 +30,7 @@ class Calls(Resource):
     def put(self, call_id):
         data = request.get_json(force=True)
 
-        if (not 'action' in data):
+        if ('action' not in data):
             return jsonify({
                 'status': 400,
                 'message': 'action not found in request data'
@@ -63,4 +64,3 @@ class Calls(Resource):
             'status': 200,
             'unhold': result
         })
-
