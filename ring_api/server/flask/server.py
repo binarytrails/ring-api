@@ -21,6 +21,7 @@
 
 from flask import Flask
 from flask_restful import Api
+from flask_restful.utils import cors
 
 import threading
 import asyncio
@@ -30,7 +31,8 @@ from websockets import exceptions as ws_ex
 from ring_api.server.flask.cb_api import websockets as cb_api
 from ring_api.server.flask.api import websockets as rest_ws
 from ring_api.server.flask.api import (
-    account, video, messages, calls, certificate, audio, crypto, codec)
+    account, video, messages, calls, certificate, audio, crypto, codec
+)
 
 
 class FlaskServer:
@@ -48,13 +50,29 @@ class FlaskServer:
         self.dring = dring
         self.verbose = verbose
 
+        # Flask Application
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = 't0p_s3cr3t'
         self.app.config.update(PROPAGATE_EXCEPTIONS=True)
 
+        # Flask Restuful API
         self.api = Api(self.app, catch_all_404s=True)
+
+        # Cross Origin Resource Sharing is needed to define response headers
+        # to allow HTTP methods from in-browser Javascript because accessing
+        # a different port is considered as accessing a different domain
+        self.api.decorators = [
+            cors.crossdomain(
+                origin='*',
+                methods = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+                attach_to_all = True,
+                automatic_options = True
+            )
+        ]
+
         self._init_api_resources()
 
+        # Websockets
         self._init_websockets()
         self._register_callbacks()
 
