@@ -21,6 +21,7 @@
 
 from flask import jsonify, request
 from flask_restful import Resource
+import numpy as np
 
 
 class Certificates(Resource):
@@ -40,7 +41,7 @@ class Certificates(Resource):
         })
 
     def post(self, cert_id):
-        data = request.args
+        data = request.get_json(force=True)
 
         if (not data):
             return jsonify({
@@ -55,15 +56,14 @@ class Certificates(Resource):
             })
 
         result = None
-        action = data.get('action')
 
-        if (action == 'pin'):
-            result = self.dring.config.pin_certificate(cert_id)
+        if (data.get('action') == 'pin'):
+            # temporary
+            local = True if data.get('local') in ["True", "true"] else False
 
-        elif (action == 'pin_remote'):
-            result = self.dring.config.pin_remote_certificate(cert_id)
+            result = self.dring.config.pin_certificate(cert_id, local)
 
-        elif (action == 'unpin'):
+        elif (data.get('action') == 'unpin'):
             result = self.dring.config.unpin_certificate(cert_id)
 
         else:

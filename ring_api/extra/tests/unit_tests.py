@@ -23,7 +23,10 @@ class TestAccount(unittest.TestCase):
     def test_account_get(self):
         print("\nGET /account/")
 
-        res = requests.get('http://localhost:8080/account/?type=SIP')
+        res = requests.get(
+            'http://localhost:8080/account/',
+            params={'type': 'SIP'}
+        )
         res = res.json()
 
         self.assertTrue('status' in res)
@@ -34,7 +37,10 @@ class TestAccount(unittest.TestCase):
         self.assertTrue('Account.type' in details)
         self.assertEqual(details['Account.type'], 'SIP')
 
-        res = requests.get('http://localhost:8080/account/?type=IAX')
+        res = requests.get(
+            'http://localhost:8080/account/',
+            params={'type': 'IAX'}
+        )
         res = res.json()
 
         self.assertTrue('status' in res)
@@ -45,7 +51,10 @@ class TestAccount(unittest.TestCase):
         self.assertTrue('Account.type' in details)
         self.assertEqual(details['Account.type'], 'IAX')
 
-        res = requests.get('http://localhost:8080/account/?type=RING')
+        res = requests.get(
+            'http://localhost:8080/account/',
+            params={'type': 'RING'}
+        )
         res = res.json()
 
         self.assertTrue('status' in res)
@@ -56,7 +65,10 @@ class TestAccount(unittest.TestCase):
         self.assertTrue('Account.type' in details)
         self.assertEqual(details['Account.type'], 'RING')
 
-        res = requests.get('http://localhost:8080/account/?type=stuff')
+        res = requests.get(
+            'http://localhost:8080/account/',
+            params={'type': 'stuff'}
+        )
         res = res.json()
 
         self.assertTrue('status' in res)
@@ -92,7 +104,7 @@ class TestAccount(unittest.TestCase):
         for account in accounts:
             res = requests.get(
                 'http://localhost:8080/accounts/' + account + '/details/',
-                {'type': 'default'}
+                params={'type': 'default'}
             )
             res = res.json()
 
@@ -127,7 +139,7 @@ class TestAccount(unittest.TestCase):
         for account in accounts:
             res = requests.get(
                 'http://localhost:8080/accounts/' + account + '/details/',
-                {'type': 'default'}
+                params={'type': 'default'}
             )
             res = res.json()
 
@@ -209,17 +221,74 @@ class TestAccount(unittest.TestCase):
 
     def test_account_certificates_get(self):
         print("\nGET /accounts/<account_id>/certificates/<cert_id>")
+ 
+        res = requests.get('http://localhost:8080/accounts/')
+        res = res.json()
 
-        print("TODO : find a way to test validateCertificate")
+        accounts = []
 
-        pass
+        for account in res['accounts']:
+            res = requests.get(
+                'http://localhost:8080/accounts/' + account + '/details/',
+                {'type': 'default'}
+            )
+            res = res.json()
+
+            self.assertEqual(res['status'], 200)
+
+
+            if (res['details']['Account.alias'] == "Unittest"):
+                res = requests.get(
+                    'http://localhost:8080/accounts/' +
+                    account +
+                    '/certificates/fa5c04850341c00ba074518db52ee6745bb49bc1/',
+                    params={'action': 'pin'}
+                )
+                res = res.json()
+
+                self.assertEqual(res['status'], 200)
+                self.assertEqual(res['success'], True)
+
+
+                res = requests.get(
+                    'http://localhost:8080/accounts/' +
+                    account +
+                    '/certificates/fa5c04850341c00ba074518db52ee6745bb49bc1/',
+                    params={'action': 'validate'}
+                )
+                res = res.json()
+
+                self.assertEqual(res['status'], 200)
+                self.assertTrue('certificates' in res)
 
     def test_account_certificates_put(self):
         print("\nPUT /accounts/<account_id>/certificates/<cert_id>")
 
-        print("TODO : find a way to test setCertificateStatus")
+        res = requests.get('http://localhost:8080/accounts/')
+        res = res.json()
 
-        pass
+        accounts = []
+
+        for account in res['accounts']:
+            res = requests.get(
+                'http://localhost:8080/accounts/' + account + '/details/',
+                params={'type': 'default'}
+            )
+            res = res.json()
+
+            self.assertEqual(res['status'], 200)
+
+            if (res['details']['Account.alias'] == "Unittest"):
+                res = requests.put(
+                    'http://localhost:8080/accounts/' +
+                    account +
+                    '/certificates/fa5c04850341c00ba074518db52ee6745bb49bc1/',
+                    data=json.dumps({'status': 'ALLOWED'})
+                )
+                res = res.json()
+
+                self.assertEqual(res['status'], 200)
+                self.assertEqual(res['success'], True)
 
 
 class TestCodec(unittest.TestCase):
@@ -261,7 +330,7 @@ class TestCrypto(unittest.TestCase):
 class TestCertificates(unittest.TestCase):
 
     def test_certificates_get(self):
-        print("\nGET /codecs/")
+        print("\nGET /certificates/")
 
         res = requests.get('http://localhost:8080/certificates/')
         res = res.json()
@@ -272,17 +341,43 @@ class TestCertificates(unittest.TestCase):
     def test_certificate_get(self):
         print("\nGET /certificate/<cert_id>/")
 
-        print("TODO : find a way to test getPinnedCertificates")
+        res = requests.get('http://localhost:8080/certificates/')
+        res = res.json()
 
-        pass
+        pinned = res['pinned']
+
+        for certificate in pinned:
+            res = requests.get(
+                'http://localhost:8080/certificates/' + certificate + '/'
+            )
+            res = res.json()
+            
+            self.assertEqual(res['status'], 200)
+            self.assertTrue('details' in res)
 
     def test_certificate_post(self):
         print("\nPOST /certificate/<cert_id>/")
+        
+        res = requests.get('http://localhost:8080/certificates/')
+        res = res.json()
 
-        print("TODO : find a way to test pinCertificate")
-
-        pass
-
+        pinned = res['pinned']
+    
+        for certificate in pinned:
+            res = requests.post(
+                'http://localhost:8080/certificates/' + certificate + '/',
+                data=json.dumps({'action': 'unpin'})
+            )
+            res = res.json()
+            print_json(res) 
+            
+            res = requests.post(
+                'http://localhost:8080/certificates/' + certificate + '/',
+                data=json.dumps({'action': 'pin', 'local': 'True'})
+            )
+            print(res)
+            res = res.json()
+            print_json(res) 
 
 class TestAudio(unittest.TestCase):
 
@@ -329,13 +424,10 @@ class TestVideo(unittest.TestCase):
         res = res.json()
         default = res['default']
 
-        params = {'type': 'default'}
-        data = {'device': default}
-
         res = requests.put(
             'http://localhost:8080/video/devices/',
-            params=params,
-            data=json.dumps(data)
+            params={'type': 'default'},
+            data=json.dumps({'device': default})
         )
         res = res.json()
 
@@ -429,7 +521,6 @@ def TestOrder():
     suite.addTest(TestAccount('test_account_codec_details_put'))
     suite.addTest(TestAccount('test_account_certificates_get'))
     suite.addTest(TestAccount('test_account_certificates_put'))
-    suite.addTest(TestAccount('test_account_delete'))
 
     suite.addTest(TestCodec('test_codecs'))
 
@@ -448,8 +539,33 @@ def TestOrder():
     suite.addTest(TestVideo('test_video_camera_get'))
     suite.addTest(TestVideo('test_video_camera_put'))
 
+    suite.addTest(TestAccount('test_account_delete'))
     return suite
+
+def delete_test_data():
+    print("\nFlushing all remaining data")
+
+    res = requests.get('http://localhost:8080/accounts/')
+    res = res.json()
+
+    accounts = res['accounts']
+
+    for account in accounts:
+        res = requests.get(
+            'http://localhost:8080/accounts/' + account + '/details/',
+            {'type': 'default'}
+        )
+        res = res.json()
+
+        if (res['details']['Account.alias'] == "Unittest"):
+            res = requests.delete(
+                'http://localhost:8080/accounts/' + account + '/'
+            )
+            res = res.json()
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner(failfast=True)
+
     runner.run(TestOrder())
+    
+    delete_test_data()

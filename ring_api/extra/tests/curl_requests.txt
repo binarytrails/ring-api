@@ -27,8 +27,8 @@ PUT: curl -d '{"details":{"foo":"bar"}}' http://localhost:8080/accounts/<account
 POST: curl -d '{"ring_id":"<ring_id>"}' http://localhost:8080/accounts/<account_id>/call/
 
 /accounts/<account_id>/certificates/<cert_id>/
-GET:
-PUT:
+GET: curl http://localhost:8080/accounts/<account_id>/certificates/<cert_id>/?action=<action>
+PUT: curl -X PUT http://localhost:8080/accounts/<account_id>/certificates/<cert_id>/?status=<status>
 
 /calls/<call_id>
 PUT: curl -X PUT -d '{"action":"<action>"}' http://localhost:8080/calls/<call_id>/

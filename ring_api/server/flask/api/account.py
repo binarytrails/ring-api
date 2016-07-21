@@ -205,7 +205,6 @@ class AccountsCertificates(Resource):
         self.dring = dring
 
     def get(self, account_id, cert_id):
-        # FIXME not tested
         data = request.args
 
         if (not data):
@@ -214,21 +213,31 @@ class AccountsCertificates(Resource):
                 'message': 'data not found'
             })
 
-        elif ('type' not in data):
+        elif ('action' not in data):
             return jsonify({
                 'status': 404,
                 'message': 'type not found in data'
             })
 
-        action = data.get('type')
+        action = data.get('action')
 
         if (action == 'validate'):
             certificates = self.dring.config.validate_certificate(
                 account_id, cert_id
             )
+
             return jsonify({
                 'status': 200,
                 'certificates': certificates
+            })
+
+        elif (action == 'pin'):
+            return jsonify({
+                'status': 200,
+                'success': self.dring.config.pin_remote_certificate(
+                    account_id,
+                    cert_id
+                )
             })
 
         return jsonify({
@@ -237,8 +246,8 @@ class AccountsCertificates(Resource):
         })
 
     def put(self, account_id, cert_id):
-        # FIXME not tested
         data = request.args
+        data = request.get_json(force=True)
 
         if (not data):
             return jsonify({
@@ -253,9 +262,9 @@ class AccountsCertificates(Resource):
             })
 
         cert_states = ["UNDEFINED", "ALLOWED", "BANNED"]
-        cert_state = data.get('type')
+        status = data.get('status')
 
-        if (cert_state not in cert_states):
+        if (status in cert_states):
             success = self.dring.config.set_certificate_status(
                     account_id, cert_id, status
             )

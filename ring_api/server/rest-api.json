@@ -133,7 +133,8 @@
     "/accounts/<account_id>/certificates/<cert_id>/": {
         "GET": {
             "action": {
-                "validate": "validateCertificate"
+                "validate": "validateCertificate",
+                "pin" : "pinRemoteCertificate"
             }
         },
         "PUT": {
@@ -196,10 +197,8 @@
     "/certificate/<cert_id>/": {
         "GET": "getCertificateDetails",
         "POST": {
-            "comment": "todo: what pin means?",
             "action": {
                 "pin": "pinCertificate",
-                "pin_remote": "pinRemoteCertificate",
                 "unpin": "unpinCertificate"
             }
         }

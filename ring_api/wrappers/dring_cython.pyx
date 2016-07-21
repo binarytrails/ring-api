@@ -26,6 +26,7 @@
 from libc.stdint cimport *
 from libcpp.string cimport string
 from libcpp.map cimport map as map
+from libcpp.vector cimport vector
 
 from ring_api.utils.std cimport *
 from ring_api.utils.cython import *
@@ -316,12 +317,25 @@ cdef class ConfigurationManager:
         """Pin a certificate to the daemon
 
         Keyword arguments:
-        certificate -- raw certificate int list
+        certificate -- certificate string
         local       -- save the certificate in the local storage bool
 
         Return: list of ids of the pinned certificate
         """
-        return raw_list_to_list(confman_cpp.pinCertificate(certificate, local))
+            
+        #return raw_list_to_list(
+        cdef vector[uint8_t] raw_cert;
+        
+        #cert_list = list(certificate)
+
+        cert_list = [ord(x) for x in list(certificate)]
+
+        print(cert_list)
+
+        for x in cert_list:
+            raw_cert.append(x)
+
+        return confman_cpp.pinCertificate(raw_cert, local)
 
     def unpin_certificate(self, cert_id):
         """Unpin a certificate from the daemon
@@ -333,7 +347,7 @@ cdef class ConfigurationManager:
         """
         return confman_cpp.unpinCertificate(cert_id.encode())
 
-    def pin_remote_certificate(account_id, ring_id):
+    def pin_remote_certificate(self, account_id, ring_id):
         """Pin a certificate for a user from a ring ID
 
         Keyword arguments:
@@ -347,7 +361,7 @@ cdef class ConfigurationManager:
             ring_id.encode()
         )
 
-    def set_certificate_status(account_id, cert_id, status):
+    def set_certificate_status(self, account_id, cert_id, status):
         """Sets the status of an account certificate
 
         Keyword arguments:
@@ -478,7 +492,7 @@ cdef class CallManager:
         call_id -- call id string
 
         Return: boolean of operation success
-        """i
+        """
         return callman_cpp.hold(call_id.encode())
 
     def unhold(self, call_id):
