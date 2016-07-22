@@ -94,6 +94,18 @@ cdef class ConfigurationManager:
         cdef string raw_id = account_id.encode()
 
         return raw_dict_to_dict(confman_cpp.getAccountDetails(raw_id))
+    
+    def account_volatile_details(self, account_id):
+        """Gets account details
+
+        Keyword argument:
+        account_id -- account id string
+
+        Return: account_details dict
+        """
+        cdef string raw_id = account_id.encode()
+
+        return raw_dict_to_dict(confman_cpp.getVolatileAccountDetails(raw_id))
 
     def set_details(self, account_id, details):
         """Set account details
@@ -205,6 +217,17 @@ cdef class ConfigurationManager:
         Return: default settings dict
         """
         return raw_dict_to_dict(confman_cpp.getTlsDefaultSettings())
+    
+    def get_supported_ciphers(self, account_id):
+        """Gets the supported ciphers for an account
+
+        Keyword arguments:
+        account_id  -- account id int
+
+        Return: supported ciphers list
+        """
+        
+        return raw_list_to_list(confman_cpp.getSupportedCiphers(account_id.encode()))
 
     def get_codec_list(self):
         """Get the list of codecs

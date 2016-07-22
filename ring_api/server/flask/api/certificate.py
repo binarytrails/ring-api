@@ -74,5 +74,5 @@ class Certificates(Resource):
 
         return jsonify({
             'status': 200,
-            'status': result
+            'action': result
         })

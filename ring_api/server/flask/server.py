@@ -108,6 +108,12 @@ class FlaskServer:
             '/accounts/<account_id>/details/',
             resource_class_kwargs={'dring': self.dring}
         )
+        
+        self.api.add_resource(
+            account.AccountsCipher,
+            '/accounts/<account_id>/ciphers/',
+            resource_class_kwargs={'dring': self.dring}
+        )
 
         self.api.add_resource(
             account.AccountsCodecs,

@@ -120,11 +120,42 @@ class AccountsDetails(Resource):
             })
 
         elif (account_type == 'volatile'):
-            pass
+            return jsonify({
+                'status': 200,
+                'details': self.dring.config.account_volatile_details(account_id)
+            })
 
         return jsonify({
             'status': 400,
             'message': 'wrong account type'
+        })
+    
+    def put(self, account_id):
+        data = request.get_json(force=True)
+
+        if('details' not in data):
+            return jsonify({
+                'status': 404,
+                'message': 'details not found in data'
+            })
+
+        print(data)
+
+        self.dring.config.set_details(account_id, data['details'])
+
+        return jsonify({
+            'status': 200
+        })
+
+
+class AccountsCipher(Resource):
+    def __init__(self, dring):
+        self.dring = dring
+
+    def get(self, account_id):
+        return jsonify({
+            'status': 200,
+            'ciphers': self.dring.config.get_supported_ciphers(account_id)
         })
 
 
@@ -142,7 +173,7 @@ class AccountsCodecs(Resource):
 
         return jsonify({
             'status': 200,
-            'details': self.dring.config.get_active_codec_list(account_id)
+            'codecs': self.dring.config.get_active_codec_list(account_id)
         })
 
     def put(self, account_id, codec_id=None):
@@ -158,12 +189,18 @@ class AccountsCodecs(Resource):
                     account_id, int(codec_id))
             })
 
+        if('codecs' not in data):
+            return jsonify({
+                'status': 404,
+                'message': 'codecs not found in data'
+            })
+
         self.dring.config.set_active_codec_list(
-                account_id, codec_id, data['list'])
+                account_id, codec_id, data['codecs'])
 
         return jsonify({
             'status': 200,
-            'details': self.dring.config.get_active_codec_list(account_id)
+            'codecs': self.dring.config.get_active_codec_list(account_id)
         })
 
 

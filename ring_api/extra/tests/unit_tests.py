@@ -111,22 +111,41 @@ class TestAccount(unittest.TestCase):
             self.assertEqual(res['status'], 200)
             self.assertTrue('details' in res)
 
-        print("TODO : implement getVolatileAccountDetails")
-#        for account in accounts:
-#            res = requests.get(
-#                'http://localhost:8080/accounts/' + account + '/details/',
-#                {'type' : 'volatile'}
-#            )
-#            res = res.json()
-#
-#            self.assertEqual(res['status'], 200)
+        for account in accounts:
+            res = requests.get(
+                'http://localhost:8080/accounts/' + account + '/details/',
+                params={'type' : 'volatile'}
+            )
+            res = res.json()
 
-    def test_account_details_post(self):
-        print("\nPOST /accounts/<account_id>/details")
+            self.assertEqual(res['status'], 200)
+            self.assertTrue('details' in res)
 
-        print("TODO : implement setAccountDetails")
+    def test_account_details_put(self):
+        print("\nPUT /accounts/<account_id>/details")
+        
+        res = requests.get('http://localhost:8080/accounts/')
+        res = res.json()
 
-        pass
+        accounts = res['accounts']
+
+        for account in accounts:
+            res = requests.get(
+                'http://localhost:8080/accounts/' + account + '/details/',
+                params={'type': 'default'}
+            )
+            res = res.json()
+
+            self.assertEqual(res['status'], 200)
+            details = res['details']
+
+            res = requests.put(
+                'http://localhost:8080/accounts/' + account + '/details/',
+                data=json.dumps({'details': details})
+            )
+            res = res.json()
+
+            self.assertEqual(res['status'], 200)
 
     def test_account_delete(self):
         print("\nDELETE /accounts/<account_id>")
@@ -155,9 +174,20 @@ class TestAccount(unittest.TestCase):
     def test_account_ciphers_get(self):
         print("\nGET /accounts/<account_id>/ciphers/")
 
-        print("TODO : implement getSupportedCiphers")
+        res = requests.get('http://localhost:8080/accounts/')
+        res = res.json()
 
-        pass
+        accounts = res['accounts']
+        
+        for account in accounts:
+            res = requests.get(
+                'http://localhost:8080/accounts/' + account + '/ciphers/'
+            )
+            res = res.json()
+
+            self.assertEqual(res['status'], 200)
+            self.assertTrue('ciphers' in res)
+
 
     def test_account_codecs_get(self):
         print("\nGET /accounts/<account_id>/codecs/")
@@ -174,13 +204,35 @@ class TestAccount(unittest.TestCase):
             res = res.json()
 
             self.assertEqual(res['status'], 200)
+            self.assertTrue('codecs' in res)
 
     def test_account_codecs_put(self):
         print("\nPUT /accounts/<account_id>/codecs/")
 
-        print("TODO : implement setActiveCodecList")
+        res = requests.get('http://localhost:8080/accounts/')
+        res = res.json()
 
-        pass
+        accounts = res['accounts']
+
+        for account in accounts:
+            res = requests.get(
+                'http://localhost:8080/accounts/' + account + '/codecs/'
+            )
+            res = res.json()
+            
+            self.assertEqual(res['status'], 200)
+            self.assertTrue('codecs' in res)
+
+            codecs = res['codecs']
+
+            res = requests.get(
+                'http://localhost:8080/accounts/' + account + '/codecs/',
+                data=json.dumps({'codecs': codecs})
+            )
+            res = res.json()
+            
+            self.assertEqual(res['status'], 200)
+            self.assertTrue('codecs' in res)
 
     def test_account_codec_details_get(self):
         print("\nGET /accounts/<account_id>/codecs/<codec_id>")
@@ -198,7 +250,7 @@ class TestAccount(unittest.TestCase):
 
             self.assertEqual(res['status'], 200)
 
-            codecs = res['details']
+            codecs = res['codecs']
 
             for codec in codecs:
                 res = requests.get(
@@ -214,10 +266,45 @@ class TestAccount(unittest.TestCase):
 
     def test_account_codec_details_put(self):
         print("\nPUT /accounts/<account_id>/codecs/<codec_id>")
+        
+        res = requests.get('http://localhost:8080/accounts/')
+        res = res.json()
 
-        print("TODO : implement setCodecDetails")
+        accounts = res['accounts']
 
-        pass
+        for account in accounts:
+            res = requests.get(
+                'http://localhost:8080/accounts/' + account + '/codecs/'
+            )
+            res = res.json()
+
+            self.assertEqual(res['status'], 200)
+
+            codecs = res['codecs']
+
+            for codec in codecs:
+                res = requests.get(
+                    'http://localhost:8080/accounts/' +
+                    account +
+                    '/codecs/' +
+                    str(codec) + '/'
+                )
+                res = res.json()
+
+                self.assertEqual(res['status'], 200)
+
+                details = res['details']
+                res = requests.get(
+                    'http://localhost:8080/accounts/' +
+                    account +
+                    '/codecs/' +
+                    str(codec) + '/',
+                    data=json.dumps({'details': details})
+                )
+                res = res.json()
+
+                self.assertEqual(res['status'], 200)
+                self.assertTrue('details' in res)
 
     def test_account_certificates_get(self):
         print("\nGET /accounts/<account_id>/certificates/<cert_id>")
@@ -366,18 +453,20 @@ class TestCertificates(unittest.TestCase):
         for certificate in pinned:
             res = requests.post(
                 'http://localhost:8080/certificates/' + certificate + '/',
-                data=json.dumps({'action': 'unpin'})
+                data=json.dumps({'action': 'pin', 'local': 'True'})
             )
             res = res.json()
-            print_json(res) 
+            self.assertEqual(res['status'], 200)
+            self.assertTrue('action' in res)
             
             res = requests.post(
                 'http://localhost:8080/certificates/' + certificate + '/',
-                data=json.dumps({'action': 'pin', 'local': 'True'})
+                data=json.dumps({'action': 'unpin'})
             )
-            print(res)
             res = res.json()
-            print_json(res) 
+            self.assertEqual(res['status'], 200)
+            self.assertTrue('action' in res)
+            
 
 class TestAudio(unittest.TestCase):
 
@@ -513,7 +602,7 @@ def TestOrder():
     suite.addTest(TestAccount('test_accounts_get'))
     suite.addTest(TestAccount('test_account_post'))
     suite.addTest(TestAccount('test_account_details_get'))
-    suite.addTest(TestAccount('test_account_details_post'))
+    suite.addTest(TestAccount('test_account_details_put'))
     suite.addTest(TestAccount('test_account_ciphers_get'))
     suite.addTest(TestAccount('test_account_codecs_get'))
     suite.addTest(TestAccount('test_account_codecs_put'))

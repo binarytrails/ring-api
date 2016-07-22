@@ -32,6 +32,7 @@ from ring_api.interfaces.dring cimport *
 cdef extern from "configurationmanager_interface.h" namespace "DRing":
 
     map[string, string] getAccountDetails(const string& accountID)
+    map[string, string] getVolatileAccountDetails(const string& accountID)
     void setAccountDetails(const string& accountID,
                            const map[string, string]& details)
     void setAccountActive(const string& accountID, const boolean& active)
@@ -43,6 +44,7 @@ cdef extern from "configurationmanager_interface.h" namespace "DRing":
                                     const map[string, string]& payloads)
     int getMessageStatus(uint64_t id)
     map[string, string] getTlsDefaultSettings()
+    vector[string] getSupportedCiphers(const string& accountID)
     vector[unsigned] getCodecList()
     vector[string] getSupportedTlsMethod()
     map[string, string] getCodecDetails(const string& accountID,

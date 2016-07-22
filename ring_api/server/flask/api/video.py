@@ -77,7 +77,7 @@ class VideoDevices(Resource):
         device_type = data.get('type')
 
         if (device_type == 'default'):
-            data = request.get_json(force=True)     # FIXME json needed?
+            data = request.get_json(force=True)
 
             if ('device' not in data):
                 return jsonify({
@@ -109,9 +109,13 @@ class VideoSettings(Resource):
         })
 
     def put(self, device_name):
-        data = request.get_json(force=True)     # FIXME remove json
+        data = request.get_json(force=True)
 
-        # TODO add more validation
+        if ('settings' not in data):
+            return jsonify({
+                'status': 404,
+                'message': 'settings not found'
+            })
 
         self.dring.video.apply_settings(device_name, data['settings'])
 
@@ -132,7 +136,7 @@ class VideoCamera(Resource):
         })
 
     def put(self):
-        data = request.get_json(force=True)     # FIXME remove json
+        data = request.get_json(force=True)
 
         if (data['action'] == 'start'):
             self.dring.video.start_camera()
