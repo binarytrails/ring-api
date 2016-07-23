@@ -173,6 +173,47 @@ It was tested using IPython. **It wasn't designed to be run with the REST Server
     # show callbacks documentation
     help(cb_api.account_message)
 
+#### Ring Node
+
+At the moment, the Node has an EchoBot which stores and forwards the account messages using a bot-like *!bang* syntax. It is important to understand that this Node never leaves the Ring over OpenDHT network.
+
+    $ ./node.py -h
+    usage: node.py [-h] [-v] -c CLIENTS
+
+    Ring API node using bots
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -v, --verbose
+      -c CLIENTS, --clients CLIENTS
+                            Clients as JSON string of '{"alias": "ring_id"}'
+
+The advantage of using aliases as secrets associated with your Ring Ids is that it very simple to remember and write. The requester will get all of the messages from all contacts which makes it simple to pull everything associated with your slave machine Ring Id at once.
+
+1. Start the node using the Ring API on your slave machine which will act as a replier.
+
+        ./node.py -vc '{"roger":"<ring_id>"}'
+
+2. From any other device -- text your slave machine which will enqueue messages.
+
+    From a third or same as previous (i.e. cellphone) device -- text the slave machine to forward all of the messages to the 'Ring Id' associated with 'roger' alias:
+
+        !echo roger reply
+
+    The slave machine will display that:
+
+        [Ring node is listening]
+        [Received    ] '!echo roger reply' : rerouting all messages to '<ring_id>'
+        [Forwarding  ] '[2016-07-23 13:39:40.351862 : <ring_id>] : Did you know'
+        [Forwarding  ] '[2016-07-23 13:39:42.346681 : <ring_id>] : that I like ..'
+        [Forwarding  ] '[2016-07-23 13:39:44.717613 : <ring_id>] : waffles?'
+
+    The device from which you requested it will display the messages in order under this form:
+
+        [<date time> : <ring_id_dest>] : <message>
+
+This a quick practical example. The exhaustive documentation is comming soon.
+
 ## Contributing
 
 ### Style
