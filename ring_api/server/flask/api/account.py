@@ -122,14 +122,16 @@ class AccountsDetails(Resource):
         elif (account_type == 'volatile'):
             return jsonify({
                 'status': 200,
-                'details': self.dring.config.account_volatile_details(account_id)
+                'details': self.dring.config.account_volatile_details(
+                               account_id
+                           )
             })
 
         return jsonify({
             'status': 400,
             'message': 'wrong account type'
         })
-    
+
     def put(self, account_id):
         data = request.get_json(force=True)
 
@@ -148,7 +150,7 @@ class AccountsDetails(Resource):
         })
 
 
-class AccountsCipher(Resource):
+class AccountsCiphers(Resource):
     def __init__(self, dring):
         self.dring = dring
 

@@ -64,9 +64,9 @@ class FlaskServer:
         self.api.decorators = [
             cors.crossdomain(
                 origin='*',
-                methods = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-                attach_to_all = True,
-                automatic_options = True
+                methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+                attach_to_all=True,
+                automatic_options=True
             )
         ]
 
@@ -108,9 +108,9 @@ class FlaskServer:
             '/accounts/<account_id>/details/',
             resource_class_kwargs={'dring': self.dring}
         )
-        
+
         self.api.add_resource(
-            account.AccountsCipher,
+            account.AccountsCiphers,
             '/accounts/<account_id>/ciphers/',
             resource_class_kwargs={'dring': self.dring}
         )

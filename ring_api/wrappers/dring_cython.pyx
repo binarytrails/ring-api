@@ -94,7 +94,7 @@ cdef class ConfigurationManager:
         cdef string raw_id = account_id.encode()
 
         return raw_dict_to_dict(confman_cpp.getAccountDetails(raw_id))
-    
+
     def account_volatile_details(self, account_id):
         """Gets account details
 
@@ -217,7 +217,7 @@ cdef class ConfigurationManager:
         Return: default settings dict
         """
         return raw_dict_to_dict(confman_cpp.getTlsDefaultSettings())
-    
+
     def get_supported_ciphers(self, account_id):
         """Gets the supported ciphers for an account
 
@@ -226,8 +226,10 @@ cdef class ConfigurationManager:
 
         Return: supported ciphers list
         """
-        
-        return raw_list_to_list(confman_cpp.getSupportedCiphers(account_id.encode()))
+
+        return raw_list_to_list(
+                  confman_cpp.getSupportedCiphers(account_id.encode())
+               )
 
     def get_codec_list(self):
         """Get the list of codecs
@@ -345,11 +347,8 @@ cdef class ConfigurationManager:
 
         Return: list of ids of the pinned certificate
         """
-            
-        #return raw_list_to_list(
-        cdef vector[uint8_t] raw_cert;
-        
-        #cert_list = list(certificate)
+
+        cdef vector[uint8_t] raw_cert
 
         cert_list = [ord(x) for x in list(certificate)]
 
