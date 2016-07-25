@@ -137,7 +137,7 @@ cdef class ConfigurationManager:
         """Generates a template for the account
 
         Keyword argument:
-        account_type -- account type string (SIP, IAX, IP2IP, RING)
+        account_type -- account type string (SIP, RING)
 
         Return: template dict
         """
