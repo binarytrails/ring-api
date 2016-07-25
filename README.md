@@ -2,7 +2,7 @@
 
 The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-api/wiki).
 
-Status: Ongoing Refactoring ~~Tested and stable at [f8cd8fa](https://github.com/sevaivanov/ring-api/commit/f8cd8fabc9ed2973fe4ca9935b423012e56c70bf).~~
+Tested and stable at [366cf1f](https://github.com/sevaivanov/ring-api/commit/366cf1f3d39f03128dd4cee6275abfcebc3f63db).
 
 ## Roadmap
 
@@ -28,9 +28,9 @@ Status: Ongoing Refactoring ~~Tested and stable at [f8cd8fa](https://github.com/
 * Wiki: document the server and WebSockets software choices
 * ~~Add unit tests~~
 * Add integration tests
-* Integrate the project to Ring-daemon Autotools (GNU Build System):
+* Integrate the project to Ring-daemon Autotools (GNU Build System)
 
-    ./configure prefix=/usr --without-dbus --with-restcython
+        ./configure prefix=/usr --without-dbus --with-restcython
 
 * Implement the functionalities:
 
