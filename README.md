@@ -114,15 +114,23 @@ Start the backend using client in verbose and with REST server:
 
     ./client.py -rv
 
-###### Send a text message
+###### Send a text message using cURL
 
-In another terminal, you can send a account message using curl:
+1. Get the available accounts
 
-    curl -X POST -G -v http://127.0.0.1:8080/accounts/<account_id>/message/ -d "ring_id=<ring_id> -d "message=curling" --data-urlencode "mime_type=text/plain"
+        curl http://127.0.0.1:8080/accounts/
 
-Get the message status:
+2. To get the destination Ring Id, just text the server's Ring Id and copy-paste it from the console's output.
 
-    curl http://127.0.0.1:8080/message/<message_id>/
+3. Send an account message:
+
+    The data is in JSON string format.
+
+        curl -X POST -d '{"ring_id":"<ring_id>","message":"curling","mime_type":"text/plain"}' http://127.0.0.1:8080/accounts/<account_id>/message/
+
+4. Get the message status:
+
+        curl http://127.0.0.1:8080/message/<message_id>/
 
 #### Interpreter
 
