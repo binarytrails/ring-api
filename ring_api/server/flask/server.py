@@ -34,13 +34,14 @@ from ring_api.server.flask.api import (
     account, video, messages, calls, certificate, audio, crypto, codec
 )
 
+
 class FlaskServer:
 
     websockets = list()
     ws_messages = asyncio.Queue()
 
-    def __init__(self, host, http_port, ws_port, ws_poll_interval,
-        dring, verbose):
+    def __init__(self, host, http_port, ws_port,
+                 ws_poll_interval, dring, verbose):
 
         self.host = host
         self.http_port = http_port
@@ -52,9 +53,7 @@ class FlaskServer:
         # Flask Application
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = 't0p_s3cr3t'
-        self.app.config.update(
-            PROPAGATE_EXCEPTIONS = True
-        )
+        self.app.config.update(PROPAGATE_EXCEPTIONS=True)
 
         # Flask Restuful API
         self.api = Api(self.app, catch_all_404s=True)
@@ -65,9 +64,9 @@ class FlaskServer:
         self.api.decorators = [
             cors.crossdomain(
                 origin='*',
-                methods = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-                attach_to_all = True,
-                automatic_options = True
+                methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+                attach_to_all=True,
+                automatic_options=True
             )
         ]
 
@@ -84,84 +83,124 @@ class FlaskServer:
         """
 
         # Websockets
-        self.api.add_resource(rest_ws.Websocket,
+        self.api.add_resource(
+            rest_ws.Websocket,
             '/websocket/<port>/',
-            resource_class_kwargs={'port': self.ws_port})
+            resource_class_kwargs={'port': self.ws_port}
+        )
 
         # Accounts
-        self.api.add_resource(account.Account,
+        self.api.add_resource(
+            account.Account,
             '/account/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
-        self.api.add_resource(account.Accounts,
+        self.api.add_resource(
+            account.Accounts,
             '/accounts/',
             '/accounts/<account_id>/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
-        self.api.add_resource(account.AccountsDetails,
+        self.api.add_resource(
+            account.AccountsDetails,
             '/accounts/<account_id>/details/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
-        self.api.add_resource(account.AccountsCodecs,
+        self.api.add_resource(
+            account.AccountsCiphers,
+            '/accounts/<account_id>/ciphers/',
+            resource_class_kwargs={'dring': self.dring}
+        )
+
+        self.api.add_resource(
+            account.AccountsCodecs,
             '/accounts/<account_id>/codecs/',
             '/accounts/<account_id>/codecs/<codec_id>/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
-        self.api.add_resource(account.AccountsCall,
+        self.api.add_resource(
+            account.AccountsCall,
             '/accounts/<account_id>/call/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
-        self.api.add_resource(account.AccountsCertificates,
+        self.api.add_resource(
+            account.AccountsCertificates,
             '/accounts/<account_id>/certificates/<cert_id>/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
-        self.api.add_resource(account.AccountsMessage,
+        self.api.add_resource(
+            account.AccountsMessage,
             '/accounts/<account_id>/message/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
         # Messages
-        self.api.add_resource(messages.Messages,
+        self.api.add_resource(
+            messages.Messages,
             '/messages/<message_id>/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
         # Calls
-        self.api.add_resource(calls.Calls,
+        self.api.add_resource(
+            calls.Calls,
             '/calls/<call_id>/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
         # Codecs
-        self.api.add_resource(codec.Codecs,
+        self.api.add_resource(
+            codec.Codecs,
             '/codecs/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
         # Crypto
-        self.api.add_resource(crypto.Tls,
+        self.api.add_resource(
+            crypto.Tls,
             '/crypto/tls/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
         # Certificates
-        self.api.add_resource(certificate.Certificates,
+        self.api.add_resource(
+            certificate.Certificates,
             '/certificates/',
             '/certificates/<cert_id>/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
         # Audio
-        self.api.add_resource(audio.Plugins,
+        self.api.add_resource(
+            audio.Plugins,
             '/audio/plugins/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
         # Video
-        self.api.add_resource(video.VideoDevices,
+        self.api.add_resource(
+            video.VideoDevices,
             '/video/devices/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
-        self.api.add_resource(video.VideoSettings,
-            '/video/<device_id>/settings/',
-            resource_class_kwargs={'dring': self.dring})
+        self.api.add_resource(
+            video.VideoSettings,
+            '/video/<device_name>/settings/',
+            resource_class_kwargs={'dring': self.dring}
+        )
 
-        self.api.add_resource(video.VideoCamera,
+        self.api.add_resource(
+            video.VideoCamera,
             '/video/camera/',
-            resource_class_kwargs={'dring': self.dring})
+            resource_class_kwargs={'dring': self.dring}
+        )
 
     def _init_websockets(self):
         self.ws_eventloop = asyncio.new_event_loop()
@@ -201,8 +240,10 @@ class FlaskServer:
         # use_reloader is set to False because if it's set to True
         # it expects to run in the main thread
 
-        self.app.run(host=self.host, port=self.http_port,
-                debug=True, use_reloader=False)
+        self.app.run(
+            host=self.host, port=self.http_port,
+            debug=True, use_reloader=False
+        )
 
     def stop(self):
         """ TODO """
@@ -274,7 +315,7 @@ class FlaskServer:
                     break
 
             # Should be only the below line without the previous for loop:
-            #message = await self.ws_messages.get()
+            # message = await self.ws_messages.get()
             # -------------------------------------------------
 
                 if (self.verbose):
@@ -292,4 +333,3 @@ class FlaskServer:
                         self.websockets.remove(websocket)
                         if (self.verbose):
                             print('server: connection closed to %s' % websocket)
-

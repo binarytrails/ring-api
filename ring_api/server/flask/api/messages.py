@@ -21,6 +21,7 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
+
 class Messages(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -55,4 +56,3 @@ class Messages(Resource):
             'status': 200,
             'message_status': status
         })
-

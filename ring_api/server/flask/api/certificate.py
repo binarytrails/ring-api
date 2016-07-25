@@ -21,25 +21,27 @@
 
 from flask import jsonify, request
 from flask_restful import Resource
+import numpy as np
+
 
 class Certificates(Resource):
     def __init__(self, dring):
         self.dring = dring
 
-    def get(self):
+    def get(self, cert_id=None):
+        if (cert_id):
+            return jsonify({
+                'status': 200,
+                'details': self.dring.config.get_certificate_details(cert_id)
+            })
+
         return jsonify({
-            'status': 404,
+            'status': 200,
             'pinned': self.dring.config.get_pinned_certificates()
         })
 
-    def get(self, cert_id):
-        return jsonify({
-            'status': 404,
-            'details': self.dring.config.get_certificate_details(cert_id)
-        })
-
     def post(self, cert_id):
-        data = request.args
+        data = request.get_json(force=True)
 
         if (not data):
             return jsonify({
@@ -47,22 +49,21 @@ class Certificates(Resource):
                 'message': 'data not found'
             })
 
-        if (not 'action' in data):
+        if ('action' not in data):
             return jsonify({
                 'status': 400,
                 'message': 'action not found in request data'
             })
 
         result = None
-        action = data.get('action')
 
-        if (action == 'pin'):
-            result = self.dring.config.pin_certificate(cert_id)
+        if (data.get('action') == 'pin'):
+            # temporary
+            local = True if data.get('local') in ["True", "true"] else False
 
-        elif (action == 'pin_remote'):
-            result = self.dring.config.pin_remote_certificate(cert_id)
+            result = self.dring.config.pin_certificate(cert_id, local)
 
-        elif (action == 'unpin'):
+        elif (data.get('action') == 'unpin'):
             result = self.dring.config.unpin_certificate(cert_id)
 
         else:
@@ -73,5 +74,5 @@ class Certificates(Resource):
 
         return jsonify({
             'status': 200,
-            'status': result
+            'action': result
         })

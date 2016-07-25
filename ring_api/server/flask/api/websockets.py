@@ -21,6 +21,7 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
+
 class Websocket(Resource):
     def __init__(self, port):
         self.port = port
@@ -30,4 +31,3 @@ class Websocket(Resource):
             'status': 200,
             'port': self.port
         })
-

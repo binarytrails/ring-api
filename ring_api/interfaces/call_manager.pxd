@@ -30,9 +30,9 @@ from ring_api.interfaces.dring cimport *
 
 cdef extern from "callmanager_interface.h" namespace "DRing":
 
-    string placeCall(const string& accountID, const string& to);
-    boolean refuse(const string& callID);
-    boolean accept(const string& callID);
-    boolean hangUp(const string& callID);
-    boolean hold(const string& callID);
-    boolean unhold(const string& callID);
+    string placeCall(const string& accountID, const string& to)
+    boolean refuse(const string& callID)
+    boolean accept(const string& callID)
+    boolean hangUp(const string& callID)
+    boolean hold(const string& callID)
+    boolean unhold(const string& callID)

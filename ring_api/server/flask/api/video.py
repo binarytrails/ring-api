@@ -22,6 +22,7 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
+
 class VideoDevices(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -60,7 +61,8 @@ class VideoDevices(Resource):
         })
 
     def put(self):
-        data = request.args
+        data = request.get_json(force=True)
+        
         if (not data):
             return jsonify({
                 'status': 404,
@@ -73,12 +75,12 @@ class VideoDevices(Resource):
                 'message': 'type not found in data'
             })
 
-        device_type = data.get('type')
+        device_type = data['type']
 
         if (device_type == 'default'):
-            data = request.get_json(force=True)     # FIXME json needed?
+            data = request.get_json(force=True)
 
-            if (not 'device' in data):
+            if ('device' not in data):
                 return jsonify({
                     'status': 400,
                     'message': 'device not found in request data'
@@ -96,6 +98,7 @@ class VideoDevices(Resource):
             'message': 'wrong device type'
         })
 
+
 class VideoSettings(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -107,7 +110,13 @@ class VideoSettings(Resource):
         })
 
     def put(self, device_name):
-        data = request.get_json(force=True)     # FIXME remove json
+        data = request.get_json(force=True)
+
+        if ('settings' not in data):
+            return jsonify({
+                'status': 404,
+                'message': 'settings not found'
+            })
 
         self.dring.video.apply_settings(device_name, data['settings'])
 
@@ -116,6 +125,7 @@ class VideoSettings(Resource):
             'settings': self.dring.video.get_settings(device_name)
         })
 
+
 class VideoCamera(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -123,11 +133,11 @@ class VideoCamera(Resource):
     def get(self):
         return jsonify({
             'status': 200,
-            'camera': self.dring.video.has_camera_started()
+            'cameraStatus': self.dring.video.has_camera_started()
         })
 
     def put(self):
-        data = request.get_json(force=True)     # FIXME remove json
+        data = request.get_json(force=True)
 
         if (data['action'] == 'start'):
             self.dring.video.start_camera()

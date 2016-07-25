@@ -24,12 +24,13 @@ from libcpp.utility cimport pair
 
 from ring_api.utils.std cimport *
 
+
 cdef extern from "dring.h" namespace "DRing":
 
     cdef enum InitFlag:
-        DRING_FLAG_DEBUG       = 1<<0
-        DRING_FLAG_CONSOLE_LOG = 1<<1
-        DRING_FLAG_AUTOANSWER  = 1<<2
+        DRING_FLAG_DEBUG = 1 << 0
+        DRING_FLAG_CONSOLE_LOG = 1 << 1
+        DRING_FLAG_AUTOANSWER = 1 << 2
 
     const char* version()
     boolean init(InitFlag flags)
@@ -41,4 +42,3 @@ cdef extern from "dring.h" namespace "DRing":
     # CallbackWrapper class and exportable_callback method are not needed.
     # The register of cython callbacks happens directly in C++ in the
     # CallbacksClient class of callbacks/cb_client.cpp
-
