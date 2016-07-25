@@ -26,11 +26,11 @@ Status: Ongoing Refactoring ~~Tested and stable at [f8cd8fa](https://github.com/
 * ~~Write a wiki base~~
 * Wiki: write how it works with and draw a diagram
 * Wiki: document the server and WebSockets software choices
-* Add unit tests
+* ~~Add unit tests~~
 * Add integration tests
-* Integrate the project to Ring-daemon Autotools (GNU Build System) using the *--without-dbus* option
+* Integrate the project to Ring-daemon Autotools (GNU Build System):
 
-    See: *Learning Cython Programming* by Philip Herron, page 32.
+    ./configure prefix=/usr --without-dbus --with-restcython
 
 * Implement the functionalities:
 
@@ -40,11 +40,12 @@ Status: Ongoing Refactoring ~~Tested and stable at [f8cd8fa](https://github.com/
     - ~~control the "static" configuration of the daemon: add/remove an account, modify properties, enable/disable them~~
     - ~~be able to listen to the changes from the daemon (framework for signals)~~
     - execute dynamic features:
+      - tx/rx IM in-call
       - ~~receive a message text (IM) out-of-call~~
       - ~~send an IM out-of-call~~
-      - be able to accept/refuse an incoming call
-      - be able to display the status of a call and stop a call
-      - tx/rx IM in-call
+      - ~~be able to accept/refuse an incoming call~~
+        - TODO: hangup crash
+      - ~~be able to display the status of a call and stop a call~~
       - ~~display video, in-call and preview for camera setup (audio is fully controlled by the daemon)~~
       - add full call controls (media pause, transfer, audio controls, conferences, ...)
       - add full "smartInfo" features
