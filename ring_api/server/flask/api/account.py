@@ -198,7 +198,7 @@ class AccountsCodecs(Resource):
             })
 
         self.dring.config.set_active_codec_list(
-                account_id, codec_id, data['codecs'])
+                account_id, data['codecs'])
 
         return jsonify({
             'status': 200,

@@ -211,7 +211,7 @@ class TestAccount(unittest.TestCase):
 
             codecs = res['codecs']
 
-            res = requests.get(
+            res = requests.put(
                 'http://localhost:8080/accounts/' + account + '/codecs/',
                 data=json.dumps({'codecs': codecs})
             )
