@@ -39,20 +39,6 @@ class TestAccount(unittest.TestCase):
 
         res = requests.get(
             'http://localhost:8080/account/',
-            params={'type': 'IAX'}
-        )
-        res = res.json()
-
-        self.assertTrue('status' in res)
-        self.assertEqual(res['status'], 200)
-        self.assertTrue('details' in res)
-        details = res['details']
-
-        self.assertTrue('Account.type' in details)
-        self.assertEqual(details['Account.type'], 'IAX')
-
-        res = requests.get(
-            'http://localhost:8080/account/',
             params={'type': 'RING'}
         )
         res = res.json()
