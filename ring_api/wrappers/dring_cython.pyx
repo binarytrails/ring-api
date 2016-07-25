@@ -352,8 +352,6 @@ cdef class ConfigurationManager:
 
         cert_list = [ord(x) for x in list(certificate)]
 
-        print(cert_list)
-
         for x in cert_list:
             raw_cert.append(x)
 
