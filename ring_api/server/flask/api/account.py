@@ -225,7 +225,7 @@ class AccountsCall(Resource):
                 'message': 'account not found'
             })
 
-        data = request.get_json(force=True)  # FIXME remove json
+        data = request.get_json(force=True)
 
         if ('ring_id' not in data):
             return jsonify({
@@ -258,7 +258,7 @@ class AccountsCertificates(Resource):
                 'message': 'type not found in data'
             })
 
-        action = data.get('action')
+        action = data['action']
 
         if (action == 'validate'):
             certificates = self.dring.config.validate_certificate(
@@ -285,7 +285,6 @@ class AccountsCertificates(Resource):
         })
 
     def put(self, account_id, cert_id):
-        data = request.args
         data = request.get_json(force=True)
 
         if (not data):
@@ -301,7 +300,7 @@ class AccountsCertificates(Resource):
             })
 
         cert_states = ["UNDEFINED", "ALLOWED", "BANNED"]
-        status = data.get('status')
+        status = data['status']
 
         if (status in cert_states):
             success = self.dring.config.set_certificate_status(
@@ -323,11 +322,10 @@ class AccountsMessage(Resource):
         self.dring = dring
 
     def post(self, account_id):
-
-        data = request.args
-        ring_id = data.get('ring_id')
-        mime_type = data.get('mime_type')
-        message = data.get('message')
+        data = request.get_json(force=True)
+        ring_id = data['ring_id']
+        mime_type = data['mime_type']
+        message = data['message']
 
         if (not (ring_id and mime_type and message)):
             return jsonify({

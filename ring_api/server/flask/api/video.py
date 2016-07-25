@@ -61,7 +61,8 @@ class VideoDevices(Resource):
         })
 
     def put(self):
-        data = request.args
+        data = request.get_json(force=True)
+        
         if (not data):
             return jsonify({
                 'status': 404,
@@ -74,7 +75,7 @@ class VideoDevices(Resource):
                 'message': 'type not found in data'
             })
 
-        device_type = data.get('type')
+        device_type = data['type']
 
         if (device_type == 'default'):
             data = request.get_json(force=True)

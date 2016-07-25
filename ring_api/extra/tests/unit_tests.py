@@ -309,7 +309,6 @@ class TestAccount(unittest.TestCase):
 
             self.assertEqual(res['status'], 200)
 
-
             if (res['details']['Account.alias'] == "Unittest"):
                 res = requests.get(
                     'http://localhost:8080/accounts/' +
