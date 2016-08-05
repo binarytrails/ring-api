@@ -64,11 +64,11 @@
         }
     },
 
-    "/websocket/port/": {
+    "/api/v0.1/websocket/port/": {
         "GET": "Returns the connection port"
     },
 
-    "/account/": {
+    "/api/v0.1/account/": {
        "GET": {
             "type": {
                 "SIP": "getAccountTemplate",
@@ -81,15 +81,15 @@
         }
     },
 
-    "/accounts/": {
+    "/api/v0.1/accounts/": {
         "GET": "getAccountList"
     },
 
-    "/accounts/<account_id>/": {
+    "/api/v0.1/accounts/<account_id>/": {
         "DELETE": "removeAccount"
     },
 
-    "/accounts/<account_id>/details/": {
+    "/api/v0.1/accounts/<account_id>/details/": {
         "GET": {
             "type": {
                 "default": "getAccountDetails",
@@ -99,27 +99,27 @@
         "PUT": "setAccountDetails"
     },
 
-    "/accounts/<account_id>/ciphers/": {
+    "/api/v0.1/accounts/<account_id>/ciphers/": {
         "GET": "getSupportedCiphers"
     },
 
-    "/accounts/<account_id>/codecs/": {
+    "/api/v0.1/accounts/<account_id>/codecs/": {
         "GET": "getActiveCodecList",
         "PUT": "setActiveCodecList"
     },
 
-    "/accounts/<account_id>/codecs/<codec_id>/": {
+    "/api/v0.1/accounts/<account_id>/codecs/<codec_id>/": {
         "GET": "getCodecDetails",
         "PUT": "setCodecDetails"
     },
 
-    "/accounts/<account_id>/call/": {
+    "/api/v0.1/accounts/<account_id>/call/": {
         "POST": {
             "ring_id": "placeCall"
         }
     },
 
-    "/accounts/<account_id>/certificates/<cert_id>/": {
+    "/api/v0.1/accounts/<account_id>/certificates/<cert_id>/": {
         "GET": {
             "action": {
                 "validate": "validateCertificate",
@@ -135,23 +135,23 @@
         }
     },
 
-    "/accounts/<account_id>/message/": {
+    "/api/v0.1/accounts/<account_id>/message/": {
         "POST": {
             ["ring_id", "mime_type", "message"]: "sendAccountTextMessage"
         }
     },
 
 
-    "/message/mime_types/": {
+    "/api/v0.1/message/mime_types/": {
         "GET": "todo"
     },
 
-    "/messages/<message_id>/": {
+    "/api/v0.1/messages/<message_id>/": {
         "GET": "getMessageStatus"
     },
 
 
-    "/calls/<call_id>/": {
+    "/api/v0.1/calls/<call_id>/": {
         "PUT": {
             "action": [
                 "accept",
@@ -164,12 +164,12 @@
     },
 
 
-    "/codecs/": {
+    "/api/v0.1/codecs/": {
         "GET": "getCodecList"
     },
 
 
-    "/crypto/tls/": {
+    "/api/v0.1/crypto/tls/": {
         "GET": {
             "type": {
                 "settings": "getTlsDefaultSettings",
@@ -179,11 +179,11 @@
     },
 
 
-    "/certificates/": {
+    "/api/v0.1/certificates/": {
         "GET": "getPinnedCertificates"
     },
 
-    "/certificate/<cert_id>/": {
+    "/api/v0.1/certificate/<cert_id>/": {
         "GET": "getCertificateDetails",
         "POST": {
             "action": {
@@ -194,12 +194,12 @@
     },
 
 
-    "/audio/plugins/": {
+    "/api/v0.1/audio/plugins/": {
         "GET": "getAudioPluginList"
     },
 
 
-    "/video/devices/": {
+    "/api/v0.1/video/devices/": {
         "GET": {
             "type": {
                 "all": "getDeviceList",
@@ -213,12 +213,12 @@
         }
     },
 
-    "/video/<device_name>/settings/": {
+    "/api/v0.1/video/<device_name>/settings/": {
         "GET": "getSettings",
         "PUT": "applySettings"
     },
 
-    "/video/camera/": {
+    "/api/v0.1/video/camera/": {
         "GET": "hasCameraStarted",
         "PUT": {
             "action": {

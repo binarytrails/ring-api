@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
 #
 
-from flask import Flask
+from flask import Flask, Blueprint
 from flask_restful import Api
 from flask_restful.utils import cors
 
@@ -34,8 +34,12 @@ from ring_api.server.flask.api import (
     account, video, messages, calls, certificate, audio, crypto, codec
 )
 
-
 class FlaskServer:
+
+    API_VERSION = 0.1
+    API_URL_PREFIX = '/api/v%s' % API_VERSION
+
+    api_blueprint = Blueprint('api', __name__)
 
     websockets = list()
     ws_messages = asyncio.Queue()
@@ -56,7 +60,11 @@ class FlaskServer:
         self.app.config.update(PROPAGATE_EXCEPTIONS=True)
 
         # Flask Restuful API
-        self.api = Api(self.app, catch_all_404s=True)
+        self.api = Api(
+            app=self.api_blueprint,
+            prefix=self.API_URL_PREFIX,
+            catch_all_404s=True
+        )
 
         # Cross Origin Resource Sharing is needed to define response headers
         # to allow HTTP methods from in-browser Javascript because accessing
@@ -71,6 +79,7 @@ class FlaskServer:
         ]
 
         self._init_api_resources()
+        self.app.register_blueprint(self.api_blueprint)
 
         # Websockets
         self._init_websockets()

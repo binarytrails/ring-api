@@ -119,7 +119,7 @@ Start the backend using client in verbose and with REST server:
 
 1. Get the available accounts
 
-        curl http://127.0.0.1:8080/accounts/
+        curl http://127.0.0.1:8080/api/v0.1/accounts/
 
 2. To get the destination Ring Id, just text the server's Ring Id and copy-paste it from the console's output.
 
@@ -127,11 +127,11 @@ Start the backend using client in verbose and with REST server:
 
     The data is in JSON string format.
 
-        curl -X POST -d '{"ring_id":"<ring_id>","message":"curling","mime_type":"text/plain"}' http://127.0.0.1:8080/accounts/<account_id>/message/
+        curl -X POST -d '{"ring_id":"<ring_id>","message":"curling","mime_type":"text/plain"}' http://127.0.0.1:8080/api/v0.1/accounts/<account_id>/message/
 
 4. Get the message status:
 
-        curl http://127.0.0.1:8080/message/<message_id>/
+        curl http://127.0.0.1:8080/api/v0.1/message/<message_id>/
 
 #### Interpreter
 

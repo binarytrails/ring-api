@@ -4,17 +4,17 @@ import unittest
 import requests
 import json
 
+API_URL = 'http://127.0.0.1:8080/api/v0.1'
 
 def print_json(data):
     print(json.dumps(data, sort_keys=True, indent=4))
-
 
 class TestAccount(unittest.TestCase):
 
     def test_accounts_get(self):
         print("\nGET /accounts/")
 
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         self.assertTrue('status' in res)
@@ -24,7 +24,7 @@ class TestAccount(unittest.TestCase):
         print("\nGET /account/")
 
         res = requests.get(
-            'http://localhost:8080/account/',
+            API_URL + '/account/',
             params={'type': 'SIP'}
         )
         res = res.json()
@@ -38,7 +38,7 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(details['Account.type'], 'SIP')
 
         res = requests.get(
-            'http://localhost:8080/account/',
+            API_URL + '/account/',
             params={'type': 'RING'}
         )
         res = res.json()
@@ -52,7 +52,7 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(details['Account.type'], 'RING')
 
         res = requests.get(
-            'http://localhost:8080/account/',
+            API_URL + '/account/',
             params={'type': 'stuff'}
         )
         res = res.json()
@@ -64,7 +64,7 @@ class TestAccount(unittest.TestCase):
     def test_account_post(self):
         print("\nPOST /account/")
 
-        req = requests.get('http://localhost:8080/account/?type=RING')
+        req = requests.get(API_URL + '/account/?type=RING')
         req = req.json()
         req['details']['Account.alias'] = "Unittest"
 
@@ -82,14 +82,14 @@ class TestAccount(unittest.TestCase):
     def test_account_details_get(self):
         print("\nGET /accounts/<account_id>/details")
 
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         accounts = res['accounts']
 
         for account in accounts:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/details/',
+                API_URL + '/accounts/' + account + '/details/',
                 params={'type': 'default'}
             )
             res = res.json()
@@ -99,7 +99,7 @@ class TestAccount(unittest.TestCase):
 
         for account in accounts:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/details/',
+                API_URL + '/accounts/' + account + '/details/',
                 params={'type' : 'volatile'}
             )
             res = res.json()
@@ -110,14 +110,14 @@ class TestAccount(unittest.TestCase):
     def test_account_details_put(self):
         print("\nPUT /accounts/<account_id>/details")
         
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         accounts = res['accounts']
 
         for account in accounts:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/details/',
+                API_URL + '/accounts/' + account + '/details/',
                 params={'type': 'default'}
             )
             res = res.json()
@@ -126,7 +126,7 @@ class TestAccount(unittest.TestCase):
             details = res['details']
 
             res = requests.put(
-                'http://localhost:8080/accounts/' + account + '/details/',
+                API_URL + '/accounts/' + account + '/details/',
                 data=json.dumps({'details': details})
             )
             res = res.json()
@@ -136,14 +136,14 @@ class TestAccount(unittest.TestCase):
     def test_account_delete(self):
         print("\nDELETE /accounts/<account_id>")
 
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         accounts = res['accounts']
 
         for account in accounts:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/details/',
+                API_URL + '/accounts/' + account + '/details/',
                 params={'type': 'default'}
             )
             res = res.json()
@@ -152,7 +152,7 @@ class TestAccount(unittest.TestCase):
 
             if (res['details']['Account.alias'] == "Unittest"):
                 res = requests.delete(
-                    'http://localhost:8080/accounts/' + account + '/'
+                    API_URL + '/accounts/' + account + '/'
                 )
                 res = res.json()
                 self.assertEqual(res['status'], 200)
@@ -160,14 +160,14 @@ class TestAccount(unittest.TestCase):
     def test_account_ciphers_get(self):
         print("\nGET /accounts/<account_id>/ciphers/")
 
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         accounts = res['accounts']
         
         for account in accounts:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/ciphers/'
+                API_URL + '/accounts/' + account + '/ciphers/'
             )
             res = res.json()
 
@@ -178,14 +178,14 @@ class TestAccount(unittest.TestCase):
     def test_account_codecs_get(self):
         print("\nGET /accounts/<account_id>/codecs/")
 
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         accounts = res['accounts']
 
         for account in accounts:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/codecs/'
+                API_URL + '/accounts/' + account + '/codecs/'
             )
             res = res.json()
 
@@ -195,14 +195,14 @@ class TestAccount(unittest.TestCase):
     def test_account_codecs_put(self):
         print("\nPUT /accounts/<account_id>/codecs/")
 
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         accounts = res['accounts']
 
         for account in accounts:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/codecs/'
+                API_URL + '/accounts/' + account + '/codecs/'
             )
             res = res.json()
             
@@ -212,7 +212,7 @@ class TestAccount(unittest.TestCase):
             codecs = res['codecs']
 
             res = requests.put(
-                'http://localhost:8080/accounts/' + account + '/codecs/',
+                API_URL + '/accounts/' + account + '/codecs/',
                 data=json.dumps({'codecs': codecs})
             )
             res = res.json()
@@ -223,14 +223,14 @@ class TestAccount(unittest.TestCase):
     def test_account_codec_details_get(self):
         print("\nGET /accounts/<account_id>/codecs/<codec_id>")
 
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         accounts = res['accounts']
 
         for account in accounts:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/codecs/'
+                API_URL + '/accounts/' + account + '/codecs/'
             )
             res = res.json()
 
@@ -240,7 +240,7 @@ class TestAccount(unittest.TestCase):
 
             for codec in codecs:
                 res = requests.get(
-                    'http://localhost:8080/accounts/' +
+                    API_URL + '/accounts/' +
                     account +
                     '/codecs/' +
                     str(codec) + '/'
@@ -253,14 +253,14 @@ class TestAccount(unittest.TestCase):
     def test_account_codec_details_put(self):
         print("\nPUT /accounts/<account_id>/codecs/<codec_id>")
         
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         accounts = res['accounts']
 
         for account in accounts:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/codecs/'
+                API_URL + '/accounts/' + account + '/codecs/'
             )
             res = res.json()
 
@@ -270,7 +270,7 @@ class TestAccount(unittest.TestCase):
 
             for codec in codecs:
                 res = requests.get(
-                    'http://localhost:8080/accounts/' +
+                    API_URL + '/accounts/' +
                     account +
                     '/codecs/' +
                     str(codec) + '/'
@@ -281,7 +281,7 @@ class TestAccount(unittest.TestCase):
 
                 details = res['details']
                 res = requests.get(
-                    'http://localhost:8080/accounts/' +
+                    API_URL + '/accounts/' +
                     account +
                     '/codecs/' +
                     str(codec) + '/',
@@ -295,14 +295,14 @@ class TestAccount(unittest.TestCase):
     def test_account_certificates_get(self):
         print("\nGET /accounts/<account_id>/certificates/<cert_id>")
  
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         accounts = []
 
         for account in res['accounts']:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/details/',
+                API_URL + '/accounts/' + account + '/details/',
                 {'type': 'default'}
             )
             res = res.json()
@@ -311,7 +311,7 @@ class TestAccount(unittest.TestCase):
 
             if (res['details']['Account.alias'] == "Unittest"):
                 res = requests.get(
-                    'http://localhost:8080/accounts/' +
+                    API_URL + '/accounts/' +
                     account +
                     '/certificates/fa5c04850341c00ba074518db52ee6745bb49bc1/',
                     params={'action': 'pin'}
@@ -323,7 +323,7 @@ class TestAccount(unittest.TestCase):
 
 
                 res = requests.get(
-                    'http://localhost:8080/accounts/' +
+                    API_URL + '/accounts/' +
                     account +
                     '/certificates/fa5c04850341c00ba074518db52ee6745bb49bc1/',
                     params={'action': 'validate'}
@@ -336,14 +336,14 @@ class TestAccount(unittest.TestCase):
     def test_account_certificates_put(self):
         print("\nPUT /accounts/<account_id>/certificates/<cert_id>")
 
-        res = requests.get('http://localhost:8080/accounts/')
+        res = requests.get(API_URL + '/accounts/')
         res = res.json()
 
         accounts = []
 
         for account in res['accounts']:
             res = requests.get(
-                'http://localhost:8080/accounts/' + account + '/details/',
+                API_URL + '/accounts/' + account + '/details/',
                 params={'type': 'default'}
             )
             res = res.json()
@@ -352,7 +352,7 @@ class TestAccount(unittest.TestCase):
 
             if (res['details']['Account.alias'] == "Unittest"):
                 res = requests.put(
-                    'http://localhost:8080/accounts/' +
+                    API_URL + '/accounts/' +
                     account +
                     '/certificates/fa5c04850341c00ba074518db52ee6745bb49bc1/',
                     data=json.dumps({'status': 'ALLOWED'})
@@ -368,7 +368,7 @@ class TestCodec(unittest.TestCase):
     def test_codecs(self):
         print("\nGET /codecs/")
 
-        res = requests.get('http://localhost:8080/codecs/')
+        res = requests.get(API_URL + '/codecs/')
         res = res.json()
 
         self.assertEqual(res['status'], 200)
@@ -381,7 +381,7 @@ class TestCrypto(unittest.TestCase):
         print("\nGET /crypto/tls/")
 
         res = requests.get(
-            'http://localhost:8080/crypto/tls/',
+            API_URL + '/crypto/tls/',
             {'type': 'settings'}
         )
         res = res.json()
@@ -390,7 +390,7 @@ class TestCrypto(unittest.TestCase):
         self.assertTrue('status' in res)
 
         res = requests.get(
-            'http://localhost:8080/crypto/tls/',
+            API_URL + '/crypto/tls/',
             {'type': 'method'}
         )
         res = res.json()
@@ -404,7 +404,7 @@ class TestCertificates(unittest.TestCase):
     def test_certificates_get(self):
         print("\nGET /certificates/")
 
-        res = requests.get('http://localhost:8080/certificates/')
+        res = requests.get(API_URL + '/certificates/')
         res = res.json()
 
         self.assertEqual(res['status'], 200)
@@ -413,14 +413,14 @@ class TestCertificates(unittest.TestCase):
     def test_certificate_get(self):
         print("\nGET /certificate/<cert_id>/")
 
-        res = requests.get('http://localhost:8080/certificates/')
+        res = requests.get(API_URL + '/certificates/')
         res = res.json()
 
         pinned = res['pinned']
 
         for certificate in pinned:
             res = requests.get(
-                'http://localhost:8080/certificates/' + certificate + '/'
+                API_URL + '/certificates/' + certificate + '/'
             )
             res = res.json()
             
@@ -430,14 +430,14 @@ class TestCertificates(unittest.TestCase):
     def test_certificate_post(self):
         print("\nPOST /certificate/<cert_id>/")
         
-        res = requests.get('http://localhost:8080/certificates/')
+        res = requests.get(API_URL + '/certificates/')
         res = res.json()
 
         pinned = res['pinned']
     
         for certificate in pinned:
             res = requests.post(
-                'http://localhost:8080/certificates/' + certificate + '/',
+                API_URL + '/certificates/' + certificate + '/',
                 data=json.dumps({'action': 'pin', 'local': 'True'})
             )
             res = res.json()
@@ -445,7 +445,7 @@ class TestCertificates(unittest.TestCase):
             self.assertTrue('action' in res)
             
             res = requests.post(
-                'http://localhost:8080/certificates/' + certificate + '/',
+                API_URL + '/certificates/' + certificate + '/',
                 data=json.dumps({'action': 'unpin'})
             )
             res = res.json()
@@ -458,7 +458,7 @@ class TestAudio(unittest.TestCase):
     def test_audio_plugins_get(self):
         print("\nGET /audio/plugins/")
 
-        res = requests.get('http://localhost:8080/audio/plugins/')
+        res = requests.get(API_URL + '/audio/plugins/')
         res = res.json()
 
         self.assertEqual(res['status'], 200)
@@ -471,7 +471,7 @@ class TestVideo(unittest.TestCase):
         print("\nGET /video/devices/")
 
         res = requests.get(
-            'http://localhost:8080/video/devices/',
+            API_URL + '/video/devices/',
             {'type': 'all'}
         )
         res = res.json()
@@ -480,7 +480,7 @@ class TestVideo(unittest.TestCase):
         self.assertTrue('devices' in res)
 
         res = requests.get(
-            'http://localhost:8080/video/devices/',
+            API_URL + '/video/devices/',
             {'type': 'default'}
         )
         res = res.json()
@@ -492,14 +492,14 @@ class TestVideo(unittest.TestCase):
         print("\nPUT /video/devices/")
 
         res = requests.get(
-            'http://localhost:8080/video/devices/',
+            API_URL + '/video/devices/',
             {'type': 'default'}
         )
         res = res.json()
         default = res['default']
 
         res = requests.put(
-            'http://localhost:8080/video/devices/',
+            API_URL + '/video/devices/',
             params={'type': 'default'},
             data=json.dumps({'device': default})
         )
@@ -509,14 +509,14 @@ class TestVideo(unittest.TestCase):
         print("\nGET /video/<device_name>/settings/")
 
         res = requests.get(
-            'http://localhost:8080/video/devices/',
+            API_URL + '/video/devices/',
             {'type': 'default'}
         )
         res = res.json()
         default = res['default']
 
         res = requests.get(
-            'http://localhost:8080/video/' + default + '/settings/'
+            API_URL + '/video/' + default + '/settings/'
         )
         res = res.json()
 
@@ -527,21 +527,21 @@ class TestVideo(unittest.TestCase):
         print("\nPUT /video/<device_name>/settings/")
 
         res = requests.get(
-            'http://localhost:8080/video/devices/',
+            API_URL + '/video/devices/',
             {'type': 'default'}
         )
         res = res.json()
         default = res['default']
 
         res = requests.get(
-            'http://localhost:8080/video/' + default + '/settings/'
+            API_URL + '/video/' + default + '/settings/'
         )
         res = res.json()
 
         settings = res['settings']
 
         res = requests.put(
-            'http://localhost:8080/video/' + default + '/settings/',
+            API_URL + '/video/' + default + '/settings/',
             data=json.dumps({'settings': settings})
         )
         res = res.json()
@@ -552,7 +552,7 @@ class TestVideo(unittest.TestCase):
     def test_video_camera_get(self):
         print("\nGET /video/camera/")
 
-        res = requests.get('http://localhost:8080/video/camera/')
+        res = requests.get(API_URL + '/video/camera/')
         res = res.json()
 
         self.assertEqual(res['status'], 200)
@@ -562,7 +562,7 @@ class TestVideo(unittest.TestCase):
         print("\nPUT /video/camera/")
 
         res = requests.put(
-            'http://localhost:8080/video/camera/',
+            API_URL + '/video/camera/',
             data=json.dumps({'action': 'start'})
         )
         res = res.json()
@@ -571,7 +571,7 @@ class TestVideo(unittest.TestCase):
         self.assertTrue('cameraStatus' in res)
 
         res = requests.put(
-            'http://localhost:8080/video/camera/',
+            API_URL + '/video/camera/',
             data=json.dumps({'action': 'stop'})
         )
         res = res.json()
@@ -585,7 +585,7 @@ def TestOrder():
 
     suite.addTest(TestAccount('test_account_get'))
     suite.addTest(TestAccount('test_accounts_get'))
-    suite.addTest(TestAccount('test_account_post'))
+    #suite.addTest(TestAccount('test_account_post'))
     suite.addTest(TestAccount('test_account_details_get'))
     suite.addTest(TestAccount('test_account_details_put'))
     suite.addTest(TestAccount('test_account_ciphers_get'))
@@ -619,21 +619,21 @@ def TestOrder():
 def delete_test_data():
     print("\nFlushing all remaining data")
 
-    res = requests.get('http://localhost:8080/accounts/')
+    res = requests.get(API_URL + '/accounts/')
     res = res.json()
 
     accounts = res['accounts']
 
     for account in accounts:
         res = requests.get(
-            'http://localhost:8080/accounts/' + account + '/details/',
+            API_URL + '/accounts/' + account + '/details/',
             {'type': 'default'}
         )
         res = res.json()
 
         if (res['details']['Account.alias'] == "Unittest"):
             res = requests.delete(
-                'http://localhost:8080/accounts/' + account + '/'
+                API_URL + '/accounts/' + account + '/'
             )
             res = res.json()
 
