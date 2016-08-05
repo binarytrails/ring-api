@@ -225,11 +225,23 @@ This a quick practical example. The exhaustive documentation is comming soon.
 
 ## Contributing
 
-### Style
+### Coding
 
-Coding: [PEP 8](https://www.python.org/dev/peps/pep-0008/)
+* Style
+    * [PEP 8](https://www.python.org/dev/peps/pep-0008/)
 
-Docstring: [PEP 257](https://www.python.org/dev/peps/pep-0257/)
+* Docstring
+    * [PEP 257](https://www.python.org/dev/peps/pep-0257/)
+
+### Packaging
+
+* [Overview](https://packaging.python.org/distributing/)
+
+* Versioning
+    * [PEP 440](https://www.python.org/dev/peps/pep-0440/)
+    * [Semantic Versioning 2.0.0](http://semver.org/)
+
+* [Classifiers](https://pypi.python.org/pypi?%3Aaction=list_classifiers)
 
 ## License
 
@@ -240,3 +252,4 @@ The code is licensed under a GNU General Public License [GPLv3](http://www.gnu.o
 Seva Ivanov seva.ivanov@savoirfairelinux.com
 
 Simon Zeni  simon.zeni@savoirfairelinux.com
+

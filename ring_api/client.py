@@ -25,7 +25,9 @@ import time
 from queue import Queue
 from threading import Thread
 
-from ring_api.dring_cython import Dring
+# generated shared library
+from ring_api.ring_api import Dring
+
 from ring_api.server.flask.server import FlaskServer
 
 def options():

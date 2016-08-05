@@ -26,10 +26,14 @@
 #include <dring.h>
 #include <configurationmanager_interface.h>
 
-#include "logger.h" // is extra for devs
+// Extra ring logger for the devs
+#include "logger.h"
 
+// Python/C API
 #include <Python.h>
-#include "dring_cython.h" // has generated C callbacks
+
+// Generated file (during make) from wrappers/ring_api.pyx
+#include "ring_api.h"
 
 class CallbacksClient {
     public:
