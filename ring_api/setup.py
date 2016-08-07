@@ -19,7 +19,7 @@
 #
 
 import sys, distutils
-from setuptools import setup, Extension
+from setuptools import setup, find_packages, Extension
 
 try:
     from Cython.Build import cythonize
@@ -40,7 +40,10 @@ setup(
     author_email='seva.ivanov@savoirfairelinux.com',
     license='GPLv3+',
     keywords='ring ring.cx ring-api ring_api',
-    #packages=find_packages(exclude=[''])
+    
+    # read: source vs build distribution
+    packages=find_packages(exclude=['docs', 'tests*']),
+
     install_requires=[
         'Cython',
         'flask',
@@ -60,11 +63,11 @@ setup(
     ],
 
     # Generate shared library
-    ext_modules = cythonize(
+    ext_modules=cythonize(
         Extension(
-            'ring_api',
+            name='dring_cython',
             sources=[
-                'wrappers/ring_api.pyx',
+                'wrappers/dring_cython.pyx',
                 'callbacks/cb_client.cpp'
             ],
             language='c++',
@@ -85,7 +88,12 @@ setup(
             ],
         )
     ),
-    cmdclass = {
+    cmdclass={
         'build_ext' : build_ext
     }
+    #entry_point={
+    #    'console_scripts': [
+    #        'ring_api=ring_api:run_client'
+    #    ],
+    #}
 )

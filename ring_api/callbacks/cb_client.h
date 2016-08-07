@@ -33,7 +33,7 @@
 #include <Python.h>
 
 // Generated file (during make) from wrappers/ring_api.pyx
-#include "ring_api.h"
+#include "dring_cython.h"
 
 class CallbacksClient {
     public:
