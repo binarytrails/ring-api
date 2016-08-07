@@ -26,9 +26,6 @@
 #include <dring.h>
 #include <configurationmanager_interface.h>
 
-// Extra ring logger for the devs
-#include "logger.h"
-
 // Python/C API
 #include <Python.h>
 
