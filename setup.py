@@ -37,10 +37,10 @@ if (not distutils.spawn.find_executable('dring')):
     sys.exit('You need to install Ring-daemon')
 
 ext_dring = Extension(
-    'dring_cython',
+    'ring_api/dring_cython',
     sources=[
-	'wrappers/dring_cython.pyx',
-	'callbacks/cb_client.cpp'
+	'ring_api/wrappers/dring_cython.pyx',
+	'ring_api/callbacks/cb_client.cpp'
     ],
     language='c++',
     extra_compile_args=[
@@ -52,8 +52,8 @@ ext_dring = Extension(
     include_dirs = [
 	'/usr/include/dring',
 	'extra/hpp/',
-	'callbacks/',
-	'wrappers/'
+	'ring_api/callbacks/',
+	'ring_api/wrappers/'
     ],
     libraries=[
 	'ring'
@@ -70,6 +70,7 @@ setup(
     author_email='seva.ivanov@savoirfairelinux.com',
     license='GPLv3+',
     keywords='ring ring.cx ring-api ring_api',
+    platforms='any',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -79,7 +80,7 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     
-    # read: source vs build distribution
+    # read: source vs build distribution; install: pip install -e .docs
     packages=find_packages(exclude=['docs', 'tests*']),
 
     install_requires=[

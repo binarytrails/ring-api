@@ -13,5 +13,5 @@ all:
 
 clean:
 	python setup.py clean
-	rm -rf *$(LIB_EXT) *.out wrappers/*{h,.cpp}
+	rm -rf *$(LIB_EXT) *.out ring_api/wrappers/*{h,.cpp}
 
