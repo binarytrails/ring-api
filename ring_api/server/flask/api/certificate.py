@@ -21,8 +21,6 @@
 
 from flask import jsonify, request
 from flask_restful import Resource
-import numpy as np
-
 
 class Certificates(Resource):
     def __init__(self, dring):
@@ -76,3 +74,4 @@ class Certificates(Resource):
             'status': 200,
             'action': result
         })
+

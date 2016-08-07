@@ -22,7 +22,6 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
-
 class Calls(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -64,3 +63,4 @@ class Calls(Resource):
             'status': 200,
             'unhold': result
         })
+

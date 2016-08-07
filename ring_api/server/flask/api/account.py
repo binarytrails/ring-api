@@ -24,7 +24,6 @@ from flask_restful import Resource
 
 from ring_api.server.flask import utils
 
-
 class Account(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -340,3 +339,4 @@ class AccountsMessage(Resource):
             'status': 200,
             'message_id': message_id
         })
+

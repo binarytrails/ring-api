@@ -22,7 +22,6 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
-
 class VideoDevices(Resource):
     def __init__(self, dring):
         self.dring = dring
@@ -159,3 +158,4 @@ class VideoCamera(Resource):
             'status': 404,
             'message': 'wrong camera action'
         })
+
