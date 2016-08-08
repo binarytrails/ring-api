@@ -12,6 +12,6 @@ all:
 	python setup.py build_ext --inplace
 
 clean:
-	python setup.py clean
-	rm -rf *$(LIB_EXT) *.out ring_api/wrappers/*{h,.cpp}
+	python setup.py clean --all
+	rm -rf ring_api/*$(LIB_EXT) ring_api/wrappers/*{h,.cpp}
 

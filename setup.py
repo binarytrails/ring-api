@@ -33,9 +33,6 @@ except ImportError:
     from Cython.Build import cythonize
     from Cython.Distutils import build_ext
 
-if (not distutils.spawn.find_executable('dring')):
-    sys.exit('You need to install Ring-daemon')
-
 ext_dring = Extension(
     'ring_api/dring_cython',
     sources=[
@@ -80,7 +77,7 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     
-    # read: source vs build distribution; install: pip install -e .docs
+    # read: source vs build distribution; install: pip install -e .[docs]
     packages=find_packages(exclude=['docs', 'tests*']),
 
     install_requires=[
@@ -93,11 +90,5 @@ setup(
     ext_modules=cythonize(ext_dring),
     cmdclass={
         'build_ext' : build_ext
-    }
-
-    #entry_point={
-    #    'console_scripts': [
-    #        'ring_api=ring_api:run_client'
-    #    ],
-    #}
+    },
 )
