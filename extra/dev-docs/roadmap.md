@@ -2,36 +2,48 @@
 
 ## 0.1.0
 
-* ~~Initialize Ring~~
-* ~~Start Ring~~
-* ~~Parse arguments~~
-* ~~Get account info for demonstration~~
-* ~~Implement RESTful API skeleton~~
-* ~~Implement encoding / decoding protocols~~
-* ~~Implement the Python package architecture~~
-* ~~Add threading~~
-* ~~Register callbacks~~
-* ~~Define python callbacks API~~
-* Segment wrappers into multiple files
-* ~~Decide whether to use REST + WebSockets or only WebSockets~~
-* ~~Select multi-threaded RESTful server~~
-* ~~Define RESTful API standards~~
-* ~~Define RESTful API in json~~
-* ~~Implement RESTful API using Flask-REST~~
-* ~~Implement WebSockets structure for server initiated callbacks~~
-* ~~Write a wiki base~~
-* Wiki: write how it works with and draw a diagram
-* Wiki: document the server and WebSockets software choices
-* ~~Add unit tests~~
-* Integrate the project to Ring-daemon Autotools (GNU Build System)
+* Cython
+    * ~~Initialize Ring~~
+    * ~~Start Ring~~
+    * ~~Parse arguments~~
+    * ~~Get account info for demonstration~~
+    * ~~Implement (de)serialization~~
+    * ~~Register callbacks~~
+    * ~~Define python callbacks API~~
+    * Segment wrappers into multiple files
 
-        ./configure prefix=/usr --without-dbus --with-restcython
+* Client
+    * ~~Add threading~~
+    * ~~Define launch options~~
 
-* Implement the functionalities:
+* Server
+    * ~~Implement RESTful API skeleton~~
+    * ~~Decide whether to use REST + WebSockets or only WebSockets~~
+    * ~~Select multi-threaded RESTful server~~
+    * ~~Define RESTful API in json~~
+    * ~~Implement RESTful API using Flask-REST~~
+    * ~~Implement WebSockets structure for server initiated callbacks~~
+    * ~~Add unit tests~~
+    * Format the logs to dring style
+    * Solve the 'Dirty Hack' in server.py
+
+* Integration
+    * ~~Implement the Python package architecture~~
+    * Integrate the project to Ring-daemon Autotools (GNU Build System)
+
+            ./configure prefix=/usr --without-dbus --with-api
+
+* Wiki
+    * ~~Write a wiki base~~
+    * ~~Define RESTful API standards~~
+    * Write how it works with and draw a diagram
+    * Document the server and WebSockets software choices
+
+* Functionalities:
 
     **It considered done when it's implement in both Cython and the RESTful server.**
 
-    - ~~possibility to talk to the REST http interface of the daemon (the framework that you've written so far)~~
+    - ~~possibility to talk to the REST http interface of the daemon~~
     - ~~control the "static" configuration of the daemon: add/remove an account, modify properties, enable/disable them~~
     - ~~be able to listen to the changes from the daemon (framework for signals)~~
     - execute dynamic features:
