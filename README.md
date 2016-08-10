@@ -90,7 +90,7 @@ It was tested using IPython. It wasn't designed to be run with the REST Server.
 
 ## Examples
 
-### Send a text message using *cURL*
+### Texting with *curl*
 
 Start the module along with the REST server:
 
@@ -112,7 +112,29 @@ Start the module along with the REST server:
 
         curl http://127.0.0.1:8080/api/v0.1/messages/<message_id>/
 
-### Run a node acting as a message replier
+### Calling
+
+**Experimental**
+
+You will send video and receive audio.
+
+    # Call
+
+    $ curl -d '{"ring_id":"<ring_id>"}' http://localhost:8080/api/v0.1/accounts/<account_id>/call/
+    {
+      "call_id": "<call_id>",
+      "status": 200
+    }
+
+    # Handup
+
+    $ curl -X PUT -d '{"action":"hangup"}' http://localhost:8080/api/v0.1/calls/<call_id>/
+    {
+      "status": 200,
+      "unhold": false
+    }
+
+### Node: message replier
 
 It is located under *extra/examples/*. The Node has an EchoBot which stores and forwards the account messages using a bot-like *!bang* syntax. It is important to understand that this Node never leaves the Ring over OpenDHT network.
 

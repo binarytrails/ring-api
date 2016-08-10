@@ -41,20 +41,36 @@
 
 * Functionalities:
 
-    **It considered done when it's implement in both Cython and the RESTful server.**
+    * **Notes**
+        * It is defined as done when it's implemented up to the server top layer
+        * Audio is fully controlled by the daemon
 
-    - ~~possibility to talk to the REST http interface of the daemon~~
-    - ~~control the "static" configuration of the daemon: add/remove an account, modify properties, enable/disable them~~
-    - ~~be able to listen to the changes from the daemon (framework for signals)~~
-    - execute dynamic features:
-      - tx/rx IM in-call
-      - ~~receive a message text (IM) out-of-call~~
-      - ~~send an IM out-of-call~~
-      - ~~be able to accept/refuse an incoming call~~
-        - TODO: hangup crash
-      - ~~be able to display the status of a call and stop a call~~
-      - ~~display video, in-call and preview for camera setup (audio is fully controlled by the daemon)~~
-      - add full call controls (media pause, transfer, audio controls, conferences, ...)
-      - add full "smartInfo" features
-      - ~~certificates controls~~
+    * Daemon
+        * ~~Talk to the REST HTTP interface of the daemon~~
+        * ~~Control the "static" configuration of the daemon: add/remove an account, modify properties, enable/disable them~~
+        * ~~Listen to the changes from the daemon (framework for signals)~~
+
+    * Instant message
+      * ~~Receive a message text (IM) out-of-call~~
+      * ~~Send an IM out-of-call~~
+      * Send / receieve in-call
+
+    * Call
+        * ~~Accept/refuse an incoming call~~
+        * ~~Display the status of a call and stop a call~~
+        * Video
+            * ~~Send~~
+            * Receive
+            * Display
+            * Preview for camera setup
+                Justify that it does into the api
+
+        * Controls
+            * Media pause
+            * Transfer
+            * Audio controls
+            * Conferences
+
+        * SmartInfo statistics features
+        * ~~Certificates controls~~
 
