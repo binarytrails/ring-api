@@ -19,10 +19,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
 #
 
-
-def valid_account_format(account_id):
-    return (len(account_id) != 16)
-
+def valid_account_len(account_id):
+    return (len(account_id) == 16)
 
 def contained_in(a, b):
-    return (not any(a in a_b for a_b in b))
+    return (any(a in a_b for a_b in b))
+

@@ -22,7 +22,7 @@
 from flask import jsonify, request
 from flask_restful import Resource
 
-from ring_api.server.flask import utils
+from ring_api.utils import server as utils
 
 class Account(Resource):
     def __init__(self, dring):
@@ -210,7 +210,7 @@ class AccountsCall(Resource):
         self.dring = dring
 
     def post(self, account_id):
-        if (not utils.valid_account_format(account_id)):
+        if (not utils.valid_account_len(account_id)):
             return jsonify({
                 'status': 400,
                 'message': 'account_id not valid'
