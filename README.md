@@ -23,7 +23,7 @@ You can either execute the *ring_api* module or import it into interpreter of yo
 It is recommended that you start it with the *--rest* option to be able to interact with it.
 
     $ python -m ring_api -h
-    Usage: client.py [options] arg1 arg2
+    Usage: __main__.py [options] arg1 arg2
 
     Options:
       -h, --help         show this help message and exit
@@ -110,7 +110,7 @@ Start the module along with the REST server:
 
 4. Get the message status:
 
-        curl http://127.0.0.1:8080/api/v0.1/message/<message_id>/
+        curl http://127.0.0.1:8080/api/v0.1/messages/<message_id>/
 
 ### Run a node acting as a message replier
 
