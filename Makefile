@@ -9,6 +9,7 @@ else
 endif
 
 all:
+	python setup.py build_ext --inplace
 	python setup.py build
 
 cython:
@@ -18,10 +19,12 @@ sdist:
 	python setup.py sdist # source distribution -> dist/
 
 install:
+	pip install --user -r requirements.txt
 	python setup.py install --user --record files.txt
 
 uninstall:
-	pip uninstall ring_api
+	pip uninstall -y -r requirements.txt
+	pip uninstall -y ring_api
 
 clean:
 	python setup.py clean --all
