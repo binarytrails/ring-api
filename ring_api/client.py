@@ -27,11 +27,13 @@ from ring_api.dring_cython import Dring
 
 from ring_api.server.flask.server import FlaskServer
 
-def options_parser():
+def options_parser(desc=None, force_rest=False):
     """ Return the parser without parsing the args """
 
-    parser = argparse.ArgumentParser(
-        description='API of the Ring-daemon')
+    if (not desc):
+        desc='API of the Ring-daemon'
+
+    parser = argparse.ArgumentParser(description=desc)
 
     parser.add_argument('-v', '--verbose',
         action='store_true', dest='verbose', default=False,
@@ -49,9 +51,16 @@ def options_parser():
         action='store_true', dest='persistent', default=False,
         help='stay alive after client quits')
 
+    rest_default = False
+    rest_help = 'start with a restful server'
+
+    if (force_rest):
+        rest_default = True
+        rest_help = argparse.SUPPRESS
+
     parser.add_argument('-r', '--rest',
-        action='store_true', dest='rest', default=False,
-        help='start with a restful server')
+        action='store_true', dest='rest', default=rest_default,
+        help=rest_help)
 
     parser.add_argument('--host',
         dest='host', default='127.0.0.1',
@@ -73,9 +82,14 @@ def options_parser():
         action='store_true', dest='dring_version', default=False,
         help='show Ring-daemon version')
 
+    interpreter_help='adapt threads for interpreter interaction'
+
+    if (force_rest):
+        interpreter_help = argparse.SUPPRESS
+
     parser.add_argument('--interpreter',
         action='store_true', dest='interpreter', default=False,
-        help='adapt threads for interpreter interaction')
+        help=interpreter_help)
 
     return parser
 
