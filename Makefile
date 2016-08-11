@@ -26,8 +26,12 @@ uninstall:
 	pip uninstall -y -r requirements.txt
 	pip uninstall -y ring_api
 
+contrib:
+	mkdir -p contrib/
+	pip download -r requirements.txt -d contrib/
+
 clean:
 	python setup.py clean --all
-	rm -rf dist/ build/ ring_api.egg-info/ files.txt \
+	rm -rf dist/ build/ contrib/ ring_api.egg-info/ files.txt \
 		ring_api/*$(LIB_EXT) ring_api/wrappers/*{h,.cpp}
 
