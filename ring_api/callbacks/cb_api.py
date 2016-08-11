@@ -33,4 +33,3 @@ def account_message(account_id, from_ring_id, content):
     content         -- dict of content defined as [<mime-type>, <message>]
     """
     pass
-

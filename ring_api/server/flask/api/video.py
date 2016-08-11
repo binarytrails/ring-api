@@ -61,7 +61,7 @@ class VideoDevices(Resource):
 
     def put(self):
         data = request.get_json(force=True)
-        
+
         if (not data):
             return jsonify({
                 'status': 404,
@@ -158,4 +158,3 @@ class VideoCamera(Resource):
             'status': 404,
             'message': 'wrong camera action'
         })
-

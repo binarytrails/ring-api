@@ -57,4 +57,3 @@ class Tls(Resource):
             'status': 400,
             'message': 'wrong tls type'
         })
-

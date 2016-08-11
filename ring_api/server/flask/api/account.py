@@ -339,4 +339,3 @@ class AccountsMessage(Resource):
             'status': 200,
             'message_id': message_id
         })
-

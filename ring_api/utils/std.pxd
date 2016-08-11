@@ -41,4 +41,3 @@ cdef extern from "<functional>" namespace "std" nogil:
     cdef cppclass function[T]:
         function() except +
         function(const T&)
-

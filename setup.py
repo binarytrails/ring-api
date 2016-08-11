@@ -76,7 +76,7 @@ setup(
         # TODO test earlier
         'Programming Language :: Python :: 3.5',
     ],
-    
+
     # read: source vs build distribution;1 install: pip install -e .[wiki]
     packages=find_packages(exclude=['wiki', 'tests*']),
 

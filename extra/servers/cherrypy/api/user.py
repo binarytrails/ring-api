@@ -8,7 +8,7 @@ class User:
     @cherrypy.expose
     def index(self):
         return 'todo'
-    
+
     @cherrypy.expose
     def accounts(self):
         return json.dumps(self.dring.config.accounts())
@@ -22,4 +22,3 @@ class User:
     def text(self, account_id, to_ring_id, message):
         self.dring.config.send_text_message(
                 account_id, to_ring_id, {'text/plain': message})
-

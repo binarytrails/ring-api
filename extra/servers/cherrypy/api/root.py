@@ -16,4 +16,3 @@ class Root(object):
     @cherrypy.expose
     def routes(self):
         return 'todo'
-

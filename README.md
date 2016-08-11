@@ -212,4 +212,3 @@ The code is licensed under a GNU General Public License [GPLv3+](http://www.gnu.
 Seva Ivanov seva.ivanov@savoirfairelinux.com
 
 Simon Zeni  simon.zeni@savoirfairelinux.com
-

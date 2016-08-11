@@ -30,4 +30,3 @@ class Plugins(Resource):
             'status': 200,
             'plugins': self.dring.config.get_audio_plugin_list()
         })
-

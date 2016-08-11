@@ -41,4 +41,3 @@ The API modules which are located in the *restfulserver/api/* are receiving an i
 This is a general layout that we should respect in all of the API modules located in */restfulserver/api/*. As the API will become bigger, we should keep it intuitive and consistent.
 
 See [REST API Standards](https://github.com/sevaivanov/ring-api/wiki/REST-API-Standards).
-

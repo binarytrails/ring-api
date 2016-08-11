@@ -63,4 +63,3 @@ class Calls(Resource):
             'status': 200,
             'unhold': result
         })
-

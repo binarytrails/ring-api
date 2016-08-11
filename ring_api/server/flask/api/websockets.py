@@ -30,4 +30,3 @@ class Websocket(Resource):
             'status': 200,
             'port': self.port
         })
-

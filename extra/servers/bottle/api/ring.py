@@ -21,4 +21,3 @@ def routes():
 @get(api['version'])
 def version():
     return json.dumps(dring.version())
-

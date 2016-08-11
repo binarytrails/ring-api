@@ -24,4 +24,3 @@ if (!DRing::init(static_cast<DRing::InitFlag>(flags)))
     return -1;
 
 registerConfHandlers(configEvHandlers);
-

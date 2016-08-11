@@ -45,4 +45,3 @@ Download [Ring](https://ring.cx/en/download) which will contain Ring-daemon.
             ./configure --prefix=/usr
             make
             make install
-

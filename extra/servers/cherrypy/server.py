@@ -35,4 +35,3 @@ class CherryServer:
 
     def stop(self):
         cherrypy.engine.stop()
-

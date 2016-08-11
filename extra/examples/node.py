@@ -149,4 +149,3 @@ if __name__ == "__main__":
 
     except (KeyboardInterrupt, SystemExit):
         ring_api.stop()
-

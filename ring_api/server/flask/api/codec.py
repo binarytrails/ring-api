@@ -30,4 +30,3 @@ class Codecs(Resource):
             'status': 200,
             'codecs': self.dring.config.get_codec_list()
         })
-

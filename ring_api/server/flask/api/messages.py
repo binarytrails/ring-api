@@ -55,4 +55,3 @@ class Messages(Resource):
             'status': 200,
             'message_status': status
         })
-

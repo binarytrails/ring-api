@@ -74,4 +74,3 @@ class Certificates(Resource):
             'status': 200,
             'action': result
         })
-

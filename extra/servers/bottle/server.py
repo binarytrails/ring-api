@@ -18,4 +18,3 @@ class BottleServer:
 
     def stop(self):
         pass
-

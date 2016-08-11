@@ -20,7 +20,7 @@ Returns a list of the detected v4l2 devices.
     {
 		"devices" : [string]
     }
-    
+
 ### /capabilities/[device]/
 
 #### REST Request
@@ -34,7 +34,7 @@ Returns a map of map of array of strings, containing the capabilities (channel, 
 
     {
 	    "capabilities" : {
-			// TODO	
+			// TODO
 		}
     }
 
@@ -47,13 +47,13 @@ Returns a map of map of array of strings, containing the capabilities (channel, 
 |GET     | /settings/[device]/ |
 |PUT 	 | /settings/[device]/ |
 
-#### PUT Request 
+#### PUT Request
     {
       // TODO
     }
 
 #### Response
-##### GET 
+##### GET
 Returns a map of settings for the given device name
 
     {
@@ -71,7 +71,7 @@ Returns a map of settings for the given device name
 |GET     | /default/ |
 |PUT 	 | /default/ |
 
-#### POST Request 
+#### POST Request
     {
       "device" : "deviceName"
     }
@@ -83,7 +83,7 @@ Returns the device used by default by the daemon
     {
       "default" : string
     }
-	
+
 ### /camera/
 
 #### REST Request
@@ -93,7 +93,7 @@ Returns the device used by default by the daemon
 |GET 	 | /camera/  |
 |PUT 	 | /camera/  |
 
-#### PUT Request 
+#### PUT Request
 Start or stop the camera. True to start, false to stop.
 	{
 		"status" : bool
@@ -114,7 +114,7 @@ A media resource locator (MRL). Currently, the following are supported:
  * camera://DEVICE
  * display://DISPLAY_NAME[ WIDTHxHEIGHT]
  * file://IMAGE_PATH
- 
+
 #### REST Request
 
 | METHOD | URL     |

@@ -28,4 +28,3 @@ def routes():
     user_api = user.User.api()
     html = {**api, **ring_api, **user_api}
     return html
-
