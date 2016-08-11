@@ -8,25 +8,25 @@ Download [Ring](https://ring.cx/en/download) which will contain Ring-daemon.
 
 > The PyPA recommended tool for installing Python packages.
 
-    # optional: go into virtualenv
+    # optional: dive into virtualenv
     virtualenv -p python3.5 ENV
     source ENV/bin/activate
 
-    # install it
-    pip install -e .
-
-    # to only build the package into dist/ folder
-    python setup.py sdist
+    make install
 
     # optional: to exit virtualenv write: deactivate
 
 ## Manual
 
-1. Ring-daemon (shared library)
+### Ring-daemon (shared library)
 
-    Apply [this patch](https://gerrit-ring.savoirfairelinux.com/#/c/4327/). It was written due to bug [#699](https://tuleap.ring.cx/plugins/tracker/?aid=699) that was blocking the generation of the shared library.
+    * Apply [4327 patch](https://gerrit-ring.savoirfairelinux.com/#/c/4327/). It was written due to bug [#699](https://tuleap.ring.cx/plugins/tracker/?aid=699) that was blocking the generation of the shared library.
 
-    **As soon as it is merged, applying it won't be necessary.**
+    * Apply [4482 patch](https://gerrit-ring.savoirfairelinux.com/#/c/4482) which is blocking many features as calls due to the absence on register_thread from sip_utils.
+
+    **As soon as the are merged, applying them won't be necessary.**
+
+    To apply the patches:
 
     1. Download the Ring-daemon
 
@@ -38,18 +38,11 @@ Download [Ring](https://ring.cx/en/download) which will contain Ring-daemon.
 
             cd contrib; mkdir build; cd build
             ../bootstrap
-            make; make .opendht
+            make; make
+            make .opendht # needed on archlinux
             cd ../../
             ./autogen.sh
             ./configure --prefix=/usr
             make
             make install
-
-2. Ring API
-
-        # dependencies
-        pip install --user -r requirements.txt
-
-        # ring_api
-        make
 

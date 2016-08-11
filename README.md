@@ -1,18 +1,24 @@
 # Ring API
 
-It's exposing the Ring-daemon using Cython to any high-level language.
+It is an Application Program Interface to interact with the headless Ring-daemon written in C++11.
 
-The documentation is located in the [Wiki](https://github.com/sevaivanov/ring-api/wiki).
+This project uses Cython for Python <-> C++ bindings. We wrap this with Python along with a RESTful web-server. It allows anyone to communicate with the daemon using a RESTful interface and to receive daemon-originated signals using WebSockets. It can be directly used in Python or through the latter web-interface.
+
+Originally developed on [GitHub](https://github.com/sevaivanov/ring-api) with the documentation located in the [Wiki](https://github.com/sevaivanov/ring-api/wiki).
 
 ## Install
 
-You need Python 3.5, pip and [Ring](https://ring.cx/en/download) which will contain the Ring-daemon.
+1. You need Python3.5 and pip.
 
-**Note:** Until [this patch](https://gerrit-ring.savoirfairelinux.com/#/c/4327/) solving the [bug #699](https://tuleap.ring.cx/plugins/tracker/?aid=699) is merged, you need to do it manually. See: [extra/dev-docs/install.md](extra/dev-docs/install.md).
+    I didn't tested with other Python versions yet. Feel free to tell me it works!
 
-Install the Ring API:
+2. You need [Ring](https://ring.cx/en/download) which will contain the Ring-daemon.
 
-    pip install --user -e .
+    **Note:** until patches [4327](https://gerrit-ring.savoirfairelinux.com/#/c/4327/) and [4482](https://gerrit-ring.savoirfairelinux.com/#/c/4482) are merged, you need to do it manually. See: [extra/dev-docs/install.md](extra/dev-docs/install.md).
+
+3. Install the Ring API:
+
+        pip install --user -e .
 
 ## Running
 
