@@ -24,4 +24,3 @@ def valid_account_len(account_id):
 
 def contained_in(a, b):
     return (any(a in a_b for a_b in b))
-
