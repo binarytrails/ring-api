@@ -18,10 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
 #
-
-from optparse import OptionParser
-
-import time
+import argparse, time
 from queue import Queue
 from threading import Thread
 
@@ -31,50 +28,50 @@ from ring_api.dring_cython import Dring
 from ring_api.server.flask.server import FlaskServer
 
 def options():
-    usage = 'usage: %prog [options] arg1 arg2'
-    parser = OptionParser(usage=usage)
+    parser = argparse.ArgumentParser(
+        description='API of the Ring-daemon')
 
-    parser.add_option('-v', '--verbose',
+    parser.add_argument('-v', '--verbose',
         action='store_true', dest='verbose', default=False,
         help='activate all of the verbose options')
 
-    parser.add_option('-d', '--debug',
+    parser.add_argument('-d', '--debug',
         action='store_true', dest='debug', default=False,
         help='debug mode (more verbose)')
 
-    parser.add_option('-c', '--console',
+    parser.add_argument('-c', '--console',
         action='store_true', dest='console', default=False,
         help='log in console (instead of syslog)')
 
-    parser.add_option('-p', '--persistent',
+    parser.add_argument('-p', '--persistent',
         action='store_true', dest='persistent', default=False,
         help='stay alive after client quits')
 
-    parser.add_option('-r', '--rest',
+    parser.add_argument('-r', '--rest',
         action='store_true', dest='rest', default=False,
-        help='start with restful server api')
+        help='start with a restful server')
 
-    parser.add_option('--port',
-        type='int', dest='http_port', default=8080,
-        help='server http port for rest')
-
-    parser.add_option('--ws-port',
-        type='int', dest='ws_port', default=5678,
-        help='server websocket port for callbacks')
-
-    parser.add_option('--host',
-        type='str', dest='host', default='127.0.0.1',
+    parser.add_argument('--host',
+        dest='host', default='127.0.0.1',
         help='restful server host')
 
-    parser.add_option('--auto-answer',
+    parser.add_argument('--port',
+        type=int, dest='http_port', default=8080,
+        help='server http port for rest')
+
+    parser.add_argument('--ws-port',
+        type=int, dest='ws_port', default=5678,
+        help='server websocket port for callbacks')
+
+    parser.add_argument('--auto-answer',
         action='store_true', dest='autoanswer', default=False,
         help='force automatic answer to incoming call')
 
-    parser.add_option('--dring-version',
+    parser.add_argument('--dring-version',
         action='store_true', dest='dring_version', default=False,
         help='show Ring-daemon version')
 
-    parser.add_option('--interpreter',
+    parser.add_argument('--interpreter',
         action='store_true', dest='interpreter', default=False,
         help='adapt threads for interpreter interaction')
 
@@ -87,7 +84,8 @@ class Client:
         self.dring_pollevents_interval = 0.1
 
         if (not _options):
-            (_options, args) = options()
+            # script mode: ask for options
+            _options = options()
         self.options = _options
 
         if (self.options.verbose):

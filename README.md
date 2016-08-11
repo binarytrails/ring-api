@@ -52,7 +52,7 @@ It was tested using IPython. It wasn't designed to be run with the REST Server.
     from ring_api import client
 
     # Options
-    (options, args) = client.options()
+    options = client.options()
     options.verbose = True
     options.interpreter = True
 
