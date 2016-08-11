@@ -27,7 +27,9 @@ from ring_api.dring_cython import Dring
 
 from ring_api.server.flask.server import FlaskServer
 
-def options():
+def options_parser():
+    """ Return the parser without parsing the args """
+
     parser = argparse.ArgumentParser(
         description='API of the Ring-daemon')
 
@@ -75,6 +77,13 @@ def options():
         action='store_true', dest='interpreter', default=False,
         help='adapt threads for interpreter interaction')
 
+    return parser
+
+def options():
+    """ Parse the options with args (used by a user script)
+        and return the result (used by interpreter to define them dynamically).
+    """
+    parser = options_parser()
     return parser.parse_args()
 
 class Client:
@@ -84,7 +93,6 @@ class Client:
         self.dring_pollevents_interval = 0.1
 
         if (not _options):
-            # script mode: ask for options
             _options = options()
         self.options = _options
 
@@ -189,4 +197,3 @@ class Client:
             flags |= self.dring._FLAG_AUTOANSWER
 
         return flags
-

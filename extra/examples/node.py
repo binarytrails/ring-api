@@ -102,7 +102,7 @@ class EchoBot:
                 'content': content
             })
 
-def options_args():
+def options_parser():
 
     parser = argparse.ArgumentParser(
         description='Ring API node using bots')
@@ -113,13 +113,17 @@ def options_args():
             help='Clients as JSON string of %s{"alias": "ring_id"}%s' %
                 ("'", "'",))
 
-    return parser.parse_args()
+    return parser
 
 if __name__ == "__main__":
 
-    opts = options_args()
+    parser = options_parser()
+    opts = parser.parse_args()
 
-    (ring_opts, ring_args) = ring_api.options()
+    ring_args = ['-v'] if opts.verbose else []
+    ring_parser = ring_api.options_parser()
+    ring_opts = ring_parser.parse_args(ring_args)
+
     ring_opts.verbose = opts.verbose
     ring_opts.interpreter = True
     ring_api = ring_api.Client(ring_opts)
