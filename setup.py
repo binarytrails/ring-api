@@ -60,8 +60,7 @@ ext_dring = Extension(
 setup(
     name='ring_api',
     version='0.1.0.dev1',
-    description='Exposing Ring-daemon using Cython',
-    #long_description=open('README.txt').read(),
+    description='Python bindings on the Ring-daemon library',
     url='https://github.com/sevaivanov/ring-api',
     author='Seva Ivanov',
     author_email='seva.ivanov@savoirfairelinux.com',

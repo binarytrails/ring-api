@@ -23,7 +23,7 @@ from ring_api import client
 
 if __name__ == "__main__":
     parser = client.options_parser(
-        desc='RESTful API of the Ring-daemon',
+        desc='RESTful Python binding of the Ring-daemon library',
         force_rest=True
     )
     ring_opts = parser.parse_args()

@@ -31,7 +31,7 @@ def options_parser(desc=None, force_rest=False):
     """ Return the parser without parsing the args """
 
     if (not desc):
-        desc='API of the Ring-daemon'
+        desc='Python bindings on the Ring-daemon library'
 
     parser = argparse.ArgumentParser(description=desc)
 
