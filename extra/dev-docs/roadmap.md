@@ -12,9 +12,9 @@
     * ~~Define python callbacks API~~
     * Segment wrappers into multiple files
 
-* Client
+* ~~Client~~
     * ~~Add threading~~
-    * ~~Define launch options~~
+    * ~~Define start options~~
 
 * Server
     * ~~Implement RESTful API skeleton~~
@@ -27,16 +27,21 @@
     * Format the logs to dring style
     * Solve the 'Dirty Hack' in server.py
 
-* Integration
+* ~~Integration~~
     * ~~Implement the Python package architecture~~
-    * Integrate the project to Ring-daemon Autotools (GNU Build System)
+    * ~~Integrate the project to Ring-daemon Autotools (GNU Build System)~~
 
-            ./configure prefix=/usr --without-dbus --with-api
+            ...
+            ./configure prefix=/usr --without-dbus --with-restpy
+            make install
+            dring-rest.py
+
+        See Gerrit public draft at [4518](https://gerrit-ring.savoirfairelinux.com/#/c/4518/).
 
 * Wiki
     * ~~Write a wiki base~~
     * ~~Define RESTful API standards~~
-    * Write how it works with and draw a diagram
+    * ~~Write how it works with and draw a diagram~~
     * Document the server and WebSockets software choices
 
 * Functionalities:
