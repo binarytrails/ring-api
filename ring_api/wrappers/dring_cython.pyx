@@ -397,7 +397,27 @@ cdef class ConfigurationManager:
             status.encode()
         )
 
+cdef class VideoRender:
+    cdef:
+        videoman_cpp.SinkTarget target
+
+    def __cinit__(self):
+        pass
+
+    def __dealloc__(self):
+        pass
+
 cdef class VideoManager:
+
+    cdef:
+        VideoRender videoRender
+
+    def __cinit__(self):
+        videoRender = VideoRender()
+
+    def __dealloc__(self):
+        pass
+
     def devices(self):
         """Lists the available video devices
 
