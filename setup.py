@@ -37,6 +37,7 @@ ext_dring = Extension(
     'ring_api/dring_cython',
     sources=[
 	'ring_api/wrappers/dring_cython.pyx',
+	'ring_api/callbacks/cb_api.pyx',
 	'ring_api/callbacks/cb_client.cpp'
     ],
     language='c++',
