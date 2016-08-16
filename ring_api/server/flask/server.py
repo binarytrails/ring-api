@@ -31,12 +31,14 @@ from websockets import exceptions as ws_ex
 from ring_api.server.flask.cb_api import websockets as cb_api
 from ring_api.server.flask.api import websockets as rest_ws
 from ring_api.server.flask.api import (
-    account, video, messages, calls, certificate, audio, crypto, codec
+    rest_api,
+    account, messages, calls, audio, video,
+    certificate, crypto, codec
 )
 
 class FlaskServer:
 
-    API_VERSION = 0.1
+    API_VERSION = 1
     API_URL_PREFIX = '/api/v%s' % API_VERSION
 
     api_blueprint = Blueprint('api', __name__)
@@ -90,6 +92,13 @@ class FlaskServer:
 
         Keep the same order as in the rest-api.json.
         """
+
+        # REST API
+        self.api.add_resource(
+            rest_api.Api,
+            '/',
+            resource_class_kwargs={'version': 'v%s' % self.API_VERSION}
+        )
 
         # Websockets
         self.api.add_resource(

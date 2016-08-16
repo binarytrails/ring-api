@@ -96,6 +96,14 @@ It was tested using IPython. It wasn't designed to be run with the REST Server.
 
 ## Examples
 
+### REST API layout
+
+You can get the documentation in JSON format by going to:
+
+    http://127.0.0.1:8080/api/v1/
+
+It's the documentaion located in the ```ring_api/rest-api/<version>/api.json``` file.
+
 ### Texting with *curl*
 
 Start the module along with the REST server:
@@ -104,7 +112,7 @@ Start the module along with the REST server:
 
 1. Get the available accounts
 
-        curl http://127.0.0.1:8080/api/v0.1/accounts/
+        curl http://127.0.0.1:8080/api/v1/accounts/
 
 2. To get the destination Ring Id, just text the server's Ring Id and copy-paste it from the console's output.
 
@@ -112,11 +120,11 @@ Start the module along with the REST server:
 
     The data is in JSON string format.
 
-        curl -X POST -d '{"ring_id":"<ring_id>","message":"curling","mime_type":"text/plain"}' http://127.0.0.1:8080/api/v0.1/accounts/<account_id>/message/
+        curl -X POST -d '{"ring_id":"<ring_id>","message":"curling","mime_type":"text/plain"}' http://127.0.0.1:8080/api/v1/accounts/<account_id>/message/
 
 4. Get the message status:
 
-        curl http://127.0.0.1:8080/api/v0.1/messages/<message_id>/
+        curl http://127.0.0.1:8080/api/v1/messages/<message_id>/
 
 ### Calling
 
@@ -126,7 +134,7 @@ You will send video and receive audio.
 
     # Call
 
-    $ curl -d '{"ring_id":"<ring_id>"}' http://localhost:8080/api/v0.1/accounts/<account_id>/call/
+    $ curl -d '{"ring_id":"<ring_id>"}' http://localhost:8080/api/v1/accounts/<account_id>/call/
     {
       "call_id": "<call_id>",
       "status": 200
@@ -134,7 +142,7 @@ You will send video and receive audio.
 
     # Handup
 
-    $ curl -X PUT -d '{"action":"hangup"}' http://localhost:8080/api/v0.1/calls/<call_id>/
+    $ curl -X PUT -d '{"action":"hangup"}' http://localhost:8080/api/v1/calls/<call_id>/
     {
       "status": 200,
       "unhold": false

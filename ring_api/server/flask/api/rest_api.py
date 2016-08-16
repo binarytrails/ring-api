@@ -1,8 +1,7 @@
 #
 # Copyright (C) 2016 Savoir-faire Linux Inc
 #
-# Authors:  Seva Ivanov <seva.ivanov@savoirfairelinux.com>
-#           Simon Zeni  <simon.zeni@savoirfairelinux.com>
+# Author:  Seva Ivanov <seva.ivanov@savoirfairelinux.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,20 +18,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
 #
 
-import os, json
+from flask import jsonify, request
+from flask_restful import Resource
 
-DIR = os.path.abspath(os.path.dirname(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+from ring_api.utils import server as utils
 
-def valid_account_len(account_id):
-    return (len(account_id) == 16)
+class Api(Resource):
+    def __init__(self, version):
+        self.version = version
 
-def contained_in(a, b):
-    return (any(a in a_b for a_b in b))
-
-def get_rest_api(version='v1'):
-    content = None
-    file_path = PROJECT_ROOT + '/rest-api/' + version + '/api.json'
-
-    with open(file_path) as rest_api:
-        return json.load(rest_api)
+    def get(self):
+        return jsonify({
+            'status': 200,
+            'content': utils.get_rest_api(self.version)
+        })

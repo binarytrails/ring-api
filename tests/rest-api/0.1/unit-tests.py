@@ -4,7 +4,7 @@ import unittest
 import requests
 import json
 
-API_URL = 'http://127.0.0.1:8080/api/v0.1'
+API_URL = 'http://127.0.0.1:8080/api/v1'
 
 def print_json(data):
     print(json.dumps(data, sort_keys=True, indent=4))
