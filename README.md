@@ -130,7 +130,7 @@ Start the module along with the REST server:
 
 **Experimental**
 
-You will send video and receive audio.
+You will send and receive video with audio. However, video displaying is WIP (Work In Progress).
 
     # Call
 
