@@ -30,27 +30,6 @@ from ring_api.interfaces.dring cimport *
 
 cdef extern from "videomanager_interface.h" namespace "DRing":
 
-    struct FrameBuffer:
-        uint8_t* ptr
-        size_t ptrSize
-        int format
-        int width
-        int height
-        vector[uint8_t] storage
-
-    # using FrameBufferPtr = std::unique_ptr<FrameBuffer>;
-    ctypedef unique_ptr[FrameBuffer] FrameBufferPtr
-
-    # std::function<FrameBufferPtr(std::size_t bytes)> pull;
-    ctypedef FrameBufferPtr (*PullCb)(size_t bytes)
-
-    # std::function<void(FrameBufferPtr)> push;
-    ctypedef void (*PushCb)(FrameBufferPtr)
-
-    struct SinkTarget:
-        PullCb pull
-        PushCb push
-
     vector[string] getDeviceList()
     map[string, string] getSettings(const string& name)
     void applySettings(const string& name, const map[string, string]& settings)
@@ -60,4 +39,3 @@ cdef extern from "videomanager_interface.h" namespace "DRing":
     void stopCamera()
     boolean switchInput(const string& resource)
     boolean hasCameraStarted()
-
