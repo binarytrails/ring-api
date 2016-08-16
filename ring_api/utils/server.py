@@ -31,7 +31,6 @@ def contained_in(a, b):
     return (any(a in a_b for a_b in b))
 
 def get_rest_api(version='v1'):
-    content = None
     file_path = PROJECT_ROOT + '/rest-api/' + version + '/api.json'
 
     with open(file_path) as rest_api:
