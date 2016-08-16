@@ -68,7 +68,8 @@ cdef public void incoming_account_message(
         callback(str(account_id), str(from_ring_id), content)
 
 cdef class CallbacksClient:
-    cdef cb_client_cpp.CallbacksClient *_thisptr
+    cdef:
+        cb_client_cpp.CallbacksClient *_thisptr
 
     def __cinit__(self):
         self._thisptr = new cb_client_cpp.CallbacksClient()
@@ -397,8 +398,9 @@ cdef class ConfigurationManager:
             status.encode()
         )
 
-cdef class VideoRender:
+cdef class VideoManager:
     cdef:
+        videoman_cpp.FrameBuffer frameBuffer
         videoman_cpp.SinkTarget target
 
     def __cinit__(self):
@@ -407,15 +409,25 @@ cdef class VideoRender:
     def __dealloc__(self):
         pass
 
-cdef class VideoManager:
+    def get_framebuffer(self):
+        """ TODO test function """
+        if (not self.frameBuffer.ptr):
+            return
+        
+        frameBuffer = {
+            'ptr':      str(self.frameBuffer.ptr),
+            'ptrSize':  self.frameBuffer.ptrSize,
+            'format':   self.frameBuffer.format,
+            'width':    self.frameBuffer.width,
+            'height':   self.frameBuffer.height
+        }
+        
+        return frameBuffer
 
-    cdef:
-        VideoRender videoRender
-
-    def __cinit__(self):
-        videoRender = VideoRender()
-
-    def __dealloc__(self):
+    def pull_framebuffer(self):
+        pass
+    
+    def push_framebuffer(self):
         pass
 
     def devices(self):
@@ -555,11 +567,12 @@ cdef class Dring:
         readonly int _FLAG_CONSOLE_LOG
         readonly int _FLAG_AUTOANSWER
 
-    cdef public ConfigurationManager config
-    cdef public VideoManager video
-    cdef public CallManager call
-    cdef public PresenceManager pres
-    cdef CallbacksClient cb_client
+        public ConfigurationManager config
+        public VideoManager video
+        public CallManager call
+        public PresenceManager pres
+        
+        CallbacksClient cb_client
 
     def __cinit__(self):
         self._FLAG_DEBUG = dring_cpp.DRING_FLAG_DEBUG
