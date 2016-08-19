@@ -18,6 +18,31 @@ Download [Ring](https://ring.cx/en/download) which will contain Ring-daemon.
 
 ## Manual
 
+### Ring API (restpy)
+
+It's located under *bin/restpy*. You have to build the Ring-daemon with it:
+
+1. Download the Ring-daemon
+
+        git clone https://gerrit-ring.savoirfairelinux.com/ring-daemon
+
+2. Build it
+
+        cd ring-daemon/contrib
+        mkdir build; cd build
+        ../bootstrap
+        make
+        cd ../
+
+        ./autogen.sh
+        ./configure prefix=/usr --without-dbus --with-restpy
+
+        sudo make install
+
+3. Run it
+
+        dring-rest.py -h
+
 ### Ring-daemon (shared library)
 
 * Apply [4327 patch](https://gerrit-ring.savoirfairelinux.com/#/c/4327/). It was written due to bug [#699](https://tuleap.ring.cx/plugins/tracker/?aid=699) that was blocking the generation of the shared library.

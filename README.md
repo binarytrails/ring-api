@@ -22,7 +22,15 @@ Originally developed on [GitHub](https://github.com/sevaivanov/ring-api) with th
 
 ## Running
 
-You can either execute the *ring_api* module or import it into interpreter of your choice.
+You can choose from the below options depending on your needs.
+
+* Client script
+    * Execute the *ring_api* Python module
+    * Execute the Ring-daemon soon integrated version
+
+* Extend in Python
+    * Import it into interpreter of your choice
+    * Import it into a Python script
 
 ### Module
 
@@ -45,9 +53,11 @@ It is recommended that you start it with the *--rest* option to be able to inter
       --dring-version    show Ring-daemon version
       --interpreter      adapt threads for interpreter interaction
 
-### Interpreter
+### Python / Interpreter
 
-It was tested using IPython. It wasn't designed to be run with the REST Server.
+To see an example of usage inside a Python script, you can skip to the *Examples* > *Node: message replier* section.
+
+In interpreter, it was tested using IPython but the threading wasn't designed to be run with the RESTful server.
 
     from ring_api import client
 
@@ -93,6 +103,20 @@ It was tested using IPython. It wasn't designed to be run with the REST Server.
 
     # show callbacks documentation
     help(cb_api.account_message)
+
+### Ring-daemon integration
+
+The main difference with the Python module script is that the RESTful server is forced and the interpreter mode is disabled. From the Ring-daemon perspective the RESTful interface is a replacement for the D-Bus. The *Ring API* integration under *restpy* name acts as an executable which runs and is used by other clients. The daemon only needs an API for IPC (inter-process communication) which is in this case our RESTful server.
+
+1. Build
+
+    See the section *Manual > Ring API (restpy)* of the [install docs](extra/dev-docs/install.md)
+
+2. Run
+
+    This executable is copied from [extra/run/force-rest.py](extra/run/force-rest.py) and renamed during the install.
+
+        dring-rest.py -h
 
 ## Examples
 
